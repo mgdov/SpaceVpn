@@ -32,7 +32,13 @@ export default function BlogPage() {
                   />
                 </div>
                 <div className="p-4">
-                  <span className="text-muted-foreground text-[8px]">{post.date}</span>
+                  <div className="flex items-center justify-between text-[8px] mb-2">
+                    <span className="text-primary uppercase tracking-[0.25em]">{post.heroHighlight}</span>
+                    <span className="text-muted-foreground tracking-normal">
+                      {post.publishedAt} • Space VPN Team
+                    </span>
+                  </div>
+                  <p className="text-muted-foreground text-[8px] mb-2">{post.heroDescription}</p>
                   <h2 className="text-foreground text-[10px] mt-2 mb-2 line-clamp-2">{post.title}</h2>
                   <p className="text-muted-foreground text-[8px] line-clamp-2 mb-4">{post.excerpt}</p>
                   <Link href={`/blog/${post.id}`} className="text-primary text-[8px] hover:underline">

@@ -33,6 +33,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
 
           {/* Header */}
           <header className="mb-8">
+            <p className="text-primary text-[10px] uppercase tracking-[0.35em] mb-2">{post.heroHighlight}</p>
+            <p className="text-muted-foreground text-[10px] mb-4">{post.heroDescription}</p>
             <div className="flex flex-wrap gap-2 mb-4">
               {post.tags.map((tag) => (
                 <span key={tag} className="bg-primary/20 text-primary text-[8px] px-2 py-1 border border-primary/30">
@@ -41,14 +43,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
               ))}
             </div>
             <h1 className="text-lg md:text-xl text-foreground mb-4 leading-relaxed">{post.title}</h1>
-            <div className="flex flex-wrap items-center gap-4 text-muted-foreground text-[9px]">
+            <div className="flex flex-wrap items-center gap-2 text-muted-foreground text-[9px]">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
-                {post.date}
-              </span>
-              <span className="flex items-center gap-1">
+                {post.publishedAt}
+                <span className="mx-1 text-muted-foreground/60">•</span>
                 <User className="w-3 h-3" />
-                {post.author}
+                Space VPN Team
               </span>
             </div>
           </header>
@@ -64,6 +65,35 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
               {post.content.split("\n").map((paragraph, index) => {
                 const trimmed = paragraph.trim()
                 if (!trimmed) return null
+
+                const tokenMatch = trimmed.match(/^\[(green|muted|main)\](.*)\[\/\1\]$/i)
+                if (tokenMatch) {
+                  const variant = tokenMatch[1].toLowerCase()
+                  const textContent = tokenMatch[2].trim()
+                  if (!textContent) return null
+
+                  if (variant === "green") {
+                    return (
+                      <p key={index} className="text-primary text-[10px] uppercase tracking-[0.35em] mb-3">
+                        {textContent}
+                      </p>
+                    )
+                  }
+
+                  if (variant === "muted") {
+                    return (
+                      <p key={index} className="text-muted-foreground text-[10px] leading-snug mb-3">
+                        {textContent}
+                      </p>
+                    )
+                  }
+
+                  return (
+                    <p key={index} className="text-foreground text-sm md:text-base leading-relaxed mb-4">
+                      {textContent}
+                    </p>
+                  )
+                }
 
                 if (trimmed.startsWith("## ")) {
                   return (
@@ -148,7 +178,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
                       />
                     </div>
                     <div className="p-4">
-                      <span className="text-muted-foreground text-[8px]">{relatedPost.date}</span>
+                      <span className="text-muted-foreground text-[8px]">
+                        {relatedPost.publishedAt} • Space VPN Team
+                      </span>
                       <h4 className="text-foreground text-[10px] mt-2 mb-2 line-clamp-2">{relatedPost.title}</h4>
                       <p className="text-muted-foreground text-[8px] line-clamp-2 mb-4">{relatedPost.excerpt}</p>
                       <Link href={`/blog/${relatedPost.id}`} className="text-primary text-[8px] hover:underline">

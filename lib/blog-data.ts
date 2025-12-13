@@ -1,9 +1,11 @@
 export interface BlogPost {
   id: number
+  heroHighlight: string
+  heroDescription: string
   title: string
   excerpt: string
   content: string
-  date: string
+  publishedAt: string
   image: string
   author: string
   tags: string[]
@@ -12,6 +14,8 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     id: 1,
+    heroHighlight: "VPN",
+    heroDescription: "Безопасность • Гайд",
     title: "Как выбрать лучший VPN сервис в 2025 году",
     excerpt: "Разбираемся в критериях выбора VPN и на что обратить внимание при покупке подписки.",
     content: `
@@ -46,13 +50,15 @@ Space VPN предлагает:
 
 Выбор VPN — важное решение для вашей цифровой безопасности. Не экономьте на защите своих данных и выбирайте проверенные сервисы с хорошей репутацией.
     `,
-    date: "10 декабря 2025",
+    publishedAt: "10 декабря 2025",
     image: "/vpn-security-cyber-protection.jpg",
     author: "Space VPN Team",
     tags: ["VPN", "Безопасность", "Гайд"],
   },
   {
     id: 2,
+    heroHighlight: "Обновления",
+    heroDescription: "Серверы • Новости",
     title: "Обновление серверов: новые локации",
     excerpt: "Мы добавили 10 новых серверов в Азии и Европе для еще более быстрого соединения.",
     content: `
@@ -87,13 +93,15 @@ Space VPN предлагает:
 
 Спасибо, что выбираете Space VPN!
     `,
-    date: "5 декабря 2025",
+    publishedAt: "5 декабря 2025",
     image: "/server-data-center-network.jpg",
     author: "Space VPN Team",
     tags: ["Обновления", "Серверы", "Новости"],
   },
   {
     id: 3,
+    heroHighlight: "Киберзащита",
+    heroDescription: "Советы • Гайд",
     title: "Безопасность в интернете: базовые правила",
     excerpt: "Советы по защите личных данных и безопасному серфингу в сети.",
     content: `
@@ -141,7 +149,7 @@ Space VPN предлагает:
 
 Следуя этим простым правилам, вы значительно повысите свою безопасность в интернете. И не забывайте использовать Space VPN для дополнительной защиты!
     `,
-    date: "1 декабря 2025",
+    publishedAt: "1 декабря 2025",
     image: "/internet-security-lock-protection.jpg",
     author: "Space VPN Team",
     tags: ["Безопасность", "Советы", "Гайд"],

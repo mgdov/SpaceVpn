@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link"
 import { PixelStars } from "@/components/pixel-stars"
 import { Key, FileText, DollarSign, Layers, Plus, Edit, Trash2, RefreshCw, LogOut, Home } from "lucide-react"
@@ -17,9 +17,13 @@ interface VPNKey {
 
 interface BlogPost {
   id: string
+  heroHighlight: string
+  heroDescription: string
   title: string
   excerpt: string
   content: string
+  tags: string[]
+  publishedAt: string
   createdAt: string
   updatedAt: string
 }
@@ -29,7 +33,10 @@ interface Tariff {
   name: string
   durationDays: number
   price: number
+  description: string
 }
+
+type ContentFormat = "green" | "muted" | "main"
 
 const initialKeys: VPNKey[] = [
   {
@@ -64,17 +71,25 @@ const initialKeys: VPNKey[] = [
 const initialPosts: BlogPost[] = [
   {
     id: "1",
+    heroHighlight: "VPN",
+    heroDescription: "Безопасность • Гайд",
     title: "Как выбрать лучший VPN",
     excerpt: "Разбираемся в критериях...",
     content: "Полный текст статьи...",
+    tags: ["VPN", "Безопасность", "Гайд"],
+    publishedAt: "2025-12-10",
     createdAt: "2025-12-10",
     updatedAt: "2025-12-10",
   },
   {
     id: "2",
+    heroHighlight: "Обновления",
+    heroDescription: "Серверы • Новости",
     title: "Обновление серверов",
     excerpt: "Новые локации...",
     content: "Полный текст...",
+    tags: ["Обновления", "Серверы", "Новости"],
+    publishedAt: "2025-12-05",
     createdAt: "2025-12-05",
     updatedAt: "2025-12-05",
   },
@@ -86,18 +101,21 @@ const initialTariffs: Tariff[] = [
     name: "1 месяц",
     durationDays: 30,
     price: 99,
+    description: "Минимальный срок для теста сервиса",
   },
   {
     id: "2",
     name: "3 месяца",
     durationDays: 90,
     price: 249,
+    description: "Оптимальный баланс цены и гибкости",
   },
   {
     id: "3",
     name: "12 месяцев",
     durationDays: 365,
     price: 799,
+    description: "Год без забот с максимальной экономией",
   },
 ]
 
@@ -124,18 +142,57 @@ export default function AdminPage() {
   })
 
   // Post form state
-  const [postForm, setPostForm] = useState({
+  const createInitialPostForm = () => ({
+    heroHighlight: "",
+    heroDescription: "",
     title: "",
     excerpt: "",
     content: "",
+    tags: "",
+    publishedAt: new Date().toISOString().split("T")[0],
   })
+  const [postForm, setPostForm] = useState(createInitialPostForm)
 
   // Tariff form state
   const [tariffForm, setTariffForm] = useState({
     name: "",
     durationDays: "30",
     price: "0",
+    description: "",
   })
+
+  const contentTextareaRef = useRef<HTMLTextAreaElement | null>(null)
+
+  const formatTokens: Record<ContentFormat, { open: string; close: string }> = {
+    green: { open: "[green]", close: "[/green]" },
+    muted: { open: "[muted]", close: "[/muted]" },
+    main: { open: "[main]", close: "[/main]" },
+  }
+
+  const applyContentFormat = (variant: ContentFormat) => {
+    const textarea = contentTextareaRef.current
+    if (!textarea) return
+
+    const { open, close } = formatTokens[variant]
+    const start = textarea.selectionStart ?? textarea.value.length
+    const end = textarea.selectionEnd ?? start
+    const before = textarea.value.slice(0, start)
+    const selected = textarea.value.slice(start, end)
+    const after = textarea.value.slice(end)
+    const nextValue = `${before}${open}${selected}${close}${after}`
+    const caretPosition = start + open.length
+    const selectionEnd = caretPosition + selected.length
+
+    textarea.value = nextValue
+    setPostForm((prev) => ({ ...prev, content: nextValue }))
+
+    requestAnimationFrame(() => {
+      if (!contentTextareaRef.current) return
+      contentTextareaRef.current.selectionStart = caretPosition
+      contentTextareaRef.current.selectionEnd = selectionEnd
+      contentTextareaRef.current.focus()
+    })
+  }
 
   const getTariffPrice = (planName: string) => tariffs.find((t) => t.name === planName)?.price ?? 0
 
@@ -197,36 +254,63 @@ export default function AdminPage() {
   }
 
   const handleCreatePost = () => {
+    const tags = parseTags(postForm.tags)
+    const today = new Date().toISOString().split("T")[0]
     const newPost: BlogPost = {
       id: Date.now().toString(),
-      ...postForm,
-      createdAt: new Date().toISOString().split("T")[0],
-      updatedAt: new Date().toISOString().split("T")[0],
+      heroHighlight: postForm.heroHighlight,
+      heroDescription: postForm.heroDescription,
+      title: postForm.title,
+      excerpt: postForm.excerpt,
+      content: postForm.content,
+      tags,
+      publishedAt: postForm.publishedAt || today,
+      createdAt: today,
+      updatedAt: today,
     }
     setPosts([...posts, newPost])
     setShowPostModal(false)
-    setPostForm({ title: "", excerpt: "", content: "" })
+    resetPostForm()
   }
 
   const handleUpdatePost = () => {
     if (!editingPost) return
+    const tags = parseTags(postForm.tags)
+    const today = new Date().toISOString().split("T")[0]
     setPosts(
       posts.map((p) =>
         p.id === editingPost.id
-          ? { ...editingPost, ...postForm, updatedAt: new Date().toISOString().split("T")[0] }
+          ? {
+            ...editingPost,
+            heroHighlight: postForm.heroHighlight,
+            heroDescription: postForm.heroDescription,
+            title: postForm.title,
+            excerpt: postForm.excerpt,
+            content: postForm.content,
+            tags,
+            publishedAt: postForm.publishedAt || editingPost.publishedAt,
+            updatedAt: today,
+          }
           : p,
       ),
     )
     setEditingPost(null)
     setShowPostModal(false)
-    setPostForm({ title: "", excerpt: "", content: "" })
+    resetPostForm()
   }
 
   const handleDeletePost = (id: string) => {
     setPosts(posts.filter((p) => p.id !== id))
   }
 
-  const resetTariffForm = () => setTariffForm({ name: "", durationDays: "30", price: "0" })
+  const resetPostForm = () => setPostForm(createInitialPostForm())
+  const parseTags = (raw: string) =>
+    raw
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean)
+
+  const resetTariffForm = () => setTariffForm({ name: "", durationDays: "30", price: "0", description: "" })
 
   const normalizeTariffValues = (overrides?: Partial<Tariff>) => {
     const rawDuration = overrides?.durationDays?.toString() ?? tariffForm.durationDays
@@ -235,6 +319,7 @@ export default function AdminPage() {
       name: (overrides?.name ?? tariffForm.name).trim(),
       durationDays: Math.max(1, Number(rawDuration) || 1),
       price: Math.max(0, Number(rawPrice) || 0),
+      description: (overrides?.description ?? tariffForm.description).trim(),
     }
   }
 
@@ -245,6 +330,7 @@ export default function AdminPage() {
       name: normalized.name || `Тариф ${tariffs.length + 1}`,
       durationDays: normalized.durationDays,
       price: normalized.price,
+      description: normalized.description,
     }
     setTariffs([...tariffs, newTariff])
     setShowTariffModal(false)
@@ -259,7 +345,10 @@ export default function AdminPage() {
 
   const handleUpdateTariff = () => {
     if (!editingTariff) return
-    const normalized = normalizeTariffValues({ name: tariffForm.name || editingTariff.name })
+    const normalized = normalizeTariffValues({
+      name: tariffForm.name || editingTariff.name,
+      description: tariffForm.description || editingTariff.description,
+    })
     setTariffs(
       tariffs.map((tariff) =>
         tariff.id === editingTariff.id
@@ -268,6 +357,7 @@ export default function AdminPage() {
             name: normalized.name || editingTariff.name,
             durationDays: normalized.durationDays,
             price: normalized.price,
+            description: normalized.description || editingTariff.description,
           }
           : tariff,
       ),
@@ -299,7 +389,15 @@ export default function AdminPage() {
 
   const openEditPost = (post: BlogPost) => {
     setEditingPost(post)
-    setPostForm({ title: post.title, excerpt: post.excerpt, content: post.content })
+    setPostForm({
+      heroHighlight: post.heroHighlight,
+      heroDescription: post.heroDescription,
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      tags: post.tags.join(", "),
+      publishedAt: post.publishedAt,
+    })
     setShowPostModal(true)
   }
 
@@ -309,6 +407,7 @@ export default function AdminPage() {
       name: tariff.name,
       durationDays: tariff.durationDays.toString(),
       price: tariff.price.toString(),
+      description: tariff.description,
     })
     setShowTariffModal(true)
   }
@@ -476,7 +575,7 @@ export default function AdminPage() {
                 <button
                   onClick={() => {
                     setEditingPost(null)
-                    setPostForm({ title: "", excerpt: "", content: "" })
+                    resetPostForm()
                     setShowPostModal(true)
                   }}
                   className="bg-primary text-primary-foreground px-4 py-2 text-[10px] flex items-center gap-2 hover:bg-primary/80"
@@ -490,11 +589,14 @@ export default function AdminPage() {
                 {posts.map((post) => (
                   <div key={post.id} className="bg-card border border-border p-4 flex items-start justify-between">
                     <div>
+                      <p className="text-primary text-[8px] uppercase tracking-[0.3em] mb-1">{post.heroHighlight}</p>
+                      <p className="text-muted-foreground text-[8px] mb-2">{post.heroDescription}</p>
                       <h3 className="text-foreground text-[11px] mb-1">{post.title}</h3>
                       <p className="text-muted-foreground text-[9px] mb-2">{post.excerpt}</p>
-                      <div className="text-[8px] text-muted-foreground">
-                        Создано: {post.createdAt} | Обновлено: {post.updatedAt}
+                      <div className="text-[8px] text-muted-foreground mb-1">
+                        Дата публикации: {post.publishedAt} • Space VPN Team
                       </div>
+                      <div className="text-[8px] text-muted-foreground">Теги: {post.tags.join(", ") || "—"}</div>
                     </div>
                     <div className="flex items-center gap-2">
                       <button onClick={() => openEditPost(post)} className="text-muted-foreground hover:text-primary">
@@ -545,7 +647,10 @@ export default function AdminPage() {
                     {tariffs.length ? (
                       tariffs.map((tariff) => (
                         <tr key={tariff.id} className="border-t border-border">
-                          <td className="px-4 py-3 text-[9px] text-foreground">{tariff.name}</td>
+                          <td className="px-4 py-3 text-[9px] text-foreground">
+                            <div>{tariff.name}</div>
+                            <p className="text-muted-foreground text-[8px] mt-1">{tariff.description || "—"}</p>
+                          </td>
                           <td className="px-4 py-3 text-[9px] text-muted-foreground">{tariff.durationDays}</td>
                           <td className="px-4 py-3 text-[9px] text-primary">{tariff.price} ₽</td>
                           <td className="px-4 py-3">
@@ -689,6 +794,24 @@ export default function AdminPage() {
             <h2 className="text-foreground text-sm mb-4">{editingPost ? "РЕДАКТИРОВАТЬ СТАТЬЮ" : "СОЗДАТЬ СТАТЬЮ"}</h2>
             <div className="space-y-4">
               <div>
+                <label className="block text-foreground text-[10px] mb-2">Зелёный заголовок</label>
+                <input
+                  type="text"
+                  value={postForm.heroHighlight}
+                  onChange={(e) => setPostForm({ ...postForm, heroHighlight: e.target.value })}
+                  className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-foreground text-[10px] mb-2">Серое описание</label>
+                <input
+                  type="text"
+                  value={postForm.heroDescription}
+                  onChange={(e) => setPostForm({ ...postForm, heroDescription: e.target.value })}
+                  className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
                 <label className="block text-foreground text-[10px] mb-2">Заголовок</label>
                 <input
                   type="text"
@@ -707,12 +830,60 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-foreground text-[10px] mb-2">Содержание</label>
+                <div className="flex flex-col gap-2 mb-2">
+                  <label className="text-foreground text-[10px]">Содержание</label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => applyContentFormat("green")}
+                      className="px-3 py-1 text-[9px] uppercase tracking-[0.3em] bg-primary/15 text-primary border border-primary/40"
+                    >
+                      Зеленый
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => applyContentFormat("muted")}
+                      className="px-3 py-1 text-[9px] uppercase tracking-[0.3em] bg-secondary text-muted-foreground border border-border"
+                    >
+                      Серый
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => applyContentFormat("main")}
+                      className="px-3 py-1 text-[9px] uppercase tracking-[0.3em] border border-border text-foreground"
+                    >
+                      Основной
+                    </button>
+                  </div>
+                  <p className="text-muted-foreground text-[8px]">
+                    Выделите текст и нажмите кнопку, чтобы применить стиль, или просто вставьте пустой блок — теги [green], [muted],
+                    [main] добавятся автоматически.
+                  </p>
+                </div>
                 <textarea
+                  ref={contentTextareaRef}
                   value={postForm.content}
                   onChange={(e) => setPostForm({ ...postForm, content: e.target.value })}
                   rows={8}
                   className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary resize-none"
+                />
+              </div>
+              <div>
+                <label className="block text-foreground text-[10px] mb-2">Дата публикации</label>
+                <input
+                  type="date"
+                  value={postForm.publishedAt}
+                  onChange={(e) => setPostForm({ ...postForm, publishedAt: e.target.value })}
+                  className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-foreground text-[10px] mb-2">Теги (через запятую)</label>
+                <input
+                  type="text"
+                  value={postForm.tags}
+                  onChange={(e) => setPostForm({ ...postForm, tags: e.target.value })}
+                  className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
                 />
               </div>
               <div className="flex gap-4 pt-4">
@@ -767,6 +938,15 @@ export default function AdminPage() {
                   value={tariffForm.price}
                   onChange={(e) => setTariffForm({ ...tariffForm, price: e.target.value })}
                   className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-foreground text-[10px] mb-2">Описание</label>
+                <textarea
+                  value={tariffForm.description}
+                  onChange={(e) => setTariffForm({ ...tariffForm, description: e.target.value })}
+                  rows={3}
+                  className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary resize-none"
                 />
               </div>
               <div className="flex gap-4 pt-4">

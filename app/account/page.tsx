@@ -1,8 +1,12 @@
+"use client"
+
 import Link from "next/link"
+import { useEffect, useState } from "react"
 import { PixelStars } from "@/components/pixel-stars"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { mockUser } from "@/lib/account-data"
+import { useAuth, withAuth } from "@/lib/auth-context"
+import { getUserSubscriptions, type Subscription } from "@/lib/api"
 
 const sections = [
     {
@@ -25,7 +29,40 @@ const sections = [
     },
 ]
 
-export default function AccountPage() {
+function AccountPageContent() {
+    const { user } = useAuth()
+    const [subscription, setSubscription] = useState<Subscription | null>(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const loadSubscription = async () => {
+            const response = await getUserSubscriptions()
+            if (response.data && response.data.length > 0) {
+                // Get the active subscription
+                const activeSub = response.data.find(s => s.is_active) || response.data[0]
+                setSubscription(activeSub)
+            }
+            setLoading(false)
+        }
+
+        loadSubscription()
+    }, [])
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString)
+        return date.toLocaleDateString('ru-RU', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric' 
+        })
+    }
+
+    const getPlanName = () => {
+        if (!subscription) return "Бесплатный"
+        if (subscription.data_limit_gb === 0) return "Ultimate"
+        return `${subscription.data_limit_gb} GB`
+    }
+
     return (
         <div className="min-h-screen bg-background relative">
             <PixelStars />
@@ -37,13 +74,29 @@ export default function AccountPage() {
                         <p className="text-accent text-[9px] tracking-[0.35em]">[ ЛИЧНЫЙ КАБИНЕТ ]</p>
                         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mt-4">
                             <div>
-                                <h1 className="text-foreground text-2xl">Привет, {mockUser.name}</h1>
-                                <p className="text-muted-foreground text-[11px] mt-2">{mockUser.email}</p>
+                                <h1 className="text-foreground text-2xl">
+                                    Привет, {user?.full_name || user?.username}
+                                </h1>
+                                <p className="text-muted-foreground text-[11px] mt-2">
+                                    {user?.email}
+                                </p>
                             </div>
                             <div className="text-right">
-                                <p className="text-muted-foreground text-[9px] uppercase tracking-[0.35em]">Текущий тариф</p>
-                                <p className="text-foreground text-lg mt-1">{mockUser.plan}</p>
-                                <p className="text-muted-foreground text-[10px]">Продление: {mockUser.nextRenewal}</p>
+                                <p className="text-muted-foreground text-[9px] uppercase tracking-[0.35em]">
+                                    Текущий тариф
+                                </p>
+                                {loading ? (
+                                    <p className="text-foreground text-lg mt-1">Загрузка...</p>
+                                ) : (
+                                    <>
+                                        <p className="text-foreground text-lg mt-1">{getPlanName()}</p>
+                                        {subscription && (
+                                            <p className="text-muted-foreground text-[10px]">
+                                                Продление: {formatDate(subscription.end_date)}
+                                            </p>
+                                        )}
+                                    </>
+                                )}
                             </div>
                         </div>
                     </section>
@@ -69,3 +122,5 @@ export default function AccountPage() {
         </div>
     )
 }
+
+export default withAuth(AccountPageContent)

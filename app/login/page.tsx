@@ -4,18 +4,37 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import { PixelStars } from "@/components/pixel-stars"
+import { useAuth } from "@/lib/auth-context"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
+  const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Demo login - in real app would validate with backend
-    alert("Демо режим: вход выполнен!")
+    setError("")
+    setLoading(true)
+
+    try {
+      const result = await login(username, password)
+      if (result.success) {
+        router.push("/account")
+      } else {
+        setError(result.error || "Ошибка входа")
+      }
+    } catch (err) {
+      setError("Ошибка сети. Проверьте подключение к интернету.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -37,6 +56,13 @@ export default function LoginPage() {
           </div>
           <h1 className="text-foreground text-sm">SPACE VPN</h1>
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[10px]">
+            {error}
+          </div>
+        )}
 
         {/* Social Login */}
         <div className="flex gap-4 mb-6">
@@ -72,13 +98,15 @@ export default function LoginPage() {
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-foreground text-[10px] mb-2">E-mail или логин</label>
+            <label className="block text-foreground text-[10px] mb-2">Логин или E-mail</label>
             <input
               type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="E-mail или логин"
-              className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Введите логин или email"
+              required
+              disabled={loading}
+              className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary disabled:opacity-50"
             />
           </div>
 
@@ -94,13 +122,16 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Пароль"
-                className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary pr-12"
+                placeholder="Введите пароль"
+                required
+                disabled={loading}
+                className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary pr-12 disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                disabled={loading}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -109,9 +140,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-primary text-primary-foreground py-3 text-[10px] hover:bg-primary/80 transition-colors"
+            disabled={loading}
+            className="w-full bg-primary text-primary-foreground py-3 text-[10px] hover:bg-primary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Войти
+            {loading ? "Вход..." : "Войти"}
           </button>
         </form>
 

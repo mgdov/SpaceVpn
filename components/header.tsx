@@ -2,13 +2,20 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { Menu, X } from "lucide-react"
+import { Menu, X, User, LogOut } from "lucide-react"
 
 import { PixelLogo } from "./pixel-logo"
+import { useAuth } from "@/lib/auth-context"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { user, logout } = useAuth()
   const closeMenu = () => setIsMenuOpen(false)
+
+  const handleLogout = () => {
+    logout()
+    closeMenu()
+  }
 
   const navLinks = [
     { href: "/", label: "Главная" },
@@ -44,15 +51,36 @@ export function Header() {
 
             {/* Auth Buttons */}
             <div className="hidden md:flex items-center gap-4">
-              <Link href="/login" className="text-foreground hover:text-primary transition-colors text-[10px]">
-                Вход
-              </Link>
-              <Link
-                href="/register"
-                className="bg-primary text-primary-foreground px-4 py-2 hover:bg-primary/80 transition-colors text-[10px]"
-              >
-                Регистрация
-              </Link>
+              {user ? (
+                <>
+                  <Link 
+                    href="/account" 
+                    className="text-foreground hover:text-primary transition-colors text-[10px] flex items-center gap-2"
+                  >
+                    <User size={14} />
+                    {user.username}
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="text-foreground hover:text-primary transition-colors text-[10px] flex items-center gap-2"
+                  >
+                    <LogOut size={14} />
+                    Выход
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="text-foreground hover:text-primary transition-colors text-[10px]">
+                    Вход
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="bg-primary text-primary-foreground px-4 py-2 hover:bg-primary/80 transition-colors text-[10px]"
+                  >
+                    Регистрация
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -92,20 +120,42 @@ export function Header() {
             </nav>
 
             <div className="mt-auto flex flex-col gap-3">
-              <Link
-                href="/login"
-                className="text-foreground text-[11px] tracking-wide border border-border py-2 text-center hover:border-primary hover:text-primary transition-colors"
-                onClick={closeMenu}
-              >
-                Вход
-              </Link>
-              <Link
-                href="/register"
-                className="bg-primary text-primary-foreground text-[11px] tracking-[0.2em] py-2 text-center hover:bg-primary/80 transition-colors"
-                onClick={closeMenu}
-              >
-                Регистрация
-              </Link>
+              {user ? (
+                <>
+                  <Link
+                    href="/account"
+                    className="text-foreground text-[11px] tracking-wide border border-border py-2 text-center hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
+                    onClick={closeMenu}
+                  >
+                    <User size={14} />
+                    {user.username}
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-foreground text-[11px] tracking-wide border border-border py-2 text-center hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
+                  >
+                    <LogOut size={14} />
+                    Выход
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="text-foreground text-[11px] tracking-wide border border-border py-2 text-center hover:border-primary hover:text-primary transition-colors"
+                    onClick={closeMenu}
+                  >
+                    Вход
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="bg-primary text-primary-foreground text-[11px] tracking-[0.2em] py-2 text-center hover:bg-primary/80 transition-colors"
+                    onClick={closeMenu}
+                  >
+                    Регистрация
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -4,8 +4,10 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Eye, EyeOff } from "lucide-react"
 import { PixelStars } from "@/components/pixel-stars"
+import { useAuth } from "@/lib/auth-context"
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -15,14 +17,40 @@ export default function RegisterPage() {
     password: "",
     confirmPassword: "",
   })
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const { register } = useAuth()
+  const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError("")
+
+    // Validation
     if (formData.password !== formData.confirmPassword) {
-      alert("Пароли не совпадают!")
+      setError("Пароли не совпадают!")
       return
     }
-    alert("Демо режим: регистрация выполнена!")
+
+    if (formData.password.length < 8) {
+      setError("Пароль должен содержать минимум 8 символов")
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const result = await register(formData.username, formData.email, formData.password)
+      if (result.success) {
+        router.push("/account")
+      } else {
+        setError(result.error || "Ошибка регистрации")
+      }
+    } catch (err) {
+      setError("Ошибка сети. Проверьте подключение к интернету.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -43,6 +71,13 @@ export default function RegisterPage() {
           </div>
           <h1 className="text-foreground text-sm">СОЗДАТЬ АККАУНТ</h1>
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[10px]">
+            {error}
+          </div>
+        )}
 
         {/* Social Register */}
         <div className="flex gap-4 mb-6">
@@ -93,7 +128,9 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="your@email.com"
-              className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary"
+              required
+              disabled={loading}
+              className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary disabled:opacity-50"
             />
           </div>
 
@@ -104,7 +141,9 @@ export default function RegisterPage() {
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               placeholder="username"
-              className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary"
+              required
+              disabled={loading}
+              className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary disabled:opacity-50"
             />
           </div>
 
@@ -116,12 +155,15 @@ export default function RegisterPage() {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 placeholder="Минимум 8 символов"
-                className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary pr-12"
+                required
+                disabled={loading}
+                className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary pr-12 disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                disabled={loading}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -135,15 +177,18 @@ export default function RegisterPage() {
               value={formData.confirmPassword}
               onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
               placeholder="Повторите пароль"
-              className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary"
+              required
+              disabled={loading}
+              className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary disabled:opacity-50"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-primary text-primary-foreground py-3 text-[10px] hover:bg-primary/80 transition-colors"
+            disabled={loading}
+            className="w-full bg-primary text-primary-foreground py-3 text-[10px] hover:bg-primary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Создать аккаунт
+            {loading ? "Регистрация..." : "Создать аккаунт"}
           </button>
         </form>
 

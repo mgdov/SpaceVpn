@@ -1,35 +1,9 @@
 "use client"
 
 import Link from "next/link"
+import { pricingPlans } from "@/lib/pricing-data"
 
-const plans = [
-  {
-    duration: "1 месяц",
-    months: 1,
-    price: 99,
-    tagline: "Гибкая оплата",
-    description: "Идеально для быстрого тест-драйва: подключитесь за минуту и ощутите стабильный тоннель связи без долгих обязательств.",
-    popular: false,
-  },
-  {
-    duration: "3 месяца",
-    months: 3,
-    price: 249,
-    tagline: "Баланс выгоды",
-    description: "Три месяца уверенного соединения, расширенный доступ к локациям и приоритет на новые маршруты сети Pixel Space.",
-    popular: true,
-  },
-  {
-    duration: "12 месяцев",
-    months: 12,
-    price: 679,
-    tagline: "Год без забот",
-    description: "Закрепите годовой тариф и пользуйтесь VPN с максимальной экономией, круглосуточной поддержкой и стабильной скоростью.",
-    popular: false,
-  },
-]
-
-const baseMonthlyPrice = plans[0].price / (plans[0].months || 1)
+const baseMonthlyPrice = pricingPlans[0].price / (pricingPlans[0].months || 1)
 
 export function PricingSection() {
   return (
@@ -46,7 +20,7 @@ export function PricingSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {plans.map((plan) => {
+          {pricingPlans.map((plan) => {
             const fullPrice = baseMonthlyPrice * plan.months
             const discountPercent = plan.months > 1 ? Math.round(((fullPrice - plan.price) / fullPrice) * 100) : 0
 

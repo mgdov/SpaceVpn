@@ -437,7 +437,7 @@ function PixelStars() {
                     animationDelay: `${star.delay}s`
                 },
                 children: star.type === "cross" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "text-purple-300 text-opacity-60",
+                    className: "text-blue-300 text-opacity-60",
                     style: {
                         fontSize: `${star.size * 6}px`
                     },
@@ -447,7 +447,7 @@ function PixelStars() {
                     lineNumber: 48,
                     columnNumber: 13
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "bg-white rounded-none",
+                    className: "bg-cyan-300 rounded-none",
                     style: {
                         width: `${star.size * 2}px`,
                         height: `${star.size * 2}px`
@@ -474,14 +474,16 @@ function PixelStars() {
 
 __turbopack_context__.s([
     "PricingSection",
-    ()=>PricingSection
+    ()=>PricingSection,
+    "pricingPlans",
+    ()=>pricingPlans
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 "use client";
 ;
 ;
-const plans = [
+const pricingPlans = [
     {
         duration: "1 месяц",
         months: 1,
@@ -507,7 +509,7 @@ const plans = [
         popular: false
     }
 ];
-const baseMonthlyPrice = plans[0].price / (plans[0].months || 1);
+const baseMonthlyPrice = pricingPlans[0].price / (pricingPlans[0].months || 1);
 function PricingSection() {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
         className: "py-20 px-4 relative z-10",
@@ -559,7 +561,7 @@ function PricingSection() {
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "grid grid-cols-1 md:grid-cols-3 gap-10",
-                    children: plans.map((plan)=>{
+                    children: pricingPlans.map((plan)=>{
                         const fullPrice = baseMonthlyPrice * plan.months;
                         const discountPercent = plan.months > 1 ? Math.round((fullPrice - plan.price) / fullPrice * 100) : 0;
                         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {

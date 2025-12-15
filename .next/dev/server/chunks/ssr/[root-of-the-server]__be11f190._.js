@@ -298,6 +298,8 @@ __turbopack_context__.s([
 const blogPosts = [
     {
         id: 1,
+        heroHighlight: "VPN",
+        heroDescription: "Безопасность • Гайд",
         title: "Как выбрать лучший VPN сервис в 2025 году",
         excerpt: "Разбираемся в критериях выбора VPN и на что обратить внимание при покупке подписки.",
         content: `
@@ -332,7 +334,7 @@ Space VPN предлагает:
 
 Выбор VPN — важное решение для вашей цифровой безопасности. Не экономьте на защите своих данных и выбирайте проверенные сервисы с хорошей репутацией.
     `,
-        date: "10 декабря 2025",
+        publishedAt: "10 декабря 2025",
         image: "/vpn-security-cyber-protection.jpg",
         author: "Space VPN Team",
         tags: [
@@ -343,6 +345,8 @@ Space VPN предлагает:
     },
     {
         id: 2,
+        heroHighlight: "Обновления",
+        heroDescription: "Серверы • Новости",
         title: "Обновление серверов: новые локации",
         excerpt: "Мы добавили 10 новых серверов в Азии и Европе для еще более быстрого соединения.",
         content: `
@@ -377,7 +381,7 @@ Space VPN предлагает:
 
 Спасибо, что выбираете Space VPN!
     `,
-        date: "5 декабря 2025",
+        publishedAt: "5 декабря 2025",
         image: "/server-data-center-network.jpg",
         author: "Space VPN Team",
         tags: [
@@ -388,6 +392,8 @@ Space VPN предлагает:
     },
     {
         id: 3,
+        heroHighlight: "Киберзащита",
+        heroDescription: "Советы • Гайд",
         title: "Безопасность в интернете: базовые правила",
         excerpt: "Советы по защите личных данных и безопасному серфингу в сети.",
         content: `
@@ -435,7 +441,7 @@ Space VPN предлагает:
 
 Следуя этим простым правилам, вы значительно повысите свою безопасность в интернете. И не забывайте использовать Space VPN для дополнительной защиты!
     `,
-        date: "1 декабря 2025",
+        publishedAt: "1 декабря 2025",
         image: "/internet-security-lock-protection.jpg",
         author: "Space VPN Team",
         tags: [
@@ -549,12 +555,40 @@ function BlogPage() {
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "p-4",
                                             children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "text-muted-foreground text-[8px]",
-                                                    children: post.date
-                                                }, void 0, false, {
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex items-center justify-between text-[8px] mb-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-primary uppercase tracking-[0.25em]",
+                                                            children: post.heroHighlight
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/blog/page.tsx",
+                                                            lineNumber: 36,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                            className: "text-muted-foreground tracking-normal",
+                                                            children: [
+                                                                post.publishedAt,
+                                                                " • Space VPN Team"
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/app/blog/page.tsx",
+                                                            lineNumber: 37,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
                                                     fileName: "[project]/app/blog/page.tsx",
                                                     lineNumber: 35,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "text-muted-foreground text-[8px] mb-2",
+                                                    children: post.heroDescription
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/blog/page.tsx",
+                                                    lineNumber: 41,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -562,7 +596,7 @@ function BlogPage() {
                                                     children: post.title
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/blog/page.tsx",
-                                                    lineNumber: 36,
+                                                    lineNumber: 42,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -570,7 +604,7 @@ function BlogPage() {
                                                     children: post.excerpt
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/blog/page.tsx",
-                                                    lineNumber: 37,
+                                                    lineNumber: 43,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$react$2d$server$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {
@@ -579,7 +613,7 @@ function BlogPage() {
                                                     children: "Читать далее →"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/blog/page.tsx",
-                                                    lineNumber: 38,
+                                                    lineNumber: 44,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
@@ -612,7 +646,7 @@ function BlogPage() {
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$footer$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Footer"], {}, void 0, false, {
                 fileName: "[project]/app/blog/page.tsx",
-                lineNumber: 47,
+                lineNumber: 53,
                 columnNumber: 7
             }, this)
         ]

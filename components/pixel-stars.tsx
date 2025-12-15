@@ -45,12 +45,12 @@ export function PixelStars() {
           }}
         >
           {star.type === "cross" ? (
-            <div className="text-purple-300 text-opacity-60" style={{ fontSize: `${star.size * 6}px` }}>
+            <div className="text-blue-300 text-opacity-60" style={{ fontSize: `${star.size * 6}px` }}>
               +
             </div>
           ) : (
             <div
-              className="bg-white rounded-none"
+              className="bg-cyan-300 rounded-none"
               style={{
                 width: `${star.size * 2}px`,
                 height: `${star.size * 2}px`,

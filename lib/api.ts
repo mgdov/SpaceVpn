@@ -138,6 +138,18 @@ async function apiRequest<T = any>(
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
+      
+      // Handle validation errors (422)
+      if (response.status === 422 && errorData.detail) {
+        if (Array.isArray(errorData.detail)) {
+          // Pydantic validation errors
+          const errors = errorData.detail.map((err: any) => 
+            `${err.loc?.join(' → ') || 'Field'}: ${err.msg}`
+          ).join(', ')
+          return { error: errors }
+        }
+      }
+      
       return {
         error: errorData.detail || errorData.message || `HTTP ${response.status}`,
       }

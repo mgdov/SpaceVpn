@@ -16,7 +16,7 @@ export interface ApiResponse<T = any> {
 }
 
 export interface User {
-  id: string
+  id: number
   username: string
   email: string | null
   full_name: string | null
@@ -32,51 +32,56 @@ export interface TokenResponse {
 }
 
 export interface Tariff {
-  id: string
+  id: number
   name: string
   description: string | null
-  duration_days: number
+  tagline?: string | null
+  duration_months: number
   price: number
-  data_limit_gb: number | null
-  is_active: boolean
-  created_at: string
-  updated_at: string
+  data_limit_gb: number
+  devices_count?: number
+  is_active?: boolean
+  is_featured?: boolean
+  features?: string | null
 }
 
 export interface VPNClient {
-  id: string
-  user_id: string
-  uuid: string
-  email: string | null
-  name?: string | null
+  id: number
+  user_id: number
+  subscription_id: number
+  client_uuid: string
+  pasarguard_username?: string | null
+  name: string
   device_info?: string | null
-  subscription_id: string | null
-  data_limit_gb: number
-  data_used_gb: number
-  expiry_date: string | null
-  is_active: boolean
+  subscription_url?: string | null
+  last_connected_at?: string | null
   created_at: string
   updated_at: string
 }
 
 export interface VPNConfig {
-  config_json: string
-  qr_code_base64: string
-  share_link: string
+  client_uuid: string
+  name: string
+  xray_config: any  // JSON object
+  subscription_url: string  // VLESS URL
+  qr_code: string  // Base64 encoded image
 }
 
 export interface Subscription {
-  id: string
-  user_id: string
-  tariff_id: string | null
-  plan_name?: string | null
+  id: number
+  user_id: number
+  pasarguard_username?: string | null
+  plan: string  // SubscriptionPlan enum value
+  status: string  // SubscriptionStatus enum value
+  data_limit?: number | null  // bytes, null = unlimited
+  used_traffic: number  // bytes
   start_date: string
-  end_date: string
-  data_limit_gb: number
-  data_used_gb: number
+  expire_date?: string | null
   is_active: boolean
-  created_at?: string
-  updated_at?: string
+  traffic_remaining?: number | null
+  traffic_used_percentage?: number | null
+  created_at: string
+  updated_at: string
 }
 
 export interface AdminSubscription extends Subscription {
@@ -104,13 +109,7 @@ export interface UpdateProfilePayload {
 }
 
 export interface CreateSubscriptionPayload {
-  tariff_id: string
-  user_id?: string
-  vpn_client_id?: string
-  starts_at?: string
-  ends_at?: string
-  payment_method?: string
-  promo_code?: string
+  plan: string  // SubscriptionPlan: "free" | "basic" | "premium" | "unlimited"
 }
 
 export interface UpdateSubscriptionPayload {
@@ -121,24 +120,28 @@ export interface UpdateSubscriptionPayload {
 }
 
 export interface CreateVPNClientPayload {
-  user_id?: string
-  name?: string
+  subscription_id: number
+  name: string
   device_info?: string
-  subscription_id?: string
-  expires_at?: string
 }
 
-export interface UpdateVPNClientPayload extends CreateVPNClientPayload {
-  is_active?: boolean
+export interface UpdateVPNClientPayload {
+  name?: string
+  device_info?: string
 }
 
 export interface CreateTariffPayload {
   name: string
-  duration_days: number
+  duration_months: number
   price: number
   description?: string | null
-  data_limit_gb?: number | null
+  tagline?: string | null
+  data_limit_gb?: number
+  devices_count?: number
   is_active?: boolean
+  is_featured?: boolean
+  sort_order?: number
+  features?: string | null
 }
 
 export type UpdateTariffPayload = Partial<CreateTariffPayload>

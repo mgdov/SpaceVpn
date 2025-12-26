@@ -6,15 +6,14 @@ import { pricingPlans } from "@/lib/pricing-data"
 import { getPublicTariffs, type Tariff } from "@/lib/api"
 
 const fallbackTariffs: Tariff[] = pricingPlans.map((plan, index) => ({
-  id: `pricing-${index}`,
+  id: index,
   name: plan.duration,
   description: plan.description,
-  duration_days: plan.months * 30,
+  duration_months: plan.months,
   price: plan.price,
-  data_limit_gb: null,
-  is_active: true,
-  created_at: "",
-  updated_at: "",
+  data_limit_gb: 0,
+  devices_count: 1,
+  is_featured: false,
 }))
 
 export function PricingSection() {
@@ -41,7 +40,7 @@ export function PricingSection() {
   const baseMonthlyPrice = useMemo(() => {
     if (!displayTariffs.length) return 0
     const perMonthPrices = displayTariffs.map((tariff) => {
-      const months = Math.max(1, tariff.duration_days / 30)
+      const months = Math.max(1, tariff.duration_months)
       return tariff.price / months
     })
     return Math.min(...perMonthPrices)
@@ -50,18 +49,14 @@ export function PricingSection() {
   const highlightTariffId = useMemo(() => {
     if (!displayTariffs.length) return null
     return displayTariffs.reduce((best, current) => {
-      const currentRatio = current.price / Math.max(1, current.duration_days)
-      const bestRatio = best.price / Math.max(1, best.duration_days)
+      const currentRatio = current.price / Math.max(1, current.duration_months)
+      const bestRatio = best.price / Math.max(1, best.duration_months)
       return currentRatio < bestRatio ? current : best
     }).id
   }, [displayTariffs])
 
-  const formatDuration = (days: number) => {
-    const months = days / 30
-    if (Number.isInteger(months)) {
-      return `${months} мес.`
-    }
-    return `${days} дн.`
+  const formatDuration = (months: number) => {
+    return `${months} мес.`
   }
 
   return (
@@ -84,7 +79,7 @@ export function PricingSection() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {displayTariffs.map((tariff) => {
-              const months = Math.max(1, tariff.duration_days / 30)
+              const months = Math.max(1, tariff.duration_months)
               const nominalPrice = baseMonthlyPrice * months
               const discountPercent = nominalPrice > tariff.price && months > 1
                 ? Math.round(((nominalPrice - tariff.price) / nominalPrice) * 100)
@@ -109,7 +104,7 @@ export function PricingSection() {
 
                   <div className="text-center space-y-4">
                     <p className="text-accent text-[9px] tracking-[0.35em]"># {tariff.name}</p>
-                    <h3 className="text-foreground text-base">{formatDuration(tariff.duration_days)}</h3>
+                    <h3 className="text-foreground text-base">{formatDuration(tariff.duration_months)}</h3>
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex items-baseline justify-center gap-2">
                         <span className="text-primary text-3xl">{tariff.price}</span>

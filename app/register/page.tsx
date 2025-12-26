@@ -27,6 +27,11 @@ export default function RegisterPage() {
     setError("")
 
     // Validation
+    if (formData.username.length < 3) {
+      setError("Имя пользователя должно содержать минимум 3 символа")
+      return
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError("Пароли не совпадают!")
       return
@@ -135,13 +140,15 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-foreground text-[10px] mb-2">Имя пользователя</label>
+            <label className="block text-foreground text-[10px] mb-2">Имя пользователя (минимум 3 символа)</label>
             <input
               type="text"
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               placeholder="username"
               required
+              minLength={3}
+              maxLength={100}
               disabled={loading}
               className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary disabled:opacity-50"
             />

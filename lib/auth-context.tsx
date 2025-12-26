@@ -57,20 +57,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (username: string, password: string) => {
     setLoading(true)
-    const response = await apiLoginUser(username, password)
-    
-    if (response.data) {
-      // Get user info after login
-      const userResponse = await getCurrentUserInfo()
-      if (userResponse.data) {
-        setUser(userResponse.data)
-        setLoading(false)
-        return { success: true }
+    try {
+      const response = await apiLoginUser(username, password)
+      
+      if (response.data) {
+        // Get user info after login
+        const userResponse = await getCurrentUserInfo()
+        if (userResponse.data) {
+          setUser(userResponse.data)
+          setLoading(false)
+          return { success: true }
+        }
       }
+      
+      setLoading(false)
+      return { success: false, error: response.error || 'Login failed' }
+    } catch (error) {
+      setLoading(false)
+      return { success: false, error: error instanceof Error ? error.message : 'Login failed' }
     }
-    
-    setLoading(false)
-    return { success: false, error: response.error || 'Login failed' }
   }
 
   const logout = () => {
@@ -81,16 +86,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (username: string, email: string, password: string, fullName?: string) => {
     setLoading(true)
-    const response = await apiRegisterUser(username, email, password, fullName)
-    
-    if (response.data) {
-      // Auto-login after registration
-      const loginResult = await login(username, password)
-      return loginResult
+    try {
+      const response = await apiRegisterUser(username, email, password, fullName)
+      
+      if (response.data) {
+        // Auto-login after registration
+        const loginResult = await login(username, password)
+        return loginResult
+      }
+      
+      setLoading(false)
+      return { success: false, error: response.error || 'Registration failed' }
+    } catch (error) {
+      setLoading(false)
+      return { success: false, error: error instanceof Error ? error.message : 'Registration failed' }
     }
-    
-    setLoading(false)
-    return { success: false, error: response.error || 'Registration failed' }
   }
 
   const refreshUser = async () => {

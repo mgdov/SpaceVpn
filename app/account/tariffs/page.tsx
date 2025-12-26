@@ -15,15 +15,14 @@ import {
 import { pricingPlans } from "@/lib/pricing-data"
 
 const fallbackTariffs: Tariff[] = pricingPlans.map((plan, index) => ({
-    id: `fallback-${index}`,
+    id: index,
     name: plan.duration,
     description: plan.description,
-    duration_days: plan.months * 30,
+    duration_months: plan.months,
     price: plan.price,
-    data_limit_gb: null,
-    is_active: true,
-    created_at: "",
-    updated_at: "",
+    data_limit_gb: 0,
+    devices_count: 1,
+    is_featured: false,
 }))
 
 export default function AccountTariffsPage() {
@@ -67,7 +66,16 @@ export default function AccountTariffsPage() {
     const handlePurchase = async (tariff: Tariff) => {
         setMessage(null)
         setPurchaseMap((prev) => ({ ...prev, [tariff.id]: true }))
-        const response = await createSubscription({ tariff_id: tariff.id })
+        // Определяем план на основе названия тарифа
+        // TODO: Добавить поле plan в Tariff для более точного определения
+        const plan = tariff.name.toLowerCase().includes('basic') ? 'basic' 
+                  : tariff.name.toLowerCase().includes('premium') ? 'premium'
+                  : tariff.name.toLowerCase().includes('unlimited') ? 'unlimited'
+                  : 'free'
+        
+        const response = await createSubscription({ 
+            plan: plan
+        })
         if (response.data) {
             setMessage({ type: "success", text: `Тариф «${tariff.name}» успешно оформлен` })
             await loadSubscription()
@@ -77,12 +85,8 @@ export default function AccountTariffsPage() {
         setPurchaseMap((prev) => ({ ...prev, [tariff.id]: false }))
     }
 
-    const formatDuration = (days: number) => {
-        const months = days / 30
-        if (Number.isInteger(months)) {
-            return `${months} мес.`
-        }
-        return `${days} дн.`
+    const formatDuration = (months: number) => {
+        return `${months} мес.`
     }
 
     const subscriptionInfo = useMemo(() => {
@@ -92,7 +96,8 @@ export default function AccountTariffsPage() {
         if (!subscription) {
             return "Активная подписка отсутствует."
         }
-        return `Текущий план — ${subscription.plan_name || subscription.tariff_id || "—"}, продление ${formatDate(subscription.end_date)}`
+        const expireDate = subscription.expire_date ? formatDate(subscription.expire_date) : "—"
+        return `Текущий план — ${subscription.plan}, продление ${expireDate}`
     }, [loadingSubscription, subscription])
 
     const formatDate = (dateString?: string) => {
@@ -134,12 +139,12 @@ export default function AccountTariffsPage() {
                                 <div key={tariff.id} className="border border-border bg-card p-5 flex flex-col gap-4">
                                     <div>
                                         <p className="text-accent text-[8px] tracking-[0.3em]">{tariff.name}</p>
-                                        <h3 className="text-foreground text-base mt-2">{formatDuration(tariff.duration_days)}</h3>
+                                        <h3 className="text-foreground text-base mt-2">{formatDuration(tariff.duration_months)}</h3>
                                     </div>
                                     <p className="text-muted-foreground text-[10px] flex-1">{tariff.description || "Гибкий тариф Space VPN"}</p>
-                                    {tariff.data_limit_gb !== null && (
-                                        <p className="text-muted-foreground text-[9px]">Лимит: {tariff.data_limit_gb || "Безлимит"} GB</p>
-                                    )}
+                                    <p className="text-muted-foreground text-[9px]">
+                                        Лимит: {tariff.data_limit_gb === 0 ? "Безлимит" : `${tariff.data_limit_gb} GB`}
+                                    </p>
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-primary text-3xl">{tariff.price}</span>
                                         <span className="text-muted-foreground text-[11px]">₽ за период</span>

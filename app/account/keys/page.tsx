@@ -13,14 +13,16 @@ import {
     createUserVPNClient,
     regenerateUserVPNClient,
     syncUserVPNClient,
+    getUserSubscriptions,
     type VPNClient,
     type VPNConfig,
+    type Subscription,
 } from "@/lib/api"
 
 function AccountKeysPageContent() {
     const { user } = useAuth()
     const [clients, setClients] = useState<VPNClient[]>([])
-    const [selectedClientId, setSelectedClientId] = useState<string | null>(null)
+    const [selectedClientId, setSelectedClientId] = useState<number | null>(null)
     const [vpnConfig, setVpnConfig] = useState<VPNConfig | null>(null)
     const [copiedField, setCopiedField] = useState<"link" | "json" | null>(null)
     const [loadingClients, setLoadingClients] = useState(true)
@@ -53,8 +55,8 @@ function AccountKeysPageContent() {
             if (!response.data.length) {
                 setSelectedClientId(null)
                 setVpnConfig(null)
-            } else if (!selectedClientId || !response.data.find((client) => client.id === selectedClientId)) {
-                setSelectedClientId(response.data[0].id)
+            } else             if (!selectedClientId || !response.data.find((client) => client.id === selectedClientId)) {
+                setSelectedClientId(response.data[0]?.id || null)
             }
         } else {
             setError(response.error || "Не удалось загрузить список VPN ключей")
@@ -63,11 +65,11 @@ function AccountKeysPageContent() {
         setLoadingClients(false)
     }
 
-    const loadConfig = async (clientId: string) => {
+    const loadConfig = async (clientId: number) => {
         setLoadingConfig(true)
         setConfigError("")
 
-        const response = await getUserVPNClientConfig(clientId)
+        const response = await getUserVPNClientConfig(clientId.toString())
         if (response.data) {
             setVpnConfig(response.data)
         } else {
@@ -81,7 +83,27 @@ function AccountKeysPageContent() {
         setCreating(true)
         setError("")
 
-        const response = await createUserVPNClient()
+        // Получить активную подписку
+        const subscriptionsResponse = await getUserSubscriptions()
+        if (!subscriptionsResponse.data || subscriptionsResponse.data.length === 0) {
+            setError("У вас нет активной подписки. Сначала оформите подписку.")
+            setCreating(false)
+            return
+        }
+
+        const activeSubscription = subscriptionsResponse.data.find((sub) => sub.is_active) || subscriptionsResponse.data[0]
+        if (!activeSubscription) {
+            setError("Не найдена подписка для создания VPN ключа")
+            setCreating(false)
+            return
+        }
+
+        const subscriptionId = typeof activeSubscription.id === 'string' ? parseInt(activeSubscription.id) : activeSubscription.id
+
+        const response = await createUserVPNClient({
+            subscription_id: subscriptionId,
+            name: `Device ${new Date().toLocaleDateString()}`,
+        })
         if (response.data) {
             await loadClients()
             setSelectedClientId(response.data.id)
@@ -97,7 +119,7 @@ function AccountKeysPageContent() {
         setRegenerating(true)
         setError("")
 
-        const response = await regenerateUserVPNClient(selectedClientId)
+        const response = await regenerateUserVPNClient(selectedClientId.toString())
         if (response.data) {
             setVpnConfig(response.data)
         } else {
@@ -112,7 +134,7 @@ function AccountKeysPageContent() {
         setSyncing(true)
         setError("")
 
-        const response = await syncUserVPNClient(selectedClientId)
+        const response = await syncUserVPNClient(selectedClientId.toString())
         if (!response.data && response.error) {
             setError(response.error || "Не удалось синхронизировать ключ")
         } else {
@@ -168,13 +190,13 @@ function AccountKeysPageContent() {
                                             Активный ключ
                                         </label>
                                         <select
-                                            value={selectedClientId ?? ""}
-                                            onChange={(event) => setSelectedClientId(event.target.value)}
+                                            value={selectedClientId?.toString() ?? ""}
+                                            onChange={(event) => setSelectedClientId(parseInt(event.target.value) || null)}
                                             className="w-full bg-background border border-border text-[10px] px-3 py-2 focus:outline-none focus:border-primary"
                                         >
                                             {clients.map((client) => (
                                                 <option key={client.id} value={client.id}>
-                                                    {client.name || client.email || client.uuid}
+                                                    {client.name || client.client_uuid}
                                                 </option>
                                             ))}
                                         </select>
@@ -254,11 +276,11 @@ function AccountKeysPageContent() {
                                     <p className="text-muted-foreground text-[10px]">VLESS / TLS Reality ссылка</p>
                                     <div className="flex flex-col md:flex-row md:items-center gap-3">
                                         <code className="flex-1 text-foreground text-[11px] break-all bg-background border border-border p-3">
-                                            {vpnConfig.share_link}
+                                            {vpnConfig.subscription_url}
                                         </code>
                                         <div className="flex gap-2">
                                             <button
-                                                onClick={() => handleCopy(vpnConfig.share_link, "link")}
+                                                onClick={() => handleCopy(vpnConfig.subscription_url, "link")}
                                                 className="border border-border px-4 py-2 text-[10px] hover:border-primary flex items-center gap-2"
                                             >
                                                 {copiedField === "link" ? (
@@ -274,7 +296,7 @@ function AccountKeysPageContent() {
                                                 )}
                                             </button>
                                             <a
-                                                href={vpnConfig.share_link}
+                                                href={vpnConfig.subscription_url}
                                                 target="_blank"
                                                 rel="noreferrer"
                                                 className="border border-border px-4 py-2 text-[10px] hover:border-primary flex items-center gap-2"
@@ -290,7 +312,7 @@ function AccountKeysPageContent() {
                                     <p className="text-muted-foreground text-[10px] mb-3">QR код для быстрой настройки</p>
                                     <div className="flex justify-center">
                                         <img
-                                            src={vpnConfig.qr_code_base64}
+                                            src={vpnConfig.qr_code}
                                             alt="VPN QR Code"
                                             className="w-64 h-64 border border-border"
                                         />
@@ -302,10 +324,10 @@ function AccountKeysPageContent() {
                                     <details className="cursor-pointer">
                                         <summary className="text-[10px] text-primary mb-2">Показать JSON</summary>
                                         <code className="block text-[9px] text-foreground break-all bg-background border border-border p-3 max-h-60 overflow-y-auto">
-                                            {vpnConfig.config_json}
+                                            {JSON.stringify(vpnConfig.xray_config, null, 2)}
                                         </code>
                                         <button
-                                            onClick={() => handleCopy(vpnConfig.config_json, "json")}
+                                            onClick={() => handleCopy(JSON.stringify(vpnConfig.xray_config, null, 2), "json")}
                                             className="mt-2 border border-border px-4 py-2 text-[10px] hover:border-primary"
                                         >
                                             {copiedField === "json" ? "Скопировано!" : "Копировать JSON"}
@@ -322,29 +344,19 @@ function AccountKeysPageContent() {
                             </section>
 
                             <section className="bg-card border border-border p-6 space-y-3">
-                                <p className="text-foreground text-[11px] font-semibold">Статистика использования</p>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <p className="text-foreground text-[11px] font-semibold">Информация о ключе</p>
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                                     <div>
-                                        <p className="text-muted-foreground text-[9px]">Использовано</p>
-                                        <p className="text-foreground text-lg">{selectedClient.data_used_gb.toFixed(2)} GB</p>
+                                        <p className="text-muted-foreground text-[9px]">UUID</p>
+                                        <p className="text-foreground text-[11px] font-mono break-all">{selectedClient.client_uuid}</p>
                                     </div>
                                     <div>
-                                        <p className="text-muted-foreground text-[9px]">Лимит</p>
-                                        <p className="text-foreground text-lg">
-                                            {selectedClient.data_limit_gb === 0 ? "∞" : `${selectedClient.data_limit_gb} GB`}
-                                        </p>
+                                        <p className="text-muted-foreground text-[9px]">Название</p>
+                                        <p className="text-foreground text-lg">{selectedClient.name}</p>
                                     </div>
                                     <div>
-                                        <p className="text-muted-foreground text-[9px]">Истекает</p>
-                                        <p className="text-foreground text-lg">
-                                            {selectedClient.expiry_date ? formatDate(selectedClient.expiry_date) : "Никогда"}
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <p className="text-muted-foreground text-[9px]">Статус</p>
-                                        <p className={`text-lg ${selectedClient.is_active ? "text-green-500" : "text-red-500"}`}>
-                                            {selectedClient.is_active ? "Активен" : "Неактивен"}
-                                        </p>
+                                        <p className="text-muted-foreground text-[9px]">Создан</p>
+                                        <p className="text-foreground text-lg">{formatDate(selectedClient.created_at)}</p>
                                     </div>
                                 </div>
                             </section>

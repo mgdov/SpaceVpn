@@ -4,9 +4,9 @@ import type { AdminVPNClient } from "@/lib/api"
 interface KeyTableProps {
     keys: AdminVPNClient[]
     onEdit: (key: AdminVPNClient) => void
-    onExtend: (id: string) => void
-    onDelete: (id: string) => void
-    onToggle: (id: string) => void
+    onExtend: (id: number) => void
+    onDelete: (id: number) => void
+    onToggle: (id: number) => void
 }
 
 const formatDate = (value?: string | null) => {
@@ -36,21 +36,14 @@ export function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }: KeyTabl
                 <tbody>
                     {keys.map((key) => (
                         <tr key={key.id} className="border-t border-border">
-                            <td className="px-4 py-3 text-[9px] text-foreground font-mono">{key.uuid}</td>
-                            <td className="px-4 py-3 text-[9px] text-muted-foreground">{key.user?.email || key.email || "—"}</td>
+                            <td className="px-4 py-3 text-[9px] text-foreground font-mono">{key.client_uuid}</td>
+                            <td className="px-4 py-3 text-[9px] text-muted-foreground">{key.user?.email || "—"}</td>
                             <td className="px-4 py-3 text-[9px] text-foreground">{key.name || key.device_info || "—"}</td>
-                            <td className="px-4 py-3 text-[9px] text-muted-foreground">{formatDate(key.expiry_date)}</td>
-                            <td className="px-4 py-3 text-[9px] text-foreground">
-                                {key.data_limit_gb === 0 ? "∞" : `${key.data_used_gb.toFixed(1)} / ${key.data_limit_gb || "—"} GB`}
-                            </td>
+                            <td className="px-4 py-3 text-[9px] text-muted-foreground">—</td>
+                            <td className="px-4 py-3 text-[9px] text-foreground">—</td>
                             <td className="px-4 py-3">
-                                <span
-                                    className={`text-[8px] px-2 py-1 ${key.is_active
-                                        ? "bg-primary/20 text-primary"
-                                        : "bg-red-500/20 text-red-400"
-                                        }`}
-                                >
-                                    {key.is_active ? "Активен" : "Выключен"}
+                                <span className="text-[8px] px-2 py-1 bg-primary/20 text-primary">
+                                    Активен
                                 </span>
                             </td>
                             <td className="px-4 py-3">
@@ -64,13 +57,6 @@ export function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }: KeyTabl
                                         title="Продлить на месяц"
                                     >
                                         <RefreshCw size={14} />
-                                    </button>
-                                    <button
-                                        onClick={() => onToggle(key.id)}
-                                        className="text-muted-foreground hover:text-yellow-400"
-                                        title="Переключить статус"
-                                    >
-                                        <Power size={14} />
                                     </button>
                                     <button
                                         onClick={() => onDelete(key.id)}

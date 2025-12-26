@@ -12,18 +12,6 @@ import {
     type Tariff,
     type Subscription,
 } from "@/lib/api"
-import { pricingPlans } from "@/lib/pricing-data"
-
-const fallbackTariffs: Tariff[] = pricingPlans.map((plan, index) => ({
-    id: index,
-    name: plan.duration,
-    description: plan.description,
-    duration_months: plan.months,
-    price: plan.price,
-    data_limit_gb: 0,
-    devices_count: 1,
-    is_featured: false,
-}))
 
 export default function AccountTariffsPage() {
     const { user } = useAuth()
@@ -50,8 +38,6 @@ export default function AccountTariffsPage() {
             const response = await getPublicTariffs()
             if (response.data?.length) {
                 setTariffs(response.data.filter((tariff) => tariff.is_active))
-            } else {
-                setTariffs(fallbackTariffs)
             }
             setLoadingTariffs(false)
         }
@@ -109,7 +95,7 @@ export default function AccountTariffsPage() {
         })
     }
 
-    const visibleTariffs = tariffs.length ? tariffs : fallbackTariffs
+    const visibleTariffs = tariffs
 
     return (
         <div className="min-h-screen bg-background relative">

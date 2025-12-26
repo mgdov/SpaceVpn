@@ -2,19 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { pricingPlans } from "@/lib/pricing-data"
 import { getPublicTariffs, type Tariff } from "@/lib/api"
-
-const fallbackTariffs: Tariff[] = pricingPlans.map((plan, index) => ({
-  id: index,
-  name: plan.duration,
-  description: plan.description,
-  duration_months: plan.months,
-  price: plan.price,
-  data_limit_gb: 0,
-  devices_count: 1,
-  is_featured: false,
-}))
 
 export function PricingSection() {
   const [tariffs, setTariffs] = useState<Tariff[]>([])
@@ -26,8 +14,6 @@ export function PricingSection() {
       const response = await getPublicTariffs()
       if (response.data?.length) {
         setTariffs(response.data.filter((tariff) => tariff.is_active))
-      } else {
-        setTariffs(fallbackTariffs)
       }
       setLoading(false)
     }
@@ -35,7 +21,7 @@ export function PricingSection() {
     loadTariffs()
   }, [])
 
-  const displayTariffs = tariffs.length ? tariffs : fallbackTariffs
+  const displayTariffs = tariffs
 
   const baseMonthlyPrice = useMemo(() => {
     if (!displayTariffs.length) return 0

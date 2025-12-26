@@ -1,13 +1,3 @@
-export interface VPNKey {
-    id: string
-    key: string
-    user: string
-    plan: string
-    expiresAt: string
-    status: "active" | "expired" | "pending"
-    createdAt: string
-}
-
 export interface BlogPost {
     id: string
     heroHighlight: string
@@ -21,17 +11,10 @@ export interface BlogPost {
     updatedAt: string
 }
 
-export interface Tariff {
-    id: string
-    name: string
-    durationDays: number
-    price: number
-    description: string
-}
-
 export interface KeyFormState {
-    user: string
-    plan: string
+    userId: string
+    name: string
+    deviceInfo: string
     expiresAt: string
 }
 

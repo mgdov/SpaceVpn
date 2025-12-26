@@ -1,16 +1,17 @@
-import type { KeyFormState, Tariff } from "@/types/admin"
+import type { KeyFormState } from "@/types/admin"
+import type { User } from "@/lib/api"
 
 interface KeyModalProps {
     open: boolean
     isEditing: boolean
     form: KeyFormState
-    tariffs: Tariff[]
+    users: User[]
     onChange: (form: KeyFormState) => void
     onSubmit: () => void
     onClose: () => void
 }
 
-export function KeyModal({ open, isEditing, form, tariffs, onChange, onSubmit, onClose }: KeyModalProps) {
+export function KeyModal({ open, isEditing, form, users, onChange, onSubmit, onClose }: KeyModalProps) {
     if (!open) return null
 
     const updateField = (key: keyof KeyFormState, value: string) => {
@@ -23,32 +24,38 @@ export function KeyModal({ open, isEditing, form, tariffs, onChange, onSubmit, o
                 <h2 className="text-foreground text-sm mb-4">{isEditing ? "РЕДАКТИРОВАТЬ КЛЮЧ" : "СОЗДАТЬ КЛЮЧ"}</h2>
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-foreground text-[10px] mb-2">Email пользователя</label>
+                        <label className="block text-foreground text-[10px] mb-2">Пользователь</label>
+                        <select
+                            value={form.userId}
+                            onChange={(e) => updateField("userId", e.target.value)}
+                            className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
+                        >
+                            <option value="">Выберите пользователя</option>
+                            {users.map((user) => (
+                                <option key={user.id} value={user.id}>
+                                    {user.email || user.username}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-foreground text-[10px] mb-2">Название устройства</label>
                         <input
-                            type="email"
-                            value={form.user}
-                            onChange={(e) => updateField("user", e.target.value)}
+                            type="text"
+                            value={form.name}
+                            onChange={(e) => updateField("name", e.target.value)}
+                            placeholder="iPhone, MacBook и т.д."
                             className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
                         />
                     </div>
                     <div>
-                        <label className="block text-foreground text-[10px] mb-2">Тариф</label>
-                        <select
-                            value={form.plan}
-                            onChange={(e) => updateField("plan", e.target.value)}
-                            disabled={!tariffs.length}
-                            className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary disabled:opacity-50"
-                        >
-                            {tariffs.length ? (
-                                tariffs.map((tariff) => (
-                                    <option key={tariff.id} value={tariff.name}>
-                                        {tariff.name} - {tariff.price} ₽
-                                    </option>
-                                ))
-                            ) : (
-                                <option value="">Нет тарифов</option>
-                            )}
-                        </select>
+                        <label className="block text-foreground text-[10px] mb-2">Описание устройства</label>
+                        <textarea
+                            value={form.deviceInfo}
+                            onChange={(e) => updateField("deviceInfo", e.target.value)}
+                            rows={3}
+                            className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
+                        />
                     </div>
                     <div>
                         <label className="block text-foreground text-[10px] mb-2">Дата истечения</label>

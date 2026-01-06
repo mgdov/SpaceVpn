@@ -86,9 +86,6 @@
     --color-red-400: #ff6568;
     --color-red-500: #fb2c36;
     --color-red-600: #e40014;
-    --color-yellow-400: #fac800;
-    --color-yellow-500: #edb200;
-    --color-green-500: #00c758;
     --color-cyan-300: #53eafd;
     --color-blue-300: #90c5ff;
     --color-black: #000;
@@ -154,9 +151,6 @@
       --color-red-400: lab(63.7053% 60.745 31.3109);
       --color-red-500: lab(55.4814% 75.0732 48.8528);
       --color-red-600: lab(48.4493% 77.4328 61.5452);
-      --color-yellow-400: lab(83.2664% 8.65132 106.895);
-      --color-yellow-500: lab(76.3898% 14.5258 98.4589);
-      --color-green-500: lab(70.5521% -66.5147 45.8073);
       --color-cyan-300: lab(85.3886% -36.7636 -21.5716);
       --color-blue-300: lab(77.5052% -6.4629 -36.42);
     }
@@ -1918,16 +1912,6 @@
     }
   }
 
-  .bg-red-500\/20 {
-    background-color: #fb2c3633;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .bg-red-500\/20 {
-      background-color: color-mix(in oklab, var(--color-red-500) 20%, transparent);
-    }
-  }
-
   .bg-secondary {
     background-color: var(--secondary);
   }
@@ -1946,16 +1930,6 @@
 
   .bg-white {
     background-color: var(--color-white);
-  }
-
-  .bg-yellow-500\/20 {
-    background-color: #edb20033;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .bg-yellow-500\/20 {
-      background-color: color-mix(in oklab, var(--color-yellow-500) 20%, transparent);
-    }
   }
 
   .bg-gradient-to-r {
@@ -2454,10 +2428,6 @@
     }
   }
 
-  .text-green-500 {
-    color: var(--color-green-500);
-  }
-
   .text-muted-foreground {
     color: var(--muted-foreground);
   }
@@ -2512,10 +2482,6 @@
 
   .text-white {
     color: var(--color-white);
-  }
-
-  .text-yellow-400 {
-    color: var(--color-yellow-400);
   }
 
   .uppercase {
@@ -3331,12 +3297,6 @@
   @media (hover: hover) {
     .hover\:text-sidebar-accent-foreground:hover {
       color: var(--sidebar-accent-foreground);
-    }
-  }
-
-  @media (hover: hover) {
-    .hover\:text-yellow-400:hover {
-      color: var(--color-yellow-400);
     }
   }
 

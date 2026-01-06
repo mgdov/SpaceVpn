@@ -1,26 +1,32 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
 import { useAuth } from "@/lib/auth-context"
 import {
     getPublicTariffs,
-    createSubscription,
     getUserSubscriptions,
+    createYookassaPayment,
+    confirmYookassaPayment,
     type Tariff,
     type Subscription,
 } from "@/lib/api"
 
 export default function AccountTariffsPage() {
     const { user } = useAuth()
+    const router = useRouter()
+    const searchParams = useSearchParams()
     const [tariffs, setTariffs] = useState<Tariff[]>([])
     const [loadingTariffs, setLoadingTariffs] = useState(true)
     const [subscription, setSubscription] = useState<Subscription | null>(null)
     const [loadingSubscription, setLoadingSubscription] = useState(true)
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
     const [purchaseMap, setPurchaseMap] = useState<Record<string, boolean>>({})
+    const [confirmingPaymentId, setConfirmingPaymentId] = useState<string | null>(null)
+    const searchParamsString = searchParams.toString()
 
     const loadSubscription = useCallback(async () => {
         setLoadingSubscription(true)
@@ -47,27 +53,57 @@ export default function AccountTariffsPage() {
 
     useEffect(() => {
         loadSubscription()
-    }, [loadSubscription])
+    }, [loadSubscription, searchParamsString])
+
+    useEffect(() => {
+        const params = new URLSearchParams(searchParamsString)
+        const paymentId = params.get("payment_id")
+        if (!paymentId || confirmingPaymentId === paymentId) {
+            return
+        }
+
+        setConfirmingPaymentId(paymentId)
+
+        const confirmPayment = async () => {
+            setMessage(null)
+            const response = await confirmYookassaPayment(paymentId)
+            if (response.data?.success) {
+                setMessage({ type: "success", text: `Платёж по плану ${response.data.plan || "корневому"} подтверждён` })
+                await loadSubscription()
+            } else {
+                setMessage({ type: "error", text: response.error || response.data?.message || "Не удалось подтвердить платёж" })
+            }
+            router.replace("/account/tariffs")
+        }
+
+        confirmPayment()
+    }, [confirmingPaymentId, loadSubscription, router, searchParamsString])
 
     const handlePurchase = async (tariff: Tariff) => {
         setMessage(null)
         setPurchaseMap((prev) => ({ ...prev, [tariff.id]: true }))
-        // Определяем план на основе названия тарифа
-        // TODO: Добавить поле plan в Tariff для более точного определения
-        const plan = tariff.name.toLowerCase().includes('basic') ? 'basic' 
-                  : tariff.name.toLowerCase().includes('premium') ? 'premium'
-                  : tariff.name.toLowerCase().includes('unlimited') ? 'unlimited'
-                  : 'free'
-        
-        const response = await createSubscription({ 
-            plan: plan
+        const normalizedName = tariff.name.toLowerCase()
+        const plan = normalizedName.includes('basic')
+            ? 'basic'
+            : normalizedName.includes('premium')
+                ? 'premium'
+                : normalizedName.includes('unlimited')
+                    ? 'unlimited'
+                    : 'free'
+
+        const response = await createYookassaPayment({
+            tariffId: tariff.id,
+            plan,
+            price: tariff.price,
+            description: `Оплата тарифа ${tariff.name}`,
         })
-        if (response.data) {
-            setMessage({ type: "success", text: `Тариф «${tariff.name}» успешно оформлен` })
-            await loadSubscription()
-        } else {
-            setMessage({ type: "error", text: response.error || "Не удалось оформить подписку" })
+
+        if (response.data?.confirmation_url) {
+            window.location.href = response.data.confirmation_url
+            return
         }
+
+        setMessage({ type: "error", text: response.error || "Не удалось инициировать платёж" })
         setPurchaseMap((prev) => ({ ...prev, [tariff.id]: false }))
     }
 

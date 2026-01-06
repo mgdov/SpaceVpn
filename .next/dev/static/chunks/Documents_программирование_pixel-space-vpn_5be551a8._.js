@@ -57,10 +57,14 @@ __turbopack_context__.s([
     ()=>adminUpdateTariff,
     "adminUpdateVPNClient",
     ()=>adminUpdateVPNClient,
+    "confirmYookassaPayment",
+    ()=>confirmYookassaPayment,
     "createSubscription",
     ()=>createSubscription,
     "createUserVPNClient",
     ()=>createUserVPNClient,
+    "createYookassaPayment",
+    ()=>createYookassaPayment,
     "deleteSubscription",
     ()=>deleteSubscription,
     "deleteUserById",
@@ -470,6 +474,70 @@ async function getHealthStatus() {
 async function getApiInfo() {
     return apiRequest('/');
 }
+async function createYookassaPayment(payload) {
+    const token = getAuthToken();
+    if (!token) {
+        return {
+            error: 'Требуется авторизация для оплаты'
+        };
+    }
+    try {
+        const response = await fetch('/api/yookassa/create-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json().catch(()=>({}));
+        if (!response.ok) {
+            return {
+                error: data?.error || data?.message || `HTTP ${response.status}`
+            };
+        }
+        return {
+            data
+        };
+    } catch (error) {
+        return {
+            error: error instanceof Error ? error.message : 'Network error'
+        };
+    }
+}
+async function confirmYookassaPayment(paymentId) {
+    const token = getAuthToken();
+    if (!token) {
+        return {
+            error: 'Требуется авторизация для оплаты'
+        };
+    }
+    try {
+        const response = await fetch('/api/yookassa/confirm-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                paymentId
+            })
+        });
+        const data = await response.json().catch(()=>({}));
+        if (!response.ok) {
+            return {
+                error: data?.error || data?.message || `HTTP ${response.status}`
+            };
+        }
+        return {
+            data
+        };
+    } catch (error) {
+        return {
+            error: error instanceof Error ? error.message : 'Network error'
+        };
+    }
+}
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
@@ -530,23 +598,31 @@ function AuthProvider({ children }) {
     }["AuthProvider.useEffect"], []);
     const login = async (username, password)=>{
         setLoading(true);
-        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["loginUser"])(username, password);
-        if (response.data) {
-            // Get user info after login
-            const userResponse = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getCurrentUserInfo"])();
-            if (userResponse.data) {
-                setUser(userResponse.data);
-                setLoading(false);
-                return {
-                    success: true
-                };
+        try {
+            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["loginUser"])(username, password);
+            if (response.data) {
+                // Get user info after login
+                const userResponse = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getCurrentUserInfo"])();
+                if (userResponse.data) {
+                    setUser(userResponse.data);
+                    setLoading(false);
+                    return {
+                        success: true
+                    };
+                }
             }
+            setLoading(false);
+            return {
+                success: false,
+                error: response.error || 'Login failed'
+            };
+        } catch (error) {
+            setLoading(false);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'Login failed'
+            };
         }
-        setLoading(false);
-        return {
-            success: false,
-            error: response.error || 'Login failed'
-        };
     };
     const logout = ()=>{
         (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["logoutUser"])();
@@ -555,17 +631,25 @@ function AuthProvider({ children }) {
     };
     const register = async (username, email, password, fullName)=>{
         setLoading(true);
-        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["registerUser"])(username, email, password, fullName);
-        if (response.data) {
-            // Auto-login after registration
-            const loginResult = await login(username, password);
-            return loginResult;
+        try {
+            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["registerUser"])(username, email, password, fullName);
+            if (response.data) {
+                // Auto-login after registration
+                const loginResult = await login(username, password);
+                return loginResult;
+            }
+            setLoading(false);
+            return {
+                success: false,
+                error: response.error || 'Registration failed'
+            };
+        } catch (error) {
+            setLoading(false);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'Registration failed'
+            };
         }
-        setLoading(false);
-        return {
-            success: false,
-            error: response.error || 'Registration failed'
-        };
     };
     const refreshUser = async ()=>{
         if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isAuthenticated"])()) {
@@ -587,7 +671,7 @@ function AuthProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/Documents/программирование/pixel-space-vpn/lib/auth-context.tsx",
-        lineNumber: 106,
+        lineNumber: 116,
         columnNumber: 5
     }, this);
 }
@@ -631,12 +715,12 @@ function withAuth(Component) {
                     children: "Загрузка..."
                 }, void 0, false, {
                     fileName: "[project]/Documents/программирование/pixel-space-vpn/lib/auth-context.tsx",
-                    lineNumber: 135,
+                    lineNumber: 145,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Documents/программирование/pixel-space-vpn/lib/auth-context.tsx",
-                lineNumber: 134,
+                lineNumber: 144,
                 columnNumber: 9
             }, this);
         }
@@ -647,7 +731,7 @@ function withAuth(Component) {
             ...props
         }, void 0, false, {
             fileName: "[project]/Documents/программирование/pixel-space-vpn/lib/auth-context.tsx",
-            lineNumber: 144,
+            lineNumber: 154,
             columnNumber: 12
         }, this);
     }, "Zr2WDa/YWeMetzDhcnOimt0LiKE=", false, function() {

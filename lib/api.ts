@@ -370,7 +370,7 @@ export async function deleteUserById(userId: string): Promise<ApiResponse<void>>
 }
 
 export async function adminListUsers(params?: QueryParams): Promise<ApiResponse<User[]>> {
-  return apiRequest<User[]>(withQuery('/admin/users', params))
+  return apiRequest<User[]>(withQuery('/admin/users/', params))  // Add trailing slash
 }
 
 export async function adminGetUser(userId: string): Promise<ApiResponse<User>> {
@@ -393,7 +393,7 @@ export async function adminMakeSuperuser(userId: string): Promise<ApiResponse<Us
  * Subscription endpoints (user)
  */
 export async function getUserSubscriptions(): Promise<ApiResponse<Subscription[]>> {
-  return apiRequest<Subscription[]>('/subscriptions')
+  return apiRequest<Subscription[]>('/subscriptions/')  // Add trailing slash
 }
 
 export async function getSubscriptionById(id: string): Promise<ApiResponse<Subscription>> {
@@ -401,7 +401,7 @@ export async function getSubscriptionById(id: string): Promise<ApiResponse<Subsc
 }
 
 export async function createSubscription(payload: CreateSubscriptionPayload): Promise<ApiResponse<Subscription>> {
-  return apiRequest<Subscription>('/subscriptions', {
+  return apiRequest<Subscription>('/subscriptions/', {  // Add trailing slash
     method: 'POST',
     body: JSON.stringify(payload),
   })
@@ -425,7 +425,7 @@ export async function deleteSubscription(id: string): Promise<ApiResponse<void>>
  * Subscription endpoints (admin)
  */
 export async function adminListSubscriptions(): Promise<ApiResponse<AdminSubscription[]>> {
-  return apiRequest<AdminSubscription[]>('/admin/subscriptions')
+  return apiRequest<AdminSubscription[]>('/admin/subscriptions/')  // Add trailing slash
 }
 
 export async function adminGetSubscription(id: string): Promise<ApiResponse<AdminSubscription>> {
@@ -435,7 +435,7 @@ export async function adminGetSubscription(id: string): Promise<ApiResponse<Admi
 export async function adminCreateSubscription(
   payload: CreateSubscriptionPayload
 ): Promise<ApiResponse<AdminSubscription>> {
-  return apiRequest<AdminSubscription>('/admin/subscriptions', {
+  return apiRequest<AdminSubscription>('/admin/subscriptions/', {  // Add trailing slash
     method: 'POST',
     body: JSON.stringify(payload),
   })
@@ -465,7 +465,7 @@ export async function adminToggleSubscription(id: string): Promise<ApiResponse<A
  * Tariff endpoints
  */
 export async function getPublicTariffs(): Promise<ApiResponse<Tariff[]>> {
-  return apiRequest<Tariff[]>('/tariffs')
+  return apiRequest<Tariff[]>('/tariffs/')  // Add trailing slash
 }
 
 export async function getPublicTariffById(id: string): Promise<ApiResponse<Tariff>> {
@@ -473,11 +473,11 @@ export async function getPublicTariffById(id: string): Promise<ApiResponse<Tarif
 }
 
 export async function adminListTariffs(): Promise<ApiResponse<Tariff[]>> {
-  return apiRequest<Tariff[]>('/admin/tariffs')
+  return apiRequest<Tariff[]>('/admin/tariffs/')  // Add trailing slash
 }
 
 export async function adminCreateTariff(payload: CreateTariffPayload): Promise<ApiResponse<Tariff>> {
-  return apiRequest<Tariff>('/admin/tariffs', {
+  return apiRequest<Tariff>('/admin/tariffs/', {  // Add trailing slash
     method: 'POST',
     body: JSON.stringify(payload),
   })
@@ -505,7 +505,7 @@ export async function adminToggleTariff(id: string): Promise<ApiResponse<Tariff>
  * VPN client endpoints (user)
  */
 export async function listUserVPNClients(): Promise<ApiResponse<VPNClient[]>> {
-  return apiRequest<VPNClient[]>('/vpn-clients')
+  return apiRequest<VPNClient[]>('/vpn-clients/')  // Add trailing slash
 }
 
 export async function getUserVPNClient(id: string): Promise<ApiResponse<VPNClient>> {
@@ -515,7 +515,7 @@ export async function getUserVPNClient(id: string): Promise<ApiResponse<VPNClien
 export async function createUserVPNClient(
   payload?: CreateVPNClientPayload
 ): Promise<ApiResponse<VPNClient>> {
-  return apiRequest<VPNClient>('/vpn-clients', {
+  return apiRequest<VPNClient>('/vpn-clients/', {  // Add trailing slash
     method: 'POST',
     body: payload ? JSON.stringify(payload) : undefined,
   })
@@ -551,7 +551,7 @@ export async function syncUserVPNClient(id: string): Promise<ApiResponse<VPNClie
  * VPN client endpoints (admin)
  */
 export async function adminListVPNClients(): Promise<ApiResponse<AdminVPNClient[]>> {
-  return apiRequest<AdminVPNClient[]>('/admin/vpn/clients')
+  return apiRequest<AdminVPNClient[]>('/admin/vpn/clients/')  // Add trailing slash
 }
 
 export async function adminGetVPNClient(id: string): Promise<ApiResponse<AdminVPNClient>> {
@@ -561,7 +561,7 @@ export async function adminGetVPNClient(id: string): Promise<ApiResponse<AdminVP
 export async function adminCreateVPNClient(
   payload: CreateVPNClientPayload
 ): Promise<ApiResponse<AdminVPNClient>> {
-  return apiRequest<AdminVPNClient>('/admin/vpn/clients', {
+  return apiRequest<AdminVPNClient>('/admin/vpn/clients/', {  // Add trailing slash
     method: 'POST',
     body: JSON.stringify(payload),
   })

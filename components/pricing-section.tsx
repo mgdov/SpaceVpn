@@ -26,7 +26,7 @@ export function PricingSection() {
   const baseMonthlyPrice = useMemo(() => {
     if (!displayTariffs.length) return 0
     const perMonthPrices = displayTariffs.map((tariff) => {
-      const months = Math.max(1, tariff.duration_months)
+      const months = tariff.duration_months === 0 ? 1 : Math.max(1, tariff.duration_months)
       return tariff.price / months
     })
     return Math.min(...perMonthPrices)
@@ -35,13 +35,18 @@ export function PricingSection() {
   const highlightTariffId = useMemo(() => {
     if (!displayTariffs.length) return null
     return displayTariffs.reduce((best, current) => {
-      const currentRatio = current.price / Math.max(1, current.duration_months)
-      const bestRatio = best.price / Math.max(1, best.duration_months)
+      const currentMonths = current.duration_months === 0 ? 1 : Math.max(1, current.duration_months)
+      const bestMonths = best.duration_months === 0 ? 1 : Math.max(1, best.duration_months)
+      const currentRatio = current.price / currentMonths
+      const bestRatio = best.price / bestMonths
       return currentRatio < bestRatio ? current : best
     }).id
   }, [displayTariffs])
 
   const formatDuration = (months: number) => {
+    if (months === 0) {
+      return "1 день"
+    }
     return `${months} мес.`
   }
 

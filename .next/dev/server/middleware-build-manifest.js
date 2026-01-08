@@ -1,48 +1,23 @@
 globalThis.__BUILD_MANIFEST = {
   "pages": {
-    "/_app": [
-      "static/chunks/159a2_next_dist_compiled_576f0a64._.js",
-      "static/chunks/159a2_next_dist_shared_lib_6619d346._.js",
-      "static/chunks/159a2_next_dist_client_1bf30e12._.js",
-      "static/chunks/159a2_next_dist_7b396ee4._.js",
-      "static/chunks/159a2_next_app_81cf35c3.js",
-      "static/chunks/[next]_entry_page-loader_ts_522aae4e._.js",
-      "static/chunks/159a2_react-dom_03e1a53d._.js",
-      "static/chunks/159a2_5d94ed58._.js",
-      "static/chunks/[root-of-the-server]__5a6b4784._.js",
-      "static/chunks/Documents_программирование_pixel-space-vpn_pages__app_2da965e7._.js",
-      "static/chunks/358b3_программирование_pixel-space-vpn_pages__app_ce76518d._.js"
-    ],
-    "/_error": [
-      "static/chunks/159a2_next_dist_compiled_576f0a64._.js",
-      "static/chunks/159a2_next_dist_shared_lib_a8da89f3._.js",
-      "static/chunks/159a2_next_dist_client_1bf30e12._.js",
-      "static/chunks/159a2_next_dist_44317852._.js",
-      "static/chunks/159a2_next_error_d7bf27f9.js",
-      "static/chunks/[next]_entry_page-loader_ts_0b9948d2._.js",
-      "static/chunks/159a2_react-dom_03e1a53d._.js",
-      "static/chunks/159a2_5d94ed58._.js",
-      "static/chunks/[root-of-the-server]__cbda7a24._.js",
-      "static/chunks/Documents_программирование_pixel-space-vpn_pages__error_2da965e7._.js",
-      "static/chunks/358b3_программирование_pixel-space-vpn_pages__error_5c1a6213._.js"
-    ]
+    "/_app": []
   },
   "devFiles": [],
   "polyfillFiles": [
-    "static/chunks/159a2_next_dist_build_polyfills_polyfill-nomodule.js"
+    "static/chunks/2e87c_next_dist_build_polyfills_polyfill-nomodule.js"
   ],
   "lowPriorityFiles": [],
   "rootMainFiles": [
-    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_775b6788._.js",
-    "static/chunks/159a2_next_dist_compiled_react-dom_b632e030._.js",
-    "static/chunks/159a2_next_dist_compiled_react-server-dom-turbopack_97aed909._.js",
-    "static/chunks/159a2_next_dist_compiled_next-devtools_index_dbd45c1c.js",
-    "static/chunks/159a2_next_dist_compiled_91376097._.js",
-    "static/chunks/159a2_next_dist_client_4bc6717c._.js",
-    "static/chunks/159a2_next_dist_e87d6485._.js",
-    "static/chunks/159a2_@swc_helpers_cjs_e2435baa._.js",
-    "static/chunks/Documents_программирование_pixel-space-vpn_a0ff3932._.js",
-    "static/chunks/turbopack-Documents_программирование_pixel-space-vpn_4a1c4768._.js"
+    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_2305d00c._.js",
+    "static/chunks/2e87c_next_dist_compiled_react-dom_b94bad6b._.js",
+    "static/chunks/2e87c_next_dist_compiled_react-server-dom-turbopack_ee3665d7._.js",
+    "static/chunks/2e87c_next_dist_compiled_next-devtools_index_a0dc4593.js",
+    "static/chunks/2e87c_next_dist_compiled_c9b09022._.js",
+    "static/chunks/2e87c_next_dist_client_d0dc76ee._.js",
+    "static/chunks/2e87c_next_dist_bf01fef4._.js",
+    "static/chunks/2e87c_@swc_helpers_cjs_b8300f58._.js",
+    "static/chunks/Documents_code_SpaceVPN_SpaceVpn_a0ff3932._.js",
+    "static/chunks/turbopack-Documents_code_SpaceVPN_SpaceVpn_6db89101._.js"
   ]
 };
 globalThis.__BUILD_MANIFEST.lowPriorityFiles = [

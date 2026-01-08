@@ -136,8 +136,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVP
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$menu$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Menu$3e$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/node_modules/lucide-react/dist/esm/icons/menu.js [app-ssr] (ecmascript) <export default as Menu>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/node_modules/lucide-react/dist/esm/icons/x.js [app-ssr] (ecmascript) <export default as X>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/node_modules/lucide-react/dist/esm/icons/user.js [app-ssr] (ecmascript) <export default as User>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/node_modules/lucide-react/dist/esm/icons/log-out.js [app-ssr] (ecmascript) <export default as LogOut>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$components$2f$pixel$2d$logo$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/components/pixel-logo.tsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$lib$2f$auth$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/lib/auth-context.tsx [app-ssr] (ecmascript)");
 "use client";
+;
 ;
 ;
 ;
@@ -145,7 +149,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVP
 ;
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const { user, logout } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$lib$2f$auth$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
     const closeMenu = ()=>setIsMenuOpen(false);
+    const handleLogout = ()=>{
+        logout();
+        closeMenu();
+    };
     const navLinks = [
         {
             href: "/",
@@ -186,7 +195,7 @@ function Header() {
                                         "aria-hidden": "true"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 28,
+                                        lineNumber: 35,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -194,13 +203,13 @@ function Header() {
                                         children: "SPACE VPN"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 29,
+                                        lineNumber: 36,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                lineNumber: 27,
+                                lineNumber: 34,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -211,39 +220,80 @@ function Header() {
                                         children: link.label
                                     }, link.href, false, {
                                         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 35,
+                                        lineNumber: 42,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                lineNumber: 33,
+                                lineNumber: 40,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "hidden md:flex items-center gap-4",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                        href: "/login",
-                                        className: "text-foreground hover:text-primary transition-colors text-[10px]",
-                                        children: "Вход"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 47,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                        href: "/register",
-                                        className: "bg-primary text-primary-foreground px-4 py-2 hover:bg-primary/80 transition-colors text-[10px]",
-                                        children: "Регистрация"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 50,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                                children: user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                            href: "/account",
+                                            className: "text-foreground hover:text-primary transition-colors text-[10px] flex items-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__["User"], {
+                                                    size: 14
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                                    lineNumber: 60,
+                                                    columnNumber: 21
+                                                }, this),
+                                                user.username
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                            lineNumber: 56,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: logout,
+                                            className: "text-foreground hover:text-primary transition-colors text-[10px] flex items-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__["LogOut"], {
+                                                    size: 14
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                                    lineNumber: 67,
+                                                    columnNumber: 21
+                                                }, this),
+                                                "Выход"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                            lineNumber: 63,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                            href: "/login",
+                                            className: "text-foreground hover:text-primary transition-colors text-[10px]",
+                                            children: "Вход"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                            lineNumber: 73,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                            href: "/register",
+                                            className: "bg-primary text-primary-foreground px-4 py-2 hover:bg-primary/80 transition-colors text-[10px]",
+                                            children: "Регистрация"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                            lineNumber: 76,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true)
+                            }, void 0, false, {
                                 fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                lineNumber: 46,
+                                lineNumber: 53,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -254,34 +304,34 @@ function Header() {
                                     size: 24
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                    lineNumber: 60,
+                                    lineNumber: 88,
                                     columnNumber: 29
                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$menu$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Menu$3e$__["Menu"], {
                                     size: 24
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                    lineNumber: 60,
+                                    lineNumber: 88,
                                     columnNumber: 47
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                lineNumber: 59,
+                                lineNumber: 87,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                        lineNumber: 25,
+                        lineNumber: 32,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                    lineNumber: 24,
+                    lineNumber: 31,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                lineNumber: 23,
+                lineNumber: 30,
                 columnNumber: 7
             }, this),
             isMenuOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -293,7 +343,7 @@ function Header() {
                         "aria-hidden": "true"
                     }, void 0, false, {
                         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                        lineNumber: 68,
+                        lineNumber: 96,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -309,7 +359,7 @@ function Header() {
                                         children: "Меню"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 75,
+                                        lineNumber: 103,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -320,18 +370,18 @@ function Header() {
                                             size: 20
                                         }, void 0, false, {
                                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                            lineNumber: 77,
+                                            lineNumber: 105,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 76,
+                                        lineNumber: 104,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                lineNumber: 74,
+                                lineNumber: 102,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -343,53 +393,95 @@ function Header() {
                                         children: link.label
                                     }, link.href, false, {
                                         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 83,
+                                        lineNumber: 111,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                lineNumber: 81,
+                                lineNumber: 109,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "mt-auto flex flex-col gap-3",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                        href: "/login",
-                                        className: "text-foreground text-[11px] tracking-wide border border-border py-2 text-center hover:border-primary hover:text-primary transition-colors",
-                                        onClick: closeMenu,
-                                        children: "Вход"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 95,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
-                                        href: "/register",
-                                        className: "bg-primary text-primary-foreground text-[11px] tracking-[0.2em] py-2 text-center hover:bg-primary/80 transition-colors",
-                                        onClick: closeMenu,
-                                        children: "Регистрация"
-                                    }, void 0, false, {
-                                        fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                        lineNumber: 102,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                                children: user ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                            href: "/account",
+                                            className: "text-foreground text-[11px] tracking-wide border border-border py-2 text-center hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2",
+                                            onClick: closeMenu,
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__["User"], {
+                                                    size: 14
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                                    lineNumber: 130,
+                                                    columnNumber: 21
+                                                }, this),
+                                                user.username
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                            lineNumber: 125,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: handleLogout,
+                                            className: "text-foreground text-[11px] tracking-wide border border-border py-2 text-center hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__["LogOut"], {
+                                                    size: 14
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                                    lineNumber: 137,
+                                                    columnNumber: 21
+                                                }, this),
+                                                "Выход"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                            lineNumber: 133,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                            href: "/login",
+                                            className: "text-foreground text-[11px] tracking-wide border border-border py-2 text-center hover:border-primary hover:text-primary transition-colors",
+                                            onClick: closeMenu,
+                                            children: "Вход"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                            lineNumber: 143,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                                            href: "/register",
+                                            className: "bg-primary text-primary-foreground text-[11px] tracking-[0.2em] py-2 text-center hover:bg-primary/80 transition-colors",
+                                            onClick: closeMenu,
+                                            children: "Регистрация"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
+                                            lineNumber: 150,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true)
+                            }, void 0, false, {
                                 fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                                lineNumber: 94,
+                                lineNumber: 122,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                        lineNumber: 69,
+                        lineNumber: 97,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/header.tsx",
-                lineNumber: 67,
+                lineNumber: 95,
                 columnNumber: 9
             }, this)
         ]
@@ -437,7 +529,7 @@ function PixelStars() {
                     animationDelay: `${star.delay}s`
                 },
                 children: star.type === "cross" ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "text-purple-300 text-opacity-60",
+                    className: "text-blue-300 text-opacity-60",
                     style: {
                         fontSize: `${star.size * 6}px`
                     },
@@ -447,7 +539,7 @@ function PixelStars() {
                     lineNumber: 48,
                     columnNumber: 13
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "bg-white rounded-none",
+                    className: "bg-cyan-300 rounded-none",
                     style: {
                         width: `${star.size * 2}px`,
                         height: `${star.size * 2}px`
@@ -477,38 +569,52 @@ __turbopack_context__.s([
     ()=>PricingSection
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/code/SpaceVPN/SpaceVpn/lib/api.ts [app-ssr] (ecmascript)");
 "use client";
 ;
 ;
-const plans = [
-    {
-        duration: "1 месяц",
-        months: 1,
-        price: 99,
-        tagline: "Гибкая оплата",
-        description: "Идеально для быстрого тест-драйва: подключитесь за минуту и ощутите стабильный тоннель связи без долгих обязательств.",
-        popular: false
-    },
-    {
-        duration: "3 месяца",
-        months: 3,
-        price: 249,
-        tagline: "Баланс выгоды",
-        description: "Три месяца уверенного соединения, расширенный доступ к локациям и приоритет на новые маршруты сети Pixel Space.",
-        popular: true
-    },
-    {
-        duration: "12 месяцев",
-        months: 12,
-        price: 679,
-        tagline: "Год без забот",
-        description: "Закрепите годовой тариф и пользуйтесь VPN с максимальной экономией, круглосуточной поддержкой и стабильной скоростью.",
-        popular: false
-    }
-];
-const baseMonthlyPrice = plans[0].price / (plans[0].months || 1);
+;
+;
 function PricingSection() {
+    const [tariffs, setTariffs] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(true);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        const loadTariffs = async ()=>{
+            setLoading(true);
+            const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getPublicTariffs"])();
+            if (response.data?.length) {
+                setTariffs(response.data.filter((tariff)=>tariff.is_active));
+            }
+            setLoading(false);
+        };
+        loadTariffs();
+    }, []);
+    const displayTariffs = tariffs;
+    const baseMonthlyPrice = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
+        if (!displayTariffs.length) return 0;
+        const perMonthPrices = displayTariffs.map((tariff)=>{
+            const months = Math.max(1, tariff.duration_months);
+            return tariff.price / months;
+        });
+        return Math.min(...perMonthPrices);
+    }, [
+        displayTariffs
+    ]);
+    const highlightTariffId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
+        if (!displayTariffs.length) return null;
+        return displayTariffs.reduce((best, current)=>{
+            const currentRatio = current.price / Math.max(1, current.duration_months);
+            const bestRatio = best.price / Math.max(1, best.duration_months);
+            return currentRatio < bestRatio ? current : best;
+        }).id;
+    }, [
+        displayTariffs
+    ]);
+    const formatDuration = (months)=>{
+        return `${months} мес.`;
+    };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
         className: "py-20 px-4 relative z-10",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -522,7 +628,7 @@ function PricingSection() {
                             children: "[ ТАРИФЫ ]"
                         }, void 0, false, {
                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                            lineNumber: 39,
+                            lineNumber: 52,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -534,13 +640,13 @@ function PricingSection() {
                                     children: "ПЛАН"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                    lineNumber: 41,
+                                    lineNumber: 54,
                                     columnNumber: 27
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                            lineNumber: 40,
+                            lineNumber: 53,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -548,30 +654,38 @@ function PricingSection() {
                             children: "Гибкие тарифы для любых потребностей. Начните с бесплатного пробного периода."
                         }, void 0, false, {
                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                            lineNumber: 43,
+                            lineNumber: 56,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                    lineNumber: 38,
+                    lineNumber: 51,
                     columnNumber: 9
                 }, this),
-                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "bg-card border border-border p-6 text-center text-muted-foreground text-[11px]",
+                    children: "Загрузка тарифов..."
+                }, void 0, false, {
+                    fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
+                    lineNumber: 62,
+                    columnNumber: 11
+                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "grid grid-cols-1 md:grid-cols-3 gap-10",
-                    children: plans.map((plan)=>{
-                        const fullPrice = baseMonthlyPrice * plan.months;
-                        const discountPercent = plan.months > 1 ? Math.round((fullPrice - plan.price) / fullPrice * 100) : 0;
+                    children: displayTariffs.map((tariff)=>{
+                        const months = Math.max(1, tariff.duration_months);
+                        const nominalPrice = baseMonthlyPrice * months;
+                        const discountPercent = nominalPrice > tariff.price && months > 1 ? Math.round((nominalPrice - tariff.price) / nominalPrice * 100) : 0;
                         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: `relative bg-card border ${plan.popular ? "border-primary" : "border-border"} p-8 flex flex-col gap-6`,
+                            className: `relative bg-card border ${tariff.id === highlightTariffId ? "border-primary" : "border-border"} p-8 flex flex-col gap-6`,
                             children: [
-                                plan.popular && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                tariff.id === highlightTariffId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 text-[8px]",
                                     children: "ПОПУЛЯРНЫЙ"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                    lineNumber: 60,
-                                    columnNumber: 19
+                                    lineNumber: 80,
+                                    columnNumber: 21
                                 }, this),
                                 discountPercent > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "absolute top-3 right-3 bg-primary/15 border border-primary/40 text-primary px-3 py-1 text-[9px] tracking-[0.3em]",
@@ -582,27 +696,30 @@ function PricingSection() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                    lineNumber: 66,
-                                    columnNumber: 19
+                                    lineNumber: 86,
+                                    columnNumber: 21
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "text-center space-y-4",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             className: "text-accent text-[9px] tracking-[0.35em]",
-                                            children: plan.tagline
-                                        }, void 0, false, {
+                                            children: [
+                                                "# ",
+                                                tariff.name
+                                            ]
+                                        }, void 0, true, {
                                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                            lineNumber: 72,
-                                            columnNumber: 19
+                                            lineNumber: 92,
+                                            columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                             className: "text-foreground text-base",
-                                            children: plan.duration
+                                            children: formatDuration(tariff.duration_months)
                                         }, void 0, false, {
                                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                            lineNumber: 73,
-                                            columnNumber: 19
+                                            lineNumber: 93,
+                                            columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "flex flex-col items-center gap-2",
@@ -612,84 +729,84 @@ function PricingSection() {
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             className: "text-primary text-3xl",
-                                                            children: plan.price
+                                                            children: tariff.price
                                                         }, void 0, false, {
                                                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                                            lineNumber: 76,
-                                                            columnNumber: 23
+                                                            lineNumber: 96,
+                                                            columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             className: "text-muted-foreground text-[12px]",
                                                             children: "₽"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                                            lineNumber: 77,
-                                                            columnNumber: 23
+                                                            lineNumber: 97,
+                                                            columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                                    lineNumber: 75,
-                                                    columnNumber: 21
+                                                    lineNumber: 95,
+                                                    columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     className: "text-muted-foreground text-[9px] uppercase tracking-[0.25em]",
                                                     children: "за весь период"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                                    lineNumber: 79,
-                                                    columnNumber: 21
+                                                    lineNumber: 99,
+                                                    columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                            lineNumber: 74,
-                                            columnNumber: 19
+                                            lineNumber: 94,
+                                            columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                    lineNumber: 71,
-                                    columnNumber: 17
+                                    lineNumber: 91,
+                                    columnNumber: 19
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "flex-1 text-muted-foreground text-[11px] leading-relaxed",
-                                    children: plan.description
+                                    children: tariff.description || "Стабильный туннель и поддержка 24/7"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                    lineNumber: 83,
-                                    columnNumber: 17
+                                    lineNumber: 103,
+                                    columnNumber: 19
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$code$2f$SpaceVPN$2f$SpaceVpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                     href: "/register",
-                                    className: `text-center py-3 text-[11px] tracking-[0.15em] transition-colors ${plan.popular ? "bg-primary text-primary-foreground hover:bg-primary/80" : "border border-border text-foreground hover:border-primary hover:text-primary"}`,
+                                    className: `text-center py-3 text-[11px] tracking-[0.15em] transition-colors ${tariff.id === highlightTariffId ? "bg-primary text-primary-foreground hover:bg-primary/80" : "border border-border text-foreground hover:border-primary hover:text-primary"}`,
                                     children: "ВЫБРАТЬ"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                                    lineNumber: 85,
-                                    columnNumber: 17
+                                    lineNumber: 105,
+                                    columnNumber: 19
                                 }, this)
                             ]
-                        }, plan.duration, true, {
+                        }, tariff.id, true, {
                             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                            lineNumber: 54,
-                            columnNumber: 15
+                            lineNumber: 75,
+                            columnNumber: 17
                         }, this);
                     })
                 }, void 0, false, {
                     fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-                    lineNumber: 48,
-                    columnNumber: 9
+                    lineNumber: 66,
+                    columnNumber: 11
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-            lineNumber: 37,
+            lineNumber: 50,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Documents/code/SpaceVPN/SpaceVpn/components/pricing-section.tsx",
-        lineNumber: 36,
+        lineNumber: 49,
         columnNumber: 5
     }, this);
 }

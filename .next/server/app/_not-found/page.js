@@ -1,0 +1,13 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_not-found/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__fde34135._.js")
+R.c("server/chunks/ssr/2e87c_next_dist_947f350c._.js")
+R.c("server/chunks/ssr/2e87c_next_dist_esm_build_templates_app-page_a5e6d9c8.js")
+R.c("server/chunks/ssr/[root-of-the-server]__f8905a83._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__75dd8d49._.js")
+R.c("server/chunks/ssr/2e87c_next_dist_0c700df2._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__efecce8f._.js")
+R.c("server/chunks/ssr/2e87c_next_dist_client_components_209e757f._.js")
+R.c("server/chunks/ssr/2e87c_next_dist_client_components_builtin_forbidden_5fda1e9f.js")
+R.c("server/chunks/ssr/4ebf1_SpaceVPN_SpaceVpn__next-internal_server_app__not-found_page_actions_b393cb35.js")
+R.m(9959)
+module.exports=R.m(9959).exports

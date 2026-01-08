@@ -1,0 +1,10 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_global-error/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__6c6f4424._.js")
+R.c("server/chunks/ssr/2e87c_next_dist_947f350c._.js")
+R.c("server/chunks/ssr/2e87c_next_dist_c5309b6a._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__f8905a83._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__75dd8d49._.js")
+R.c("server/chunks/ssr/2e87c_next_dist_0c700df2._.js")
+R.c("server/chunks/ssr/4ebf1_SpaceVPN_SpaceVpn__next-internal_server_app__global-error_page_actions_ef0a125b.js")
+R.m(57734)
+module.exports=R.m(57734).exports

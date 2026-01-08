@@ -2,7 +2,7 @@
     script: typeof document === "object" ? document.currentScript : undefined,
     chunks: [
   "static/chunks/[root-of-the-server]__912e1488._.css",
-  "static/chunks/2e87c_ce248b0c._.js"
+  "static/chunks/Documents_code_SpaceVPN_SpaceVpn_054b9253._.js"
 ],
     source: "dynamic"
 });

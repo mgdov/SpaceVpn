@@ -45,7 +45,7 @@ export function PricingSectionDynamic() {
 
   // Calculate base monthly price for discount calculation
   const baseTariff = tariffs.find(t => t.duration_months === 1)
-  const baseMonthlyPrice = baseTariff ? baseTariff.price : 199
+  const baseMonthlyPrice = baseTariff ? baseTariff.price : (tariffs.find(t => t.duration_months > 0)?.price || 199)
 
   return (
     <section className="py-20 px-4 relative z-10">
@@ -62,8 +62,9 @@ export function PricingSectionDynamic() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {tariffs.map((tariff) => {
-            const fullPrice = baseMonthlyPrice * tariff.duration_months
-            const discountPercent = tariff.duration_months > 1 ? Math.round(((fullPrice - tariff.price) / fullPrice) * 100) : 0
+            const months = tariff.duration_months === 0 ? 1 : tariff.duration_months
+            const fullPrice = baseMonthlyPrice * months
+            const discountPercent = months > 1 ? Math.round(((fullPrice - tariff.price) / fullPrice) * 100) : 0
 
             return (
               <div

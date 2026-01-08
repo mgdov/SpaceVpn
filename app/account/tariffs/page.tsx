@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -15,18 +15,47 @@ import {
     type Subscription,
 } from "@/lib/api"
 
-export default function AccountTariffsPage() {
-    const { user } = useAuth()
+function PaymentHandler({ 
+    onPaymentConfirmed 
+}: { 
+    onPaymentConfirmed: () => void 
+}) {
     const router = useRouter()
     const searchParams = useSearchParams()
+    const [confirmingPaymentId, setConfirmingPaymentId] = useState<string | null>(null)
+    const searchParamsString = searchParams?.toString() || ""
+
+    useEffect(() => {
+        const params = new URLSearchParams(searchParamsString)
+        const paymentId = params.get("payment_id")
+        if (!paymentId || confirmingPaymentId === paymentId) {
+            return
+        }
+
+        setConfirmingPaymentId(paymentId)
+
+        const confirmPayment = async () => {
+            const response = await confirmYookassaPayment(paymentId)
+            if (response.data?.success) {
+                onPaymentConfirmed()
+            }
+            router.replace("/account/tariffs")
+        }
+
+        confirmPayment()
+    }, [confirmingPaymentId, onPaymentConfirmed, router, searchParamsString])
+
+    return null
+}
+
+function AccountTariffsContent() {
+    const { user } = useAuth()
     const [tariffs, setTariffs] = useState<Tariff[]>([])
     const [loadingTariffs, setLoadingTariffs] = useState(true)
     const [subscription, setSubscription] = useState<Subscription | null>(null)
     const [loadingSubscription, setLoadingSubscription] = useState(true)
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
     const [purchaseMap, setPurchaseMap] = useState<Record<string, boolean>>({})
-    const [confirmingPaymentId, setConfirmingPaymentId] = useState<string | null>(null)
-    const searchParamsString = searchParams.toString()
 
     const loadSubscription = useCallback(async () => {
         setLoadingSubscription(true)
@@ -53,31 +82,12 @@ export default function AccountTariffsPage() {
 
     useEffect(() => {
         loadSubscription()
-    }, [loadSubscription, searchParamsString])
+    }, [loadSubscription])
 
-    useEffect(() => {
-        const params = new URLSearchParams(searchParamsString)
-        const paymentId = params.get("payment_id")
-        if (!paymentId || confirmingPaymentId === paymentId) {
-            return
-        }
-
-        setConfirmingPaymentId(paymentId)
-
-        const confirmPayment = async () => {
-            setMessage(null)
-            const response = await confirmYookassaPayment(paymentId)
-            if (response.data?.success) {
-                setMessage({ type: "success", text: `Платёж по плану ${response.data.plan || "корневому"} подтверждён` })
-                await loadSubscription()
-            } else {
-                setMessage({ type: "error", text: response.error || response.data?.message || "Не удалось подтвердить платёж" })
-            }
-            router.replace("/account/tariffs")
-        }
-
-        confirmPayment()
-    }, [confirmingPaymentId, loadSubscription, router, searchParamsString])
+    const handlePaymentConfirmed = useCallback(async () => {
+        setMessage({ type: "success", text: "Платёж подтверждён" })
+        await loadSubscription()
+    }, [loadSubscription])
 
     const handlePurchase = async (tariff: Tariff) => {
         setMessage(null)
@@ -108,6 +118,9 @@ export default function AccountTariffsPage() {
     }
 
     const formatDuration = (months: number) => {
+        if (months === 0) {
+            return "1 день"
+        }
         return `${months} мес.`
     }
 
@@ -134,24 +147,28 @@ export default function AccountTariffsPage() {
     const visibleTariffs = tariffs
 
     return (
-        <div className="min-h-screen bg-background relative">
-            <PixelStars />
-            <Header />
+        <>
+            <Suspense fallback={null}>
+                <PaymentHandler onPaymentConfirmed={handlePaymentConfirmed} />
+            </Suspense>
+            <div className="min-h-screen bg-background relative">
+                <PixelStars />
+                <Header />
 
-            <main className="pt-32 pb-20 px-4">
-                <div className="max-w-5xl mx-auto space-y-10">
-                    <header className="bg-card border border-border p-6 flex flex-col gap-2">
-                        <p className="text-accent text-[9px] tracking-[0.35em]">[ ТАРИФЫ ]</p>
-                        <h1 className="text-foreground text-2xl">Продлите действие ключа</h1>
-                        <p className="text-muted-foreground text-[11px]">
-                            Активный пользователь: {user?.full_name || user?.username || "—"}. {subscriptionInfo}
-                        </p>
-                        {message && (
-                            <p className={`text-[11px] ${message.type === "success" ? "text-primary" : "text-red-400"}`}>
-                                {message.text}
+                <main className="pt-32 pb-20 px-4">
+                    <div className="max-w-5xl mx-auto space-y-10">
+                        <header className="bg-card border border-border p-6 flex flex-col gap-2">
+                            <p className="text-accent text-[9px] tracking-[0.35em]">[ ТАРИФЫ ]</p>
+                            <h1 className="text-foreground text-2xl">Продлите действие ключа</h1>
+                            <p className="text-muted-foreground text-[11px]">
+                                Активный пользователь: {user?.full_name || user?.username || "—"}. {subscriptionInfo}
                             </p>
-                        )}
-                    </header>
+                            {message && (
+                                <p className={`text-[11px] ${message.type === "success" ? "text-primary" : "text-red-400"}`}>
+                                    {message.text}
+                                </p>
+                            )}
+                        </header>
 
                     {loadingTariffs ? (
                         <div className="bg-card border border-border p-6 text-muted-foreground text-[11px]">Загрузка тарифов...</div>
@@ -185,7 +202,29 @@ export default function AccountTariffsPage() {
                 </div>
             </main>
 
-            <Footer />
-        </div>
+                <Footer />
+            </div>
+        </>
+    )
+}
+
+export default function AccountTariffsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-background relative">
+                <PixelStars />
+                <Header />
+                <main className="pt-32 pb-20 px-4">
+                    <div className="max-w-5xl mx-auto">
+                        <div className="bg-card border border-border p-6 text-muted-foreground text-[11px]">
+                            Загрузка...
+                        </div>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        }>
+            <AccountTariffsContent />
+        </Suspense>
     )
 }

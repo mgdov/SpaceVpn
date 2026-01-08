@@ -86,7 +86,7 @@ function AccountTariffsContent() {
 
     const handlePaymentConfirmed = useCallback(async () => {
         setMessage({ type: "success", text: "Платёж подтверждён" })
-        await loadSubscription()
+                await loadSubscription()
     }, [loadSubscription])
 
     const handlePurchase = async (tariff: Tariff) => {
@@ -151,24 +151,24 @@ function AccountTariffsContent() {
             <Suspense fallback={null}>
                 <PaymentHandler onPaymentConfirmed={handlePaymentConfirmed} />
             </Suspense>
-            <div className="min-h-screen bg-background relative">
-                <PixelStars />
-                <Header />
+        <div className="min-h-screen bg-background relative">
+            <PixelStars />
+            <Header />
 
-                <main className="pt-32 pb-20 px-4">
-                    <div className="max-w-5xl mx-auto space-y-10">
-                        <header className="bg-card border border-border p-6 flex flex-col gap-2">
-                            <p className="text-accent text-[9px] tracking-[0.35em]">[ ТАРИФЫ ]</p>
-                            <h1 className="text-foreground text-2xl">Продлите действие ключа</h1>
-                            <p className="text-muted-foreground text-[11px]">
-                                Активный пользователь: {user?.full_name || user?.username || "—"}. {subscriptionInfo}
+            <main className="pt-32 pb-20 px-4">
+                <div className="max-w-5xl mx-auto space-y-10">
+                    <header className="bg-card border border-border p-6 flex flex-col gap-2">
+                        <p className="text-accent text-[9px] tracking-[0.35em]">[ ТАРИФЫ ]</p>
+                        <h1 className="text-foreground text-2xl">Продлите действие ключа</h1>
+                        <p className="text-muted-foreground text-[11px]">
+                            Активный пользователь: {user?.full_name || user?.username || "—"}. {subscriptionInfo}
+                        </p>
+                        {message && (
+                            <p className={`text-[11px] ${message.type === "success" ? "text-primary" : "text-red-400"}`}>
+                                {message.text}
                             </p>
-                            {message && (
-                                <p className={`text-[11px] ${message.type === "success" ? "text-primary" : "text-red-400"}`}>
-                                    {message.text}
-                                </p>
-                            )}
-                        </header>
+                        )}
+                    </header>
 
                     {loadingTariffs ? (
                         <div className="bg-card border border-border p-6 text-muted-foreground text-[11px]">Загрузка тарифов...</div>
@@ -202,8 +202,8 @@ function AccountTariffsContent() {
                 </div>
             </main>
 
-                <Footer />
-            </div>
+            <Footer />
+        </div>
         </>
     )
 }

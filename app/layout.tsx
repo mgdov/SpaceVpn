@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Press_Start_2P } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
+// import { Analytics } from "@vercel/analytics/next"  // Disabled - not configured
 import { AuthProvider } from "@/lib/auth-context"
 import "./globals.css"
 
@@ -48,7 +48,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
         </AuthProvider>
-        <Analytics />
+        {/* <Analytics /> */}
       </body>
     </html>
   )

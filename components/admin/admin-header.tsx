@@ -1,7 +1,13 @@
+"use client"
+
 import Link from "next/link"
 import { LogOut, Home } from "lucide-react"
 
-export function AdminHeader() {
+interface AdminHeaderProps {
+    onLogout: () => void
+}
+
+export function AdminHeader({ onLogout }: AdminHeaderProps) {
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-card border-b border-border">
             <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -16,7 +22,10 @@ export function AdminHeader() {
                         <Home size={14} />
                         На сайт
                     </Link>
-                    <button className="text-muted-foreground hover:text-primary text-[10px] flex items-center gap-1">
+                    <button
+                        onClick={onLogout}
+                        className="text-muted-foreground hover:text-primary text-[10px] flex items-center gap-1"
+                    >
                         <LogOut size={14} />
                         Выход
                     </button>

@@ -1,127 +1,152 @@
-[00:00:00.808] Server  LOG      ✓ Ready in 566ms
-[00:00:04.990] Server  ERROR    ⨯ TurbopackInternalError: Failed to write app endpoint /_not-found/page
+[00:00:00.746] Server  LOG      ✓ Ready in 511ms
+[00:00:05.266] Server  ERROR    ⨯ ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx:267:1
+Parsing ecmascript source code failed
+  265 |     )
+  266 | }
+> 267 | }
+      | ^
+  268 |
 
-Caused by:
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
+Expression expected
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk failed
-- Execution of <AppEndpoint as Endpoint>::output failed
-- Failed to write app endpoint /_not-found/page
-- Execution of all_server_paths failed
-- Execution of server_path failed
-- Execution of *FileContent::hash failed
-- Execution of *AssetContent::file_content failed
-- Execution of <SourceMapAsset as Asset>::content failed
-- Execution of <EcmascriptBuildNodeEntryChunk as GenerateSourceMap>::generate_source_map failed
-- Execution of *<Code as GenerateSourceMap>::generate_source_map failed
-- Execution of EcmascriptBuildNodeEntryChunk::code failed
-- Execution of <NodeJsChunkingContext as ChunkingContext>::chunk_path failed
-- Execution of AssetIdent::output_name failed
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
-[00:00:10.611] Server  ERROR    ⨯ TurbopackInternalError: Failed to write app endpoint /_not-found/page
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
 
-Caused by:
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk failed
-- Execution of <AppEndpoint as Endpoint>::output failed
-- Failed to write app endpoint /_not-found/page
-- Execution of all_server_paths failed
-- Execution of server_path failed
-- Execution of *FileContent::hash failed
-- Execution of *AssetContent::file_content failed
-- Execution of <SourceMapAsset as Asset>::content failed
-- Execution of <EcmascriptBuildNodeEntryChunk as GenerateSourceMap>::generate_source_map failed
-- Execution of *<Code as GenerateSourceMap>::generate_source_map failed
-- Execution of EcmascriptBuildNodeEntryChunk::code failed
-- Execution of <NodeJsChunkingContext as ChunkingContext>::chunk_path failed
-- Execution of AssetIdent::output_name failed
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
-[00:00:10.627] Server  ERROR    ⨯ TurbopackInternalError: Failed to write app endpoint /_not-found/page
 
-Caused by:
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
+[00:00:05.396] Browser ERROR   ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx:267:1
+Parsing ecmascript source code failed
+  265 |     )
+  266 | }
+> 267 | }
+      | ^
+  268 |
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk failed
-- Execution of <AppEndpoint as Endpoint>::output failed
-- Failed to write app endpoint /_not-found/page
-- Execution of all_server_paths failed
-- Execution of server_path failed
-- Execution of *FileContent::hash failed
-- Execution of *AssetContent::file_content failed
-- Execution of <SourceMapAsset as Asset>::content failed
-- Execution of <EcmascriptBuildNodeEntryChunk as GenerateSourceMap>::generate_source_map failed
-- Execution of *<Code as GenerateSourceMap>::generate_source_map failed
-- Execution of EcmascriptBuildNodeEntryChunk::code failed
-- Execution of <NodeJsChunkingContext as ChunkingContext>::chunk_path failed
-- Execution of AssetIdent::output_name failed
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
-[00:00:10.628] Server  ERROR    ⨯ TurbopackInternalError: Failed to write app endpoint /_not-found/page
+Expression expected
 
-Caused by:
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk failed
-- Execution of <AppEndpoint as Endpoint>::output failed
-- Failed to write app endpoint /_not-found/page
-- Execution of all_server_paths failed
-- Execution of server_path failed
-- Execution of *FileContent::hash failed
-- Execution of *AssetContent::file_content failed
-- Execution of <SourceMapAsset as Asset>::content failed
-- Execution of <EcmascriptBuildNodeEntryChunk as GenerateSourceMap>::generate_source_map failed
-- Execution of *<Code as GenerateSourceMap>::generate_source_map failed
-- Execution of EcmascriptBuildNodeEntryChunk::code failed
-- Execution of <NodeJsChunkingContext as ChunkingContext>::chunk_path failed
-- Execution of AssetIdent::output_name failed
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
-[00:00:10.628] Server  ERROR    ⨯ TurbopackInternalError: Failed to write app endpoint /_not-found/page
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+[00:00:05.899] Browser ERROR   ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx:267:1
+Parsing ecmascript source code failed
+  265 |     )
+  266 | }
+> 267 | }
+      | ^
+  268 |
 
-Caused by:
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
+Expression expected
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk failed
-- Execution of <AppEndpoint as Endpoint>::output failed
-- Failed to write app endpoint /_not-found/page
-- Execution of all_server_paths failed
-- Execution of server_path failed
-- Execution of *FileContent::hash failed
-- Execution of *AssetContent::file_content failed
-- Execution of <SourceMapAsset as Asset>::content failed
-- Execution of <EcmascriptBuildNodeEntryChunk as GenerateSourceMap>::generate_source_map failed
-- Execution of *<Code as GenerateSourceMap>::generate_source_map failed
-- Execution of EcmascriptBuildNodeEntryChunk::code failed
-- Execution of <NodeJsChunkingContext as ChunkingContext>::chunk_path failed
-- Execution of AssetIdent::output_name failed
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
-[00:00:22.653] Server  ERROR    ⨯ TurbopackInternalError: Failed to write app endpoint /_not-found/page
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
 
-Caused by:
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+[00:00:05.900] Browser ERROR   ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx:267:1
+Parsing ecmascript source code failed
+  265 |     )
+  266 | }
+> 267 | }
+      | ^
+  268 |
 
-Debug info:
-- Execution of get_written_endpoint_with_issues_operation failed
-- Execution of endpoint_write_to_disk failed
-- Execution of <AppEndpoint as Endpoint>::output failed
-- Failed to write app endpoint /_not-found/page
-- Execution of all_server_paths failed
-- Execution of server_path failed
-- Execution of *FileContent::hash failed
-- Execution of *AssetContent::file_content failed
-- Execution of <SourceMapAsset as Asset>::content failed
-- Execution of <EcmascriptBuildNodeEntryChunk as GenerateSourceMap>::generate_source_map failed
-- Execution of *<Code as GenerateSourceMap>::generate_source_map failed
-- Execution of EcmascriptBuildNodeEntryChunk::code failed
-- Execution of <NodeJsChunkingContext as ChunkingContext>::chunk_path failed
-- Execution of AssetIdent::output_name failed
-- byte index 37 is not a char boundary; it is inside 'н' (bytes 36..38) of `Documents_программирование_pixel-space-vpn__next-internal_server_app__not-found_page_actions_e5e874bf`
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+[00:00:06.006] Browser ERROR   uncaughtError: Error: ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx:267:1
+Parsing ecmascript source code failed
+  265 |     )
+  266 | }
+> 267 | }
+      | ^
+  268 |
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+
+
+[00:00:06.164] Browser ERROR   ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx:267:1
+Parsing ecmascript source code failed
+  265 |     )
+  266 | }
+> 267 | }
+      | ^
+  268 |
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+[00:00:06.164] Browser ERROR   ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx:267:1
+Parsing ecmascript source code failed
+  265 |     )
+  266 | }
+> 267 | }
+      | ^
+  268 |
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/components/admin/blog/post-modal.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/admin/page.tsx [Server Component]
+[00:00:20.946] Server  LOG      ✓ Compiled in 71ms
+[00:01:49.463] Server  LOG      ✓ Compiled in 151ms
+[00:04:14.530] Server  LOG      ✓ Compiled in 201ms
+[00:05:39.353] Server  LOG      ✓ Compiled in 118ms
+[00:05:51.556] Server  LOG      ✓ Compiled in 80ms
+[00:06:05.383] Server  LOG      ✓ Compiled in 98ms
+[00:06:17.555] Server  LOG      ✓ Compiled in 129ms

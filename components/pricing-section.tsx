@@ -108,13 +108,13 @@ export function PricingSection() {
                   <p className="flex-1 text-muted-foreground text-[11px] leading-relaxed">{tariff.description || "Стабильный туннель и поддержка 24/7"}</p>
 
                   <Link
-                    href="/register"
+                    href={tariff.price === 0 ? "/register" : "/login"}
                     className={`text-center py-3 text-[11px] tracking-[0.15em] transition-colors ${tariff.id === highlightTariffId
                       ? "bg-primary text-primary-foreground hover:bg-primary/80"
                       : "border border-border text-foreground hover:border-primary hover:text-primary"
                       }`}
                   >
-                    ВЫБРАТЬ
+                    {tariff.price === 0 ? "ПОПРОБОВАТЬ" : "ВЫБРАТЬ"}
                   </Link>
                 </div>
               )

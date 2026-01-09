@@ -10,7 +10,7 @@ import { KeyModal } from "@/components/admin/keys/key-modal"
 import { KeyTable } from "@/components/admin/keys/key-table"
 import { TariffTable } from "@/components/admin/tariffs/tariff-table"
 import { TariffModal } from "@/components/admin/tariffs/tariff-modal"
-import { Plus } from "lucide-react"
+import { Plus, Eye, EyeOff } from "lucide-react"
 import type { BlogPost, KeyFormState, PostFormState, TariffFormState } from "@/types/admin"
 import {
   adminListVPNClients,
@@ -32,27 +32,35 @@ import {
   type AdminSubscription,
 } from "@/lib/api"
 
+// Константы для админской авторизации
+const ADMIN_USERNAME = "admin"
+const ADMIN_PASSWORD = "mimo123321qwer"
+const ADMIN_AUTH_KEY = "admin_authenticated"
+const BLOG_POSTS_KEY = "admin_blog_posts"
+
 const initialPosts: BlogPost[] = [
   {
     id: "1",
     heroHighlight: "VPN",
     heroDescription: "Безопасность • Гайд",
     title: "Как выбрать лучший VPN",
-    excerpt: "Разбираемся в критериях...",
-    content: "Полный текст статьи...",
+    excerpt: "Разбираемся в критериях выбора VPN сервиса для максимальной безопасности и конфиденциальности",
+    content: "## Зачем нужен VPN?\n\nVPN — это технология защищённого туннеля между вашим устройством и интернетом.\n\n### Основные критерии выбора\n\nПри выборе VPN важно учитывать скорость, политику логирования и количество серверов.",
     tags: ["VPN", "Безопасность", "Гайд"],
+    author: "SpaceVPN Team",
     publishedAt: "2025-12-10",
     createdAt: "2025-12-10",
     updatedAt: "2025-12-10",
   },
   {
     id: "2",
-    heroHighlight: "Обновления",
-    heroDescription: "Серверы • Новости",
+    heroHighlight: "UPDATE",
+    heroDescription: "Обновления • Серверы",
     title: "Обновление серверов",
-    excerpt: "Новые локации...",
-    content: "Полный текст...",
+    excerpt: "Новые локации и улучшенная производительность наших VPN серверов",
+    content: "## Новые серверы доступны\n\nМы рады сообщить о запуске новых серверов в Европе и Азии.\n\n### Что изменилось\n\nУвеличена скорость подключения и стабильность работы.",
     tags: ["Обновления", "Серверы", "Новости"],
+    author: "SpaceVPN Team",
     publishedAt: "2025-12-05",
     createdAt: "2025-12-05",
     updatedAt: "2025-12-05",
@@ -60,9 +68,22 @@ const initialPosts: BlogPost[] = [
 ]
 
 export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+  const [loginUsername, setLoginUsername] = useState("")
+  const [loginPassword, setLoginPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [loginError, setLoginError] = useState("")
+
   const [activeTab, setActiveTab] = useState<"keys" | "blog" | "tariffs" | "balance">("keys")
   const [vpnClients, setVpnClients] = useState<AdminVPNClient[]>([])
-  const [posts, setPosts] = useState<BlogPost[]>(initialPosts)
+  const [posts, setPosts] = useState<BlogPost[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(BLOG_POSTS_KEY)
+      return saved ? JSON.parse(saved) : initialPosts
+    }
+    return initialPosts
+  })
   const [tariffs, setTariffs] = useState<ApiTariff[]>([])
   const [subscriptions, setSubscriptions] = useState<AdminSubscription[]>([])
   const [users, setUsers] = useState<User[]>([])
@@ -80,6 +101,41 @@ export default function AdminPage() {
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null)
   const [editingTariff, setEditingTariff] = useState<ApiTariff | null>(null)
 
+  // Проверка авторизации при загрузке
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem(ADMIN_AUTH_KEY)
+    setIsAuthenticated(authStatus === "true")
+    setIsCheckingAuth(false)
+  }, [])
+
+  // Сохранение постов в localStorage при изменении
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(BLOG_POSTS_KEY, JSON.stringify(posts))
+    }
+  }, [posts])
+
+  // Обработка логина
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoginError("")
+
+    if (loginUsername === ADMIN_USERNAME && loginPassword === ADMIN_PASSWORD) {
+      sessionStorage.setItem(ADMIN_AUTH_KEY, "true")
+      setIsAuthenticated(true)
+    } else {
+      setLoginError("Неверный логин или пароль")
+    }
+  }
+
+  // Обработка выхода
+  const handleLogout = () => {
+    sessionStorage.removeItem(ADMIN_AUTH_KEY)
+    setIsAuthenticated(false)
+    setLoginUsername("")
+    setLoginPassword("")
+  }
+
   // Key form state
   const [keyForm, setKeyForm] = useState<KeyFormState>({
     userId: "",
@@ -96,6 +152,8 @@ export default function AdminPage() {
     excerpt: "",
     content: "",
     tags: "",
+    author: "SpaceVPN Team",
+    image: "",
     publishedAt: new Date().toISOString().split("T")[0],
   })
   const [postForm, setPostForm] = useState<PostFormState>(createInitialPostForm())
@@ -169,12 +227,15 @@ export default function AdminPage() {
     setUsersLoading(false)
   }
 
+  // Загрузка данных только если авторизован
   useEffect(() => {
-    refreshKeys()
-    refreshTariffs()
-    refreshSubscriptions()
-    refreshUsers()
-  }, [])
+    if (isAuthenticated && !isCheckingAuth) {
+      refreshKeys()
+      refreshTariffs()
+      refreshSubscriptions()
+      refreshUsers()
+    }
+  }, [isAuthenticated, isCheckingAuth])
 
   useEffect(() => {
     setKeyForm((prev) => (prev.userId ? prev : { ...prev, userId: users[0]?.id?.toString() ?? "" }))
@@ -236,6 +297,8 @@ export default function AdminPage() {
       excerpt: postForm.excerpt,
       content: postForm.content,
       tags,
+      author: postForm.author || "SpaceVPN Team",
+      image: postForm.image,
       publishedAt: postForm.publishedAt || today,
       createdAt: today,
       updatedAt: today,
@@ -260,6 +323,8 @@ export default function AdminPage() {
             excerpt: postForm.excerpt,
             content: postForm.content,
             tags,
+            author: postForm.author || "SpaceVPN Team",
+            image: postForm.image,
             publishedAt: postForm.publishedAt || editingPost.publishedAt,
             updatedAt: today,
           }
@@ -373,12 +438,14 @@ export default function AdminPage() {
   const openEditPost = (post: BlogPost) => {
     setEditingPost(post)
     setPostForm({
-      heroHighlight: post.heroHighlight,
-      heroDescription: post.heroDescription,
+      heroHighlight: post.heroHighlight || "",
+      heroDescription: post.heroDescription || "",
       title: post.title,
       excerpt: post.excerpt,
       content: post.content,
       tags: post.tags.join(", "),
+      author: post.author || "SpaceVPN Team",
+      image: post.image || "",
       publishedAt: post.publishedAt,
     })
     setShowPostModal(true)
@@ -429,11 +496,104 @@ export default function AdminPage() {
     return bDate - aDate
   }).slice(0, 10)
 
+  // Форма входа
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-muted-foreground">Загрузка...</div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background relative flex items-center justify-center">
+        <PixelStars />
+
+        <div className="relative z-10 w-full max-w-md p-8">
+          <div className="bg-card border border-border rounded-lg p-8">
+            <div className="flex items-center justify-center mb-8">
+              <div className="w-12 h-12 bg-primary flex items-center justify-center">
+                <span className="text-background text-lg font-bold">S</span>
+              </div>
+            </div>
+
+            <h1 className="text-xl text-center text-foreground mb-2">ADMIN PANEL</h1>
+            <p className="text-sm text-center text-muted-foreground mb-6">Вход в панель администратора</p>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label htmlFor="username" className="block text-xs text-muted-foreground mb-2">
+                  Логин
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  className="w-full px-4 py-2 bg-background border border-border rounded text-sm text-foreground focus:outline-none focus:border-primary"
+                  placeholder="admin"
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-xs text-muted-foreground mb-2">
+                  Пароль
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    className="w-full px-4 py-2 bg-background border border-border rounded text-sm text-foreground focus:outline-none focus:border-primary pr-10"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              {loginError && (
+                <div className="text-xs text-red-500 text-center">
+                  {loginError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full bg-primary text-background py-2 rounded text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                Войти
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Show loading state while checking authentication
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-muted-foreground">Загрузка...</div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background relative">
       <PixelStars />
 
-      <AdminHeader />
+      <AdminHeader onLogout={handleLogout} />
 
       <div className="flex pt-16">
         <AdminSidebar activeTab={activeTab} onChange={setActiveTab} balance={balance} />
@@ -466,7 +626,7 @@ export default function AdminPage() {
                   onEdit={openEditKey}
                   onExtend={handleExtendKey}
                   onDelete={handleDeleteKey}
-                  onToggle={() => {}}  // Удалено, но оставлено для совместимости
+                  onToggle={() => { }}  // Удалено, но оставлено для совместимости
                 />
               )}
             </div>

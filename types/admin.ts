@@ -6,6 +6,8 @@ export interface BlogPost {
     excerpt: string
     content: string
     tags: string[]
+    author: string
+    image?: string
     publishedAt: string
     createdAt: string
     updatedAt: string
@@ -25,6 +27,8 @@ export interface PostFormState {
     excerpt: string
     content: string
     tags: string
+    author: string
+    image: string
     publishedAt: string
 }
 

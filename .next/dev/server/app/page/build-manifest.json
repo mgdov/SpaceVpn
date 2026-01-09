@@ -2,20 +2,20 @@
   "devFiles": [],
   "ampDevFiles": [],
   "polyfillFiles": [
-    "static/chunks/159a2_next_dist_build_polyfills_polyfill-nomodule.js"
+    "static/chunks/eba22_next_dist_build_polyfills_polyfill-nomodule.js"
   ],
   "lowPriorityFiles": [],
   "rootMainFiles": [
-    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_775b6788._.js",
-    "static/chunks/159a2_next_dist_compiled_react-dom_b632e030._.js",
-    "static/chunks/159a2_next_dist_compiled_react-server-dom-turbopack_97aed909._.js",
-    "static/chunks/159a2_next_dist_compiled_next-devtools_index_dbd45c1c.js",
-    "static/chunks/159a2_next_dist_compiled_91376097._.js",
-    "static/chunks/159a2_next_dist_client_4bc6717c._.js",
-    "static/chunks/159a2_next_dist_e87d6485._.js",
-    "static/chunks/159a2_@swc_helpers_cjs_e2435baa._.js",
-    "static/chunks/Documents_программирование_pixel-space-vpn_a0ff3932._.js",
-    "static/chunks/turbopack-Documents_программирование_pixel-space-vpn_4a1c4768._.js"
+    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_b9b6d564._.js",
+    "static/chunks/eba22_next_dist_compiled_react-dom_1509d4e9._.js",
+    "static/chunks/eba22_next_dist_compiled_react-server-dom-turbopack_28b33492._.js",
+    "static/chunks/eba22_next_dist_compiled_next-devtools_index_b2e7d723.js",
+    "static/chunks/eba22_next_dist_compiled_a885cf78._.js",
+    "static/chunks/eba22_next_dist_client_4f05e5c9._.js",
+    "static/chunks/eba22_next_dist_5d67761c._.js",
+    "static/chunks/eba22_@swc_helpers_cjs_615ee79d._.js",
+    "static/chunks/Documents_programming_pixel-space-vpn_a0ff3932._.js",
+    "static/chunks/turbopack-Documents_programming_pixel-space-vpn_fd4ebd00._.js"
   ],
   "pages": {},
   "ampFirstPages": []

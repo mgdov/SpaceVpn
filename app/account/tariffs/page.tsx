@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { getPublicTariffs, purchaseFreeTariff, type Tariff } from "@/lib/api"
+import { getPublicTariffs, purchaseFreeTariff, createYookassaPayment, type Tariff } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -29,39 +29,60 @@ export default function TariffsPage() {
     setLoading(false)
   }
 
-  const handlePurchase = async (tariffId: number, tariffName: string) => {
+  const handlePurchase = async (tariffId: number, tariffName: string, tariffPrice: number) => {
     // Clear previous messages
     setMessage(null)
     setPurchasing(tariffId)
 
     try {
-      const response = await purchaseFreeTariff({
-        tariff_id: tariffId,
-        bypass_preset: "chrome",
-      })
-
-      if (response.data) {
-        setMessage({
-          type: "success",
-          text: response.data.message,
+      // Если тариф бесплатный, активируем сразу
+      if (tariffPrice === 0) {
+        const response = await purchaseFreeTariff({
+          tariff_id: tariffId,
+          bypass_preset: "chrome",
         })
 
-        // Redirect to keys page after 2 seconds
-        setTimeout(() => {
-          router.push("/account/keys")
-        }, 2000)
+        if (response.data) {
+          setMessage({
+            type: "success",
+            text: response.data.message,
+          })
+
+          // Redirect to keys page after 2 seconds
+          setTimeout(() => {
+            router.push("/account/keys")
+          }, 2000)
+        } else {
+          setMessage({
+            type: "error",
+            text: response.error || "Ошибка активации тарифа",
+          })
+        }
       } else {
-        setMessage({
-          type: "error",
-          text: response.error || "Ошибка активации тарифа",
+        // Если тариф платный, создаем платёж через YooKassa
+        const response = await createYookassaPayment({
+          tariffId: tariffId,
+          plan: tariffName,
+          price: tariffPrice,
+          description: `Оплата тарифа ${tariffName}`,
         })
+
+        if (response.data?.confirmation_url) {
+          // Перенаправляем пользователя на страницу оплаты YooKassa
+          window.location.href = response.data.confirmation_url
+        } else {
+          setMessage({
+            type: "error",
+            text: response.error || "Ошибка создания платежа",
+          })
+          setPurchasing(null)
+        }
       }
     } catch (error) {
       setMessage({
         type: "error",
         text: "Произошла ошибка. Попробуйте позже.",
       })
-    } finally {
       setPurchasing(null)
     }
   }
@@ -82,7 +103,7 @@ export default function TariffsPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </div>
@@ -182,14 +203,14 @@ export default function TariffsPage() {
               <CardFooter>
                 <Button
                   className="w-full"
-                  onClick={() => handlePurchase(tariff.id, tariff.name)}
+                  onClick={() => handlePurchase(tariff.id, tariff.name, tariff.price)}
                   disabled={purchasing !== null}
                   variant={tariff.price === 0 ? "outline" : "default"}
                 >
                   {purchasing === tariff.id ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Активация...
+                      {tariff.price === 0 ? "Активация..." : "Подготовка оплаты..."}
                     </>
                   ) : tariff.price === 0 ? (
                     "Активировать"

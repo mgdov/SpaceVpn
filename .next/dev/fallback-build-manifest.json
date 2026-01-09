@@ -1,30 +1,30 @@
 {
   "pages": {
     "/_app": [
-      "static/chunks/159a2_next_dist_compiled_576f0a64._.js",
-      "static/chunks/159a2_next_dist_shared_lib_6619d346._.js",
-      "static/chunks/159a2_next_dist_client_1bf30e12._.js",
-      "static/chunks/159a2_next_dist_7b396ee4._.js",
-      "static/chunks/159a2_next_app_81cf35c3.js",
-      "static/chunks/[next]_entry_page-loader_ts_522aae4e._.js",
-      "static/chunks/159a2_react-dom_03e1a53d._.js",
-      "static/chunks/159a2_5d94ed58._.js",
-      "static/chunks/[root-of-the-server]__5a6b4784._.js",
-      "static/chunks/Documents_программирование_pixel-space-vpn_pages__app_2da965e7._.js",
-      "static/chunks/358b3_программирование_pixel-space-vpn_pages__app_ce76518d._.js"
+      "static/chunks/eba22_next_dist_compiled_ed47b57b._.js",
+      "static/chunks/eba22_next_dist_shared_lib_5836b5fa._.js",
+      "static/chunks/eba22_next_dist_client_7ad95094._.js",
+      "static/chunks/eba22_next_dist_a23030bd._.js",
+      "static/chunks/eba22_next_app_65abbeb5.js",
+      "static/chunks/[next]_entry_page-loader_ts_df96e293._.js",
+      "static/chunks/eba22_react-dom_fd096b32._.js",
+      "static/chunks/eba22_fa4a5b33._.js",
+      "static/chunks/[root-of-the-server]__7b46171d._.js",
+      "static/chunks/Documents_programming_pixel-space-vpn_pages__app_2da965e7._.js",
+      "static/chunks/turbopack-Documents_programming_pixel-space-vpn_pages__app_b57a83d4._.js"
     ],
     "/_error": [
-      "static/chunks/159a2_next_dist_compiled_576f0a64._.js",
-      "static/chunks/159a2_next_dist_shared_lib_a8da89f3._.js",
-      "static/chunks/159a2_next_dist_client_1bf30e12._.js",
-      "static/chunks/159a2_next_dist_44317852._.js",
-      "static/chunks/159a2_next_error_d7bf27f9.js",
-      "static/chunks/[next]_entry_page-loader_ts_0b9948d2._.js",
-      "static/chunks/159a2_react-dom_03e1a53d._.js",
-      "static/chunks/159a2_5d94ed58._.js",
-      "static/chunks/[root-of-the-server]__cbda7a24._.js",
-      "static/chunks/Documents_программирование_pixel-space-vpn_pages__error_2da965e7._.js",
-      "static/chunks/358b3_программирование_pixel-space-vpn_pages__error_5c1a6213._.js"
+      "static/chunks/eba22_next_dist_compiled_ed47b57b._.js",
+      "static/chunks/eba22_next_dist_shared_lib_26a6b9cc._.js",
+      "static/chunks/eba22_next_dist_client_7ad95094._.js",
+      "static/chunks/eba22_next_dist_a6197d95._.js",
+      "static/chunks/eba22_next_error_055faa92.js",
+      "static/chunks/[next]_entry_page-loader_ts_d81e0ef7._.js",
+      "static/chunks/eba22_react-dom_fd096b32._.js",
+      "static/chunks/eba22_fa4a5b33._.js",
+      "static/chunks/[root-of-the-server]__294c594b._.js",
+      "static/chunks/Documents_programming_pixel-space-vpn_pages__error_2da965e7._.js",
+      "static/chunks/turbopack-Documents_programming_pixel-space-vpn_pages__error_ed42bc94._.js"
     ]
   },
   "devFiles": [],

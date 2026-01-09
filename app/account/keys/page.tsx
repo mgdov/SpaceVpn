@@ -55,7 +55,7 @@ function AccountKeysPageContent() {
             if (!response.data.length) {
                 setSelectedClientId(null)
                 setVpnConfig(null)
-            } else             if (!selectedClientId || !response.data.find((client) => client.id === selectedClientId)) {
+            } else if (!selectedClientId || !response.data.find((client) => client.id === selectedClientId)) {
                 setSelectedClientId(response.data[0]?.id || null)
             }
         } else {
@@ -83,7 +83,7 @@ function AccountKeysPageContent() {
         setCreating(true)
         setError("")
 
-        // Получить активную подписку
+        // Получить активную подписку через /subscriptions/my
         const subscriptionsResponse = await getUserSubscriptions()
         if (!subscriptionsResponse.data || subscriptionsResponse.data.length === 0) {
             setError("У вас нет активной подписки. Сначала оформите подписку.")
@@ -91,17 +91,15 @@ function AccountKeysPageContent() {
             return
         }
 
-        const activeSubscription = subscriptionsResponse.data.find((sub) => sub.is_active) || subscriptionsResponse.data[0]
+        const activeSubscription = subscriptionsResponse.data.find((sub) => sub.status === 'active') || subscriptionsResponse.data[0]
         if (!activeSubscription) {
-            setError("Не найдена подписка для создания VPN ключа")
+            setError("Не найдена активная подписка для создания VPN ключа")
             setCreating(false)
             return
         }
 
-        const subscriptionId = typeof activeSubscription.id === 'string' ? parseInt(activeSubscription.id) : activeSubscription.id
-
         const response = await createUserVPNClient({
-            subscription_id: subscriptionId,
+            subscription_id: activeSubscription.id,
             name: `Device ${new Date().toLocaleDateString()}`,
         })
         if (response.data) {
@@ -205,7 +203,7 @@ function AccountKeysPageContent() {
                                         <p className="text-muted-foreground text-[9px] uppercase tracking-[0.35em]">Тип</p>
                                         <p className="text-foreground text-lg">VLESS / TLS Reality</p>
                                         <p className="text-muted-foreground text-[10px]">
-                                            Обновлено: {formatDate(selectedClient.updated_at)}
+                                            Создан: {formatDate(selectedClient.created_at)}
                                         </p>
                                     </div>
                                 </div>

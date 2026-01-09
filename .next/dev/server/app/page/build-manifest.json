@@ -2,20 +2,20 @@
   "devFiles": [],
   "ampDevFiles": [],
   "polyfillFiles": [
-    "static/chunks/2e87c_next_dist_build_polyfills_polyfill-nomodule.js"
+    "static/chunks/159a2_next_dist_build_polyfills_polyfill-nomodule.js"
   ],
   "lowPriorityFiles": [],
   "rootMainFiles": [
-    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_2305d00c._.js",
-    "static/chunks/2e87c_next_dist_compiled_react-dom_b94bad6b._.js",
-    "static/chunks/2e87c_next_dist_compiled_react-server-dom-turbopack_ee3665d7._.js",
-    "static/chunks/2e87c_next_dist_compiled_next-devtools_index_a0dc4593.js",
-    "static/chunks/2e87c_next_dist_compiled_c9b09022._.js",
-    "static/chunks/2e87c_next_dist_client_d0dc76ee._.js",
-    "static/chunks/2e87c_next_dist_bf01fef4._.js",
-    "static/chunks/2e87c_@swc_helpers_cjs_b8300f58._.js",
-    "static/chunks/Documents_code_SpaceVPN_SpaceVpn_a0ff3932._.js",
-    "static/chunks/turbopack-Documents_code_SpaceVPN_SpaceVpn_6db89101._.js"
+    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_775b6788._.js",
+    "static/chunks/159a2_next_dist_compiled_react-dom_b632e030._.js",
+    "static/chunks/159a2_next_dist_compiled_react-server-dom-turbopack_97aed909._.js",
+    "static/chunks/159a2_next_dist_compiled_next-devtools_index_dbd45c1c.js",
+    "static/chunks/159a2_next_dist_compiled_91376097._.js",
+    "static/chunks/159a2_next_dist_client_4bc6717c._.js",
+    "static/chunks/159a2_next_dist_e87d6485._.js",
+    "static/chunks/159a2_@swc_helpers_cjs_e2435baa._.js",
+    "static/chunks/Documents_программирование_pixel-space-vpn_a0ff3932._.js",
+    "static/chunks/turbopack-Documents_программирование_pixel-space-vpn_4a1c4768._.js"
   ],
   "pages": {},
   "ampFirstPages": []

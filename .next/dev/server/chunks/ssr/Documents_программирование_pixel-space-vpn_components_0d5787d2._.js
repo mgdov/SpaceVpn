@@ -595,7 +595,7 @@ function PricingSection() {
     const baseMonthlyPrice = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
         if (!displayTariffs.length) return 0;
         const perMonthPrices = displayTariffs.map((tariff)=>{
-            const months = Math.max(1, tariff.duration_months);
+            const months = tariff.duration_months === 0 ? 1 : Math.max(1, tariff.duration_months);
             return tariff.price / months;
         });
         return Math.min(...perMonthPrices);
@@ -605,14 +605,19 @@ function PricingSection() {
     const highlightTariffId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
         if (!displayTariffs.length) return null;
         return displayTariffs.reduce((best, current)=>{
-            const currentRatio = current.price / Math.max(1, current.duration_months);
-            const bestRatio = best.price / Math.max(1, best.duration_months);
+            const currentMonths = current.duration_months === 0 ? 1 : Math.max(1, current.duration_months);
+            const bestMonths = best.duration_months === 0 ? 1 : Math.max(1, best.duration_months);
+            const currentRatio = current.price / currentMonths;
+            const bestRatio = best.price / bestMonths;
             return currentRatio < bestRatio ? current : best;
         }).id;
     }, [
         displayTariffs
     ]);
     const formatDuration = (months)=>{
+        if (months === 0) {
+            return "1 день";
+        }
         return `${months} мес.`;
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -628,7 +633,7 @@ function PricingSection() {
                             children: "[ ТАРИФЫ ]"
                         }, void 0, false, {
                             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                            lineNumber: 52,
+                            lineNumber: 57,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -640,13 +645,13 @@ function PricingSection() {
                                     children: "ПЛАН"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                    lineNumber: 54,
+                                    lineNumber: 59,
                                     columnNumber: 27
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                            lineNumber: 53,
+                            lineNumber: 58,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -654,13 +659,13 @@ function PricingSection() {
                             children: "Гибкие тарифы для любых потребностей. Начните с бесплатного пробного периода."
                         }, void 0, false, {
                             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                            lineNumber: 56,
+                            lineNumber: 61,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                    lineNumber: 51,
+                    lineNumber: 56,
                     columnNumber: 9
                 }, this),
                 loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -668,7 +673,7 @@ function PricingSection() {
                     children: "Загрузка тарифов..."
                 }, void 0, false, {
                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                    lineNumber: 62,
+                    lineNumber: 67,
                     columnNumber: 11
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "grid grid-cols-1 md:grid-cols-3 gap-10",
@@ -684,7 +689,7 @@ function PricingSection() {
                                     children: "ПОПУЛЯРНЫЙ"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                    lineNumber: 80,
+                                    lineNumber: 85,
                                     columnNumber: 21
                                 }, this),
                                 discountPercent > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -696,7 +701,7 @@ function PricingSection() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                    lineNumber: 86,
+                                    lineNumber: 91,
                                     columnNumber: 21
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -710,7 +715,7 @@ function PricingSection() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                            lineNumber: 92,
+                                            lineNumber: 97,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -718,7 +723,7 @@ function PricingSection() {
                                             children: formatDuration(tariff.duration_months)
                                         }, void 0, false, {
                                             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                            lineNumber: 93,
+                                            lineNumber: 98,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -732,7 +737,7 @@ function PricingSection() {
                                                             children: tariff.price
                                                         }, void 0, false, {
                                                             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                                            lineNumber: 96,
+                                                            lineNumber: 101,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -740,13 +745,13 @@ function PricingSection() {
                                                             children: "₽"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                                            lineNumber: 97,
+                                                            lineNumber: 102,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                                    lineNumber: 95,
+                                                    lineNumber: 100,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -754,19 +759,19 @@ function PricingSection() {
                                                     children: "за весь период"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                                    lineNumber: 99,
+                                                    lineNumber: 104,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                            lineNumber: 94,
+                                            lineNumber: 99,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                    lineNumber: 91,
+                                    lineNumber: 96,
                                     columnNumber: 19
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -774,7 +779,7 @@ function PricingSection() {
                                     children: tariff.description || "Стабильный туннель и поддержка 24/7"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                    lineNumber: 103,
+                                    lineNumber: 108,
                                     columnNumber: 19
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -783,30 +788,30 @@ function PricingSection() {
                                     children: "ВЫБРАТЬ"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                                    lineNumber: 105,
+                                    lineNumber: 110,
                                     columnNumber: 19
                                 }, this)
                             ]
                         }, tariff.id, true, {
                             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                            lineNumber: 75,
+                            lineNumber: 80,
                             columnNumber: 17
                         }, this);
                     })
                 }, void 0, false, {
                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-                    lineNumber: 66,
+                    lineNumber: 71,
                     columnNumber: 11
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-            lineNumber: 50,
+            lineNumber: 55,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Documents/программирование/pixel-space-vpn/components/pricing-section.tsx",
-        lineNumber: 49,
+        lineNumber: 54,
         columnNumber: 5
     }, this);
 }

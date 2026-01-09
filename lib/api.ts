@@ -47,16 +47,41 @@ export interface Tariff {
 
 export interface VPNClient {
   id: number
-  user_id: number
-  subscription_id: number
+  user_id?: number
+  subscription_id?: number
   client_uuid: string
-  pasarguard_username?: string | null
   name: string
   device_info?: string | null
   subscription_url?: string | null
-  last_connected_at?: string | null
+  qr_code?: string | null
   created_at: string
-  updated_at: string
+  updated_at?: string
+}
+
+export interface CreateVPNClientPayload {
+  subscription_id: number
+  name: string
+  device_info?: string
+}
+
+export interface RegenerateVPNClientPayload {
+  bypass_preset?: string
+  fingerprint?: string
+  server_name?: string
+}
+
+export interface BypassPreset {
+  id: string
+  name: string
+  description: string
+  fingerprint: string
+  server_name: string
+  region: string
+  risk: string
+}
+
+export interface BypassPresetsResponse {
+  presets: BypassPreset[]
 }
 
 export interface VPNConfig {
@@ -69,19 +94,33 @@ export interface VPNConfig {
 
 export interface Subscription {
   id: number
-  user_id: number
-  pasarguard_username?: string | null
-  plan: string  // SubscriptionPlan enum value
-  status: string  // SubscriptionStatus enum value
-  data_limit?: number | null  // bytes, null = unlimited
-  used_traffic: number  // bytes
+  user_id?: number
+  tariff_id: number
+  status: 'active' | 'expired' | 'cancelled'  // SubscriptionStatus
   start_date: string
-  expire_date?: string | null
-  is_active: boolean
-  traffic_remaining?: number | null
-  traffic_used_percentage?: number | null
-  created_at: string
-  updated_at: string
+  expire_date: string | null
+  data_limit: number  // bytes, 0 = unlimited
+  used_traffic: number  // bytes
+  created_at?: string
+  updated_at?: string
+}
+
+export interface MySubscriptionsResponse {
+  subscriptions: Subscription[]
+}
+
+export interface VPNStatus {
+  status: 'none' | 'active' | 'expired' | 'cancelled'
+  expires_at: string | null
+  traffic_used: number | null  // bytes
+  traffic_limit: number | null  // bytes
+  traffic_used_gb: number | null  // GB
+  traffic_limit_gb: number | null  // GB
+  traffic_percentage: number | null  // 0-100
+  vless_uri: string | null
+  qr_code: string | null
+  subscription_id: number | null
+  tariff_name: string | null
 }
 
 export interface AdminSubscription extends Subscription {
@@ -313,7 +352,7 @@ export async function loginUser(username: string, password: string): Promise<Api
   formData.append('username', username)
   formData.append('password', password)
 
-  const response = await apiRequest<TokenResponse>('/auth/token', {
+  const response = await apiRequest<TokenResponse>('/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -346,6 +385,10 @@ export async function getCurrentUserInfo(): Promise<ApiResponse<User>> {
     setCurrentUser(response.data)
   }
   return response
+}
+
+export async function getUserVPNStatus(): Promise<ApiResponse<VPNStatus>> {
+  return apiRequest<VPNStatus>('/users/me/vpn')
 }
 
 export async function updateCurrentUser(payload: UpdateProfilePayload): Promise<ApiResponse<User>> {
@@ -394,6 +437,10 @@ export async function adminMakeSuperuser(userId: string): Promise<ApiResponse<Us
  */
 export async function getUserSubscriptions(): Promise<ApiResponse<Subscription[]>> {
   return apiRequest<Subscription[]>('/subscriptions/')  // Add trailing slash
+}
+
+export async function getMySubscriptions(): Promise<ApiResponse<MySubscriptionsResponse>> {
+  return apiRequest<MySubscriptionsResponse>('/subscriptions/my')
 }
 
 export async function getSubscriptionById(id: string): Promise<ApiResponse<Subscription>> {
@@ -527,8 +574,23 @@ export async function purchaseFreeTariff(
   })
 }
 
-export async function getMySubscriptions(): Promise<ApiResponse<any>> {
-  return apiRequest<any>('/subscriptions/my')
+export interface CreateVPNClientResponse {
+  id: number
+  client_uuid: string
+  subscription_url: string
+  qr_code: string
+  name: string
+  device_info?: string
+  created_at: string
+}
+
+export async function createUserVPNClient(
+  payload: CreateVPNClientPayload
+): Promise<ApiResponse<CreateVPNClientResponse>> {
+  return apiRequest<CreateVPNClientResponse>('/vpn-clients/', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
 }
 
 /**
@@ -540,15 +602,6 @@ export async function listUserVPNClients(): Promise<ApiResponse<VPNClient[]>> {
 
 export async function getUserVPNClient(id: string): Promise<ApiResponse<VPNClient>> {
   return apiRequest<VPNClient>(`/vpn-clients/${id}`)
-}
-
-export async function createUserVPNClient(
-  payload?: CreateVPNClientPayload
-): Promise<ApiResponse<VPNClient>> {
-  return apiRequest<VPNClient>('/vpn-clients/', {  // Add trailing slash
-    method: 'POST',
-    body: payload ? JSON.stringify(payload) : undefined,
-  })
 }
 
 export async function updateUserVPNClient(
@@ -569,8 +622,15 @@ export async function getUserVPNClientConfig(id: string): Promise<ApiResponse<VP
   return apiRequest<VPNConfig>(`/vpn-clients/${id}/config`)
 }
 
-export async function regenerateUserVPNClient(id: string): Promise<ApiResponse<VPNConfig>> {
-  return apiRequest<VPNConfig>(`/vpn-clients/${id}/regenerate`, { method: 'POST' })
+export async function regenerateUserVPNClient(id: string, payload?: RegenerateVPNClientPayload): Promise<ApiResponse<VPNConfig>> {
+  return apiRequest<VPNConfig>(`/vpn-clients/${id}/regenerate`, {
+    method: 'POST',
+    body: payload ? JSON.stringify(payload) : undefined,
+  })
+}
+
+export async function getBypassPresets(): Promise<ApiResponse<BypassPresetsResponse>> {
+  return apiRequest<BypassPresetsResponse>('/vpn-clients/bypass-presets')
 }
 
 export async function syncUserVPNClient(id: string): Promise<ApiResponse<VPNClient>> {

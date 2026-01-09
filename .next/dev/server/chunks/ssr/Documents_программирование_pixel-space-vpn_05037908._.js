@@ -986,7 +986,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2d$pen$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Edit$3e$__ = __turbopack_context__.i("[project]/Documents/программирование/pixel-space-vpn/node_modules/lucide-react/dist/esm/icons/square-pen.js [app-ssr] (ecmascript) <export default as Edit>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__ = __turbopack_context__.i("[project]/Documents/программирование/pixel-space-vpn/node_modules/lucide-react/dist/esm/icons/refresh-cw.js [app-ssr] (ecmascript) <export default as RefreshCw>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trash$2d$2$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Trash2$3e$__ = __turbopack_context__.i("[project]/Documents/программирование/pixel-space-vpn/node_modules/lucide-react/dist/esm/icons/trash-2.js [app-ssr] (ecmascript) <export default as Trash2>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$power$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Power$3e$__ = __turbopack_context__.i("[project]/Documents/программирование/pixel-space-vpn/node_modules/lucide-react/dist/esm/icons/power.js [app-ssr] (ecmascript) <export default as Power>");
 ;
 ;
 const formatDate = (value)=>{
@@ -1080,7 +1079,7 @@ function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }) {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                     className: "px-4 py-3 text-[9px] text-foreground font-mono",
-                                    children: key.uuid
+                                    children: key.client_uuid
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
                                     lineNumber: 39,
@@ -1088,7 +1087,7 @@ function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }) {
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                     className: "px-4 py-3 text-[9px] text-muted-foreground",
-                                    children: key.user?.email || key.email || "—"
+                                    children: key.user?.email || "—"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
                                     lineNumber: 40,
@@ -1104,7 +1103,7 @@ function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }) {
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                     className: "px-4 py-3 text-[9px] text-muted-foreground",
-                                    children: formatDate(key.expiry_date)
+                                    children: "—"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
                                     lineNumber: 42,
@@ -1112,7 +1111,7 @@ function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }) {
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                     className: "px-4 py-3 text-[9px] text-foreground",
-                                    children: key.data_limit_gb === 0 ? "∞" : `${key.data_used_gb.toFixed(1)} / ${key.data_limit_gb || "—"} GB`
+                                    children: "—"
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
                                     lineNumber: 43,
@@ -1121,16 +1120,16 @@ function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }) {
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                     className: "px-4 py-3",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: `text-[8px] px-2 py-1 ${key.is_active ? "bg-primary/20 text-primary" : "bg-red-500/20 text-red-400"}`,
-                                        children: key.is_active ? "Активен" : "Выключен"
+                                        className: "text-[8px] px-2 py-1 bg-primary/20 text-primary",
+                                        children: "Активен"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                        lineNumber: 47,
+                                        lineNumber: 45,
                                         columnNumber: 33
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                    lineNumber: 46,
+                                    lineNumber: 44,
                                     columnNumber: 29
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -1146,12 +1145,12 @@ function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }) {
                                                     size: 14
                                                 }, void 0, false, {
                                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                                    lineNumber: 59,
+                                                    lineNumber: 52,
                                                     columnNumber: 41
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                                lineNumber: 58,
+                                                lineNumber: 51,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1162,28 +1161,12 @@ function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }) {
                                                     size: 14
                                                 }, void 0, false, {
                                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                                    lineNumber: 66,
+                                                    lineNumber: 59,
                                                     columnNumber: 41
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                                lineNumber: 61,
-                                                columnNumber: 37
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>onToggle(key.id),
-                                                className: "text-muted-foreground hover:text-yellow-400",
-                                                title: "Переключить статус",
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$power$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Power$3e$__["Power"], {
-                                                    size: 14
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                                    lineNumber: 73,
-                                                    columnNumber: 41
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                                lineNumber: 68,
+                                                lineNumber: 54,
                                                 columnNumber: 37
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1194,23 +1177,23 @@ function KeyTable({ keys, onEdit, onExtend, onDelete, onToggle }) {
                                                     size: 14
                                                 }, void 0, false, {
                                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                                    lineNumber: 80,
+                                                    lineNumber: 66,
                                                     columnNumber: 41
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                                lineNumber: 75,
+                                                lineNumber: 61,
                                                 columnNumber: 37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                        lineNumber: 57,
+                                        lineNumber: 50,
                                         columnNumber: 33
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/keys/key-table.tsx",
-                                    lineNumber: 56,
+                                    lineNumber: 49,
                                     columnNumber: 29
                                 }, this)
                             ]
@@ -1287,7 +1270,7 @@ function TariffTable({ tariffs, onEdit, onDelete, onToggle }) {
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                 className: "px-4 py-3 text-left text-[8px] text-muted-foreground",
-                                children: "СРОК (ДНЕЙ)"
+                                children: "СРОК (МЕС.)"
                             }, void 0, false, {
                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/tariffs/tariff-table.tsx",
                                 lineNumber: 28,
@@ -1358,7 +1341,7 @@ function TariffTable({ tariffs, onEdit, onDelete, onToggle }) {
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                     className: "px-4 py-3 text-[9px] text-muted-foreground",
-                                    children: tariff.duration_days
+                                    children: tariff.duration_months
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/программирование/pixel-space-vpn/components/admin/tariffs/tariff-table.tsx",
                                     lineNumber: 41,
@@ -1837,7 +1820,7 @@ function AdminPage() {
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         setKeyForm((prev)=>prev.userId ? prev : {
                 ...prev,
-                userId: users[0]?.id ?? ""
+                userId: users[0]?.id?.toString() ?? ""
             });
     }, [
         users
@@ -1847,13 +1830,14 @@ function AdminPage() {
             setKeysError("Выберите пользователя");
             return;
         }
+        // Админский эндпоинт использует старую структуру, но пока оставляем так
+        // TODO: Обновить админский эндпоинт для использования новой структуры
         const payload = {
-            user_id: keyForm.userId,
+            user_id: parseInt(keyForm.userId),
             name: keyForm.name || undefined,
-            device_info: keyForm.deviceInfo || undefined,
-            expires_at: keyForm.expiresAt || undefined
+            device_info: keyForm.deviceInfo || undefined
         };
-        const response = editingKey ? await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminUpdateVPNClient"])(editingKey.id, payload) : await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminCreateVPNClient"])(payload);
+        const response = editingKey ? await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminUpdateVPNClient"])(editingKey.id.toString(), payload) : await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminCreateVPNClient"])(payload);
         if (response.error) {
             setKeysError(response.error);
             return;
@@ -1864,21 +1848,14 @@ function AdminPage() {
         refreshKeys();
     };
     const handleExtendKey = async (id)=>{
-        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminExtendVPNClient"])(id);
+        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminExtendVPNClient"])(id.toString());
         if (response.error) {
             setKeysError(response.error);
         }
         refreshKeys();
     };
     const handleDeleteKey = async (id)=>{
-        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminDeleteVPNClient"])(id);
-        if (response.error) {
-            setKeysError(response.error);
-        }
-        refreshKeys();
-    };
-    const handleToggleKey = async (id)=>{
-        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminToggleVPNClient"])(id);
+        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminDeleteVPNClient"])(id.toString());
         if (response.error) {
             setKeysError(response.error);
         }
@@ -1937,11 +1914,11 @@ function AdminPage() {
             description: ""
         });
     const normalizeTariffValues = (overrides)=>{
-        const rawDuration = overrides?.duration_days?.toString() ?? tariffForm.durationDays;
+        const rawDuration = overrides?.duration_months?.toString() ?? tariffForm.durationDays;
         const rawPrice = overrides?.price?.toString() ?? tariffForm.price;
         return {
             name: (overrides?.name ?? tariffForm.name).trim(),
-            durationDays: Math.max(1, Number(rawDuration) || 1),
+            durationMonths: Math.max(1, Number(rawDuration) || 1),
             price: Math.max(0, Number(rawPrice) || 0),
             description: (overrides?.description ?? tariffForm.description).trim()
         };
@@ -1950,7 +1927,7 @@ function AdminPage() {
         const normalized = normalizeTariffValues();
         const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminCreateTariff"])({
             name: normalized.name || `Тариф ${tariffs.length + 1}`,
-            duration_days: normalized.durationDays,
+            duration_months: normalized.durationMonths,
             price: normalized.price,
             description: normalized.description
         });
@@ -1970,9 +1947,9 @@ function AdminPage() {
             name: tariffForm.name || editingTariff.name,
             description: tariffForm.description || editingTariff.description
         });
-        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminUpdateTariff"])(editingTariff.id, {
+        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminUpdateTariff"])(editingTariff.id.toString(), {
             name: normalized.name,
-            duration_days: normalized.durationDays,
+            duration_months: normalized.durationMonths,
             price: normalized.price,
             description: normalized.description
         });
@@ -1987,7 +1964,7 @@ function AdminPage() {
         refreshSubscriptions();
     };
     const handleDeleteTariff = async (id)=>{
-        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminDeleteTariff"])(id);
+        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminDeleteTariff"])(id.toString());
         if (response.error) {
             setTariffsError(response.error);
         }
@@ -1995,7 +1972,7 @@ function AdminPage() {
         refreshSubscriptions();
     };
     const handleToggleTariff = async (id)=>{
-        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminToggleTariff"])(id);
+        const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["adminToggleTariff"])(id.toString());
         if (response.error) {
             setTariffsError(response.error);
         }
@@ -2004,10 +1981,10 @@ function AdminPage() {
     const openEditKey = (key)=>{
         setEditingKey(key);
         setKeyForm({
-            userId: key.user_id,
+            userId: key.user_id.toString(),
             name: key.name || "",
             deviceInfo: key.device_info || "",
-            expiresAt: key.expiry_date ? key.expiry_date.split("T")[0] : ""
+            expiresAt: ""
         });
         setShowKeyModal(true);
     };
@@ -2028,9 +2005,9 @@ function AdminPage() {
         setEditingTariff(tariff);
         setTariffForm({
             name: tariff.name,
-            durationDays: tariff.duration_days.toString(),
+            durationDays: tariff.duration_months.toString(),
             price: tariff.price.toString(),
-            description: tariff.description
+            description: tariff.description || ""
         });
         setShowTariffModal(true);
     };
@@ -2050,14 +2027,16 @@ function AdminPage() {
     };
     const balance = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
         return subscriptions.reduce((acc, subscription)=>{
-            const matchedTariff = tariffs.find((tariff)=>tariff.id === subscription.tariff_id);
+            const tariffId = typeof subscription.tariff_id === 'string' ? parseInt(subscription.tariff_id) : subscription.tariff_id;
+            const matchedTariff = tariffs.find((tariff)=>tariff.id === tariffId);
             return acc + (matchedTariff?.price ?? 0);
         }, 0);
     }, [
         subscriptions,
         tariffs
     ]);
-    const activeKeys = vpnClients.filter((client)=>client.is_active).length;
+    const activeKeys = vpnClients.length // Все ключи активны, если есть в БД
+    ;
     const totalKeys = vpnClients.length;
     const activeSubscriptions = subscriptions.filter((subscription)=>subscription.is_active).length;
     const latestSubscriptions = [
@@ -2072,12 +2051,12 @@ function AdminPage() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$components$2f$pixel$2d$stars$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PixelStars"], {}, void 0, false, {
                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 440,
+                lineNumber: 434,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$admin$2d$header$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["AdminHeader"], {}, void 0, false, {
                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 442,
+                lineNumber: 436,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2089,7 +2068,7 @@ function AdminPage() {
                         balance: balance
                     }, void 0, false, {
                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                        lineNumber: 445,
+                        lineNumber: 439,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -2105,7 +2084,7 @@ function AdminPage() {
                                                 children: "VPN КЛЮЧИ"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 453,
+                                                lineNumber: 447,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2120,20 +2099,20 @@ function AdminPage() {
                                                         size: 14
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 462,
+                                                        lineNumber: 456,
                                                         columnNumber: 19
                                                     }, this),
                                                     "Создать ключ"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 454,
+                                                lineNumber: 448,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 452,
+                                        lineNumber: 446,
                                         columnNumber: 15
                                     }, this),
                                     keysError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2141,7 +2120,7 @@ function AdminPage() {
                                         children: keysError
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 466,
+                                        lineNumber: 460,
                                         columnNumber: 29
                                     }, this),
                                     keysLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2149,23 +2128,23 @@ function AdminPage() {
                                         children: "Загрузка ключей..."
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 468,
+                                        lineNumber: 462,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$keys$2f$key$2d$table$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["KeyTable"], {
                                         keys: vpnClients,
                                         onEdit: openEditKey,
                                         onExtend: handleExtendKey,
                                         onDelete: handleDeleteKey,
-                                        onToggle: handleToggleKey
+                                        onToggle: ()=>{}
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 470,
+                                        lineNumber: 464,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 451,
+                                lineNumber: 445,
                                 columnNumber: 13
                             }, this),
                             activeTab === "blog" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2178,7 +2157,7 @@ function AdminPage() {
                                                 children: "БЛОГ"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 485,
+                                                lineNumber: 479,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2193,20 +2172,20 @@ function AdminPage() {
                                                         size: 14
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 494,
+                                                        lineNumber: 488,
                                                         columnNumber: 19
                                                     }, this),
                                                     "Создать статью"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 486,
+                                                lineNumber: 480,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 484,
+                                        lineNumber: 478,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$blog$2f$post$2d$list$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PostList"], {
@@ -2215,13 +2194,13 @@ function AdminPage() {
                                         onDelete: handleDeletePost
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 499,
+                                        lineNumber: 493,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 483,
+                                lineNumber: 477,
                                 columnNumber: 13
                             }, this),
                             activeTab === "tariffs" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2234,7 +2213,7 @@ function AdminPage() {
                                                 children: "ТАРИФЫ"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 507,
+                                                lineNumber: 501,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2249,20 +2228,20 @@ function AdminPage() {
                                                         size: 14
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 516,
+                                                        lineNumber: 510,
                                                         columnNumber: 19
                                                     }, this),
                                                     "Добавить тариф"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 508,
+                                                lineNumber: 502,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 506,
+                                        lineNumber: 500,
                                         columnNumber: 15
                                     }, this),
                                     tariffsError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2270,7 +2249,7 @@ function AdminPage() {
                                         children: tariffsError
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 520,
+                                        lineNumber: 514,
                                         columnNumber: 32
                                     }, this),
                                     tariffsLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2278,7 +2257,7 @@ function AdminPage() {
                                         children: "Загрузка тарифов..."
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 522,
+                                        lineNumber: 516,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$tariffs$2f$tariff$2d$table$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TariffTable"], {
                                         tariffs: tariffs,
@@ -2287,13 +2266,13 @@ function AdminPage() {
                                         onToggle: handleToggleTariff
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 524,
+                                        lineNumber: 518,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 505,
+                                lineNumber: 499,
                                 columnNumber: 13
                             }, this),
                             activeTab === "balance" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2303,7 +2282,7 @@ function AdminPage() {
                                         children: "БАЛАНС"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 532,
+                                        lineNumber: 526,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2317,7 +2296,7 @@ function AdminPage() {
                                                         children: "ОБЩИЙ БАЛАНС"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 536,
+                                                        lineNumber: 530,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2328,13 +2307,13 @@ function AdminPage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 537,
+                                                        lineNumber: 531,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 535,
+                                                lineNumber: 529,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2345,7 +2324,7 @@ function AdminPage() {
                                                         children: "АКТИВНЫХ КЛЮЧЕЙ"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 540,
+                                                        lineNumber: 534,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2353,13 +2332,13 @@ function AdminPage() {
                                                         children: activeKeys
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 541,
+                                                        lineNumber: 535,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 539,
+                                                lineNumber: 533,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2370,7 +2349,7 @@ function AdminPage() {
                                                         children: "АКТИВНЫХ ПОДПИСОК"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 544,
+                                                        lineNumber: 538,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2378,19 +2357,19 @@ function AdminPage() {
                                                         children: activeSubscriptions
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 545,
+                                                        lineNumber: 539,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 543,
+                                                lineNumber: 537,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 534,
+                                        lineNumber: 528,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2401,7 +2380,7 @@ function AdminPage() {
                                                 children: "ИСТОРИЯ ПОСТУПЛЕНИЙ"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 550,
+                                                lineNumber: 544,
                                                 columnNumber: 17
                                             }, this),
                                             balanceError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2409,7 +2388,7 @@ function AdminPage() {
                                                 children: balanceError
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 551,
+                                                lineNumber: 545,
                                                 columnNumber: 34
                                             }, this),
                                             subscriptionsLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2417,12 +2396,13 @@ function AdminPage() {
                                                 children: "Загрузка подписок..."
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 553,
+                                                lineNumber: 547,
                                                 columnNumber: 19
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "space-y-3",
                                                 children: latestSubscriptions.map((subscription)=>{
-                                                    const tariff = tariffs.find((item)=>item.id === subscription.tariff_id);
+                                                    const tariffId = typeof subscription.tariff_id === 'string' ? parseInt(subscription.tariff_id) : subscription.tariff_id;
+                                                    const tariff = tariffs.find((item)=>item.id === tariffId);
                                                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "flex items-center justify-between py-2 border-b border-border",
                                                         children: [
@@ -2433,7 +2413,7 @@ function AdminPage() {
                                                                         children: subscription.user?.email || subscription.user_id
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                                        lineNumber: 561,
+                                                                        lineNumber: 556,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2445,13 +2425,13 @@ function AdminPage() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                                        lineNumber: 562,
+                                                                        lineNumber: 557,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                                lineNumber: 560,
+                                                                lineNumber: 555,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2463,43 +2443,43 @@ function AdminPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                                lineNumber: 566,
+                                                                lineNumber: 561,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, subscription.id, true, {
                                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 559,
+                                                        lineNumber: 554,
                                                         columnNumber: 25
                                                     }, this);
                                                 })
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 555,
+                                                lineNumber: 549,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 549,
+                                        lineNumber: 543,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 531,
+                                lineNumber: 525,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                        lineNumber: 448,
+                        lineNumber: 442,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 444,
+                lineNumber: 438,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$keys$2f$key$2d$modal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["KeyModal"], {
@@ -2512,7 +2492,7 @@ function AdminPage() {
                 onClose: closeKeyModal
             }, void 0, false, {
                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 578,
+                lineNumber: 573,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$blog$2f$post$2d$modal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PostModal"], {
@@ -2524,7 +2504,7 @@ function AdminPage() {
                 onClose: closePostModal
             }, void 0, false, {
                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 588,
+                lineNumber: 583,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f_43f$$_440$$_43e$$_433$$_440$$_430$$_43c$$_43c$$_438$$_440$$_43e$$_432$$_430$$_43d$$_438$$_435$$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$tariffs$2f$tariff$2d$modal$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TariffModal"], {
@@ -2536,13 +2516,13 @@ function AdminPage() {
                 onClose: closeTariffModal
             }, void 0, false, {
                 fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 597,
+                lineNumber: 592,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Documents/программирование/pixel-space-vpn/app/admin/page.tsx",
-        lineNumber: 439,
+        lineNumber: 433,
         columnNumber: 5
     }, this);
 }

@@ -6,7 +6,7 @@ import { PixelStars } from "@/components/pixel-stars"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { useAuth, withAuth } from "@/lib/auth-context"
-import { getUserSubscriptions, type Subscription } from "@/lib/api"
+import { getUserVPNStatus, type VPNStatus } from "@/lib/api"
 
 const sections = [
     {
@@ -31,36 +31,54 @@ const sections = [
 
 function AccountPageContent() {
     const { user } = useAuth()
-    const [subscription, setSubscription] = useState<Subscription | null>(null)
+    const [vpnStatus, setVpnStatus] = useState<VPNStatus | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const loadSubscription = async () => {
-            const response = await getUserSubscriptions()
-            if (response.data && response.data.length > 0) {
-                // Get the active subscription
-                const activeSub = response.data.find(s => s.is_active) || response.data[0]
-                setSubscription(activeSub)
+        const loadVPNStatus = async () => {
+            const response = await getUserVPNStatus()
+            if (response.data) {
+                setVpnStatus(response.data)
             }
             setLoading(false)
         }
 
-        loadSubscription()
+        loadVPNStatus()
     }, [])
 
-    const formatDate = (dateString: string) => {
+    const formatDate = (dateString: string | null) => {
+        if (!dateString) return "Нет данных"
         const date = new Date(dateString)
-        return date.toLocaleDateString('ru-RU', { 
-            day: '2-digit', 
-            month: '2-digit', 
-            year: 'numeric' 
+        return date.toLocaleDateString('ru-RU', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
         })
     }
 
-    const getPlanName = () => {
-        if (!subscription) return "Бесплатный"
-        if (subscription.data_limit_gb === 0) return "Ultimate"
-        return `${subscription.data_limit_gb} GB`
+    const getStatusLabel = () => {
+        if (!vpnStatus) return "Нет подписки"
+        switch (vpnStatus.status) {
+            case 'active':
+                return vpnStatus.tariff_name || "Активна"
+            case 'expired':
+                return "Истекла"
+            case 'cancelled':
+                return "Отменена"
+            case 'none':
+            default:
+                return "Нет подписки"
+        }
+    }
+
+    const getTrafficInfo = () => {
+        if (!vpnStatus || vpnStatus.status === 'none') return null
+
+        if (vpnStatus.traffic_limit_gb === 0 || vpnStatus.traffic_limit_gb === null) {
+            return "Безлимитный трафик"
+        }
+
+        return `${vpnStatus.traffic_used_gb?.toFixed(2) || 0} GB / ${vpnStatus.traffic_limit_gb} GB`
     }
 
     return (
@@ -89,11 +107,18 @@ function AccountPageContent() {
                                     <p className="text-foreground text-lg mt-1">Загрузка...</p>
                                 ) : (
                                     <>
-                                        <p className="text-foreground text-lg mt-1">{getPlanName()}</p>
-                                        {subscription && (
-                                            <p className="text-muted-foreground text-[10px]">
-                                                Продление: {formatDate(subscription.end_date)}
-                                            </p>
+                                        <p className="text-foreground text-lg mt-1">{getStatusLabel()}</p>
+                                        {vpnStatus && vpnStatus.status !== 'none' && (
+                                            <>
+                                                <p className="text-muted-foreground text-[10px]">
+                                                    Истекает: {formatDate(vpnStatus.expires_at)}
+                                                </p>
+                                                {getTrafficInfo() && (
+                                                    <p className="text-muted-foreground text-[10px]">
+                                                        {getTrafficInfo()}
+                                                    </p>
+                                                )}
+                                            </>
                                         )}
                                     </>
                                 )}

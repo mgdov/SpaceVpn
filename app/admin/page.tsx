@@ -26,6 +26,7 @@ import {
   adminToggleTariff,
   adminListUsers,
   adminListSubscriptions,
+  loginUser,
   type AdminVPNClient,
   type Tariff as ApiTariff,
   type User,
@@ -116,13 +117,24 @@ export default function AdminPage() {
   }, [posts])
 
   // Обработка логина
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoginError("")
 
     if (loginUsername === ADMIN_USERNAME && loginPassword === ADMIN_PASSWORD) {
-      sessionStorage.setItem(ADMIN_AUTH_KEY, "true")
-      setIsAuthenticated(true)
+      // Логинимся через API для получения токена
+      try {
+        const response = await loginUser(loginUsername, loginPassword)
+        if (response.error) {
+          setLoginError("Ошибка авторизации в API: " + response.error)
+          return
+        }
+        // Токен автоматически сохранен в localStorage через loginUser
+        sessionStorage.setItem(ADMIN_AUTH_KEY, "true")
+        setIsAuthenticated(true)
+      } catch (error) {
+        setLoginError("Ошибка подключения к API")
+      }
     } else {
       setLoginError("Неверный логин или пароль")
     }
@@ -131,6 +143,10 @@ export default function AdminPage() {
   // Обработка выхода
   const handleLogout = () => {
     sessionStorage.removeItem(ADMIN_AUTH_KEY)
+    // Удаляем токен из localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token')
+    }
     setIsAuthenticated(false)
     setLoginUsername("")
     setLoginPassword("")

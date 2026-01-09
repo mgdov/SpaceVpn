@@ -502,6 +502,36 @@ export async function adminToggleTariff(id: string): Promise<ApiResponse<Tariff>
 }
 
 /**
+ * Subscription purchase endpoints
+ */
+export interface PurchaseFreeTariffRequest {
+  tariff_id: number
+  bypass_preset?: string
+}
+
+export interface PurchaseFreeTariffResponse {
+  subscription_id: number
+  vpn_client_id: number
+  vless_uri: string
+  qr_code: string
+  expire_date: string
+  message: string
+}
+
+export async function purchaseFreeTariff(
+  data: PurchaseFreeTariffRequest
+): Promise<ApiResponse<PurchaseFreeTariffResponse>> {
+  return apiRequest<PurchaseFreeTariffResponse>('/subscriptions/purchase-free', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+}
+
+export async function getMySubscriptions(): Promise<ApiResponse<any>> {
+  return apiRequest<any>('/subscriptions/my')
+}
+
+/**
  * VPN client endpoints (user)
  */
 export async function listUserVPNClients(): Promise<ApiResponse<VPNClient[]>> {

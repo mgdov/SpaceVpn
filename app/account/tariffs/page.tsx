@@ -1,230 +1,207 @@
 "use client"
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { PixelStars } from "@/components/pixel-stars"
-import { useAuth } from "@/lib/auth-context"
-import {
-    getPublicTariffs,
-    getUserSubscriptions,
-    createYookassaPayment,
-    confirmYookassaPayment,
-    type Tariff,
-    type Subscription,
-} from "@/lib/api"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { getPublicTariffs, purchaseFreeTariff, type Tariff } from "@/lib/api"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { CheckCircle2, XCircle, Loader2 } from "lucide-react"
 
-function PaymentHandler({ 
-    onPaymentConfirmed 
-}: { 
-    onPaymentConfirmed: () => void 
-}) {
-    const router = useRouter()
-    const searchParams = useSearchParams()
-    const [confirmingPaymentId, setConfirmingPaymentId] = useState<string | null>(null)
-    const searchParamsString = searchParams?.toString() || ""
+export default function TariffsPage() {
+  const router = useRouter()
+  const [tariffs, setTariffs] = useState<Tariff[]>([])
+  const [loading, setLoading] = useState(true)
+  const [purchasing, setPurchasing] = useState<number | null>(null)
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
-    useEffect(() => {
-        const params = new URLSearchParams(searchParamsString)
-        const paymentId = params.get("payment_id")
-        if (!paymentId || confirmingPaymentId === paymentId) {
-            return
-        }
+  useEffect(() => {
+    loadTariffs()
+  }, [])
 
-        setConfirmingPaymentId(paymentId)
+  const loadTariffs = async () => {
+    setLoading(true)
+    const response = await getPublicTariffs()
+    if (response.data?.length) {
+      setTariffs(response.data.filter((tariff) => tariff.is_active))
+    }
+    setLoading(false)
+  }
 
-        const confirmPayment = async () => {
-            const response = await confirmYookassaPayment(paymentId)
-            if (response.data?.success) {
-                onPaymentConfirmed()
-            }
-            router.replace("/account/tariffs")
-        }
+  const handlePurchase = async (tariffId: number, tariffName: string) => {
+    // Clear previous messages
+    setMessage(null)
+    setPurchasing(tariffId)
 
-        confirmPayment()
-    }, [confirmingPaymentId, onPaymentConfirmed, router, searchParamsString])
+    try {
+      const response = await purchaseFreeTariff({
+        tariff_id: tariffId,
+        bypass_preset: "chrome",
+      })
 
-    return null
-}
-
-function AccountTariffsContent() {
-    const { user } = useAuth()
-    const [tariffs, setTariffs] = useState<Tariff[]>([])
-    const [loadingTariffs, setLoadingTariffs] = useState(true)
-    const [subscription, setSubscription] = useState<Subscription | null>(null)
-    const [loadingSubscription, setLoadingSubscription] = useState(true)
-    const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
-    const [purchaseMap, setPurchaseMap] = useState<Record<string, boolean>>({})
-
-    const loadSubscription = useCallback(async () => {
-        setLoadingSubscription(true)
-        const response = await getUserSubscriptions()
-        if (response.data) {
-            const active = response.data.find((item) => item.is_active) || response.data[0] || null
-            setSubscription(active)
-        }
-        setLoadingSubscription(false)
-    }, [])
-
-    useEffect(() => {
-        const loadTariffs = async () => {
-            setLoadingTariffs(true)
-            const response = await getPublicTariffs()
-            if (response.data?.length) {
-                setTariffs(response.data.filter((tariff) => tariff.is_active))
-            }
-            setLoadingTariffs(false)
-        }
-
-        loadTariffs()
-    }, [])
-
-    useEffect(() => {
-        loadSubscription()
-    }, [loadSubscription])
-
-    const handlePaymentConfirmed = useCallback(async () => {
-        setMessage({ type: "success", text: "Платёж подтверждён" })
-                await loadSubscription()
-    }, [loadSubscription])
-
-    const handlePurchase = async (tariff: Tariff) => {
-        setMessage(null)
-        setPurchaseMap((prev) => ({ ...prev, [tariff.id]: true }))
-        const normalizedName = tariff.name.toLowerCase()
-        const plan = normalizedName.includes('basic')
-            ? 'basic'
-            : normalizedName.includes('premium')
-                ? 'premium'
-                : normalizedName.includes('unlimited')
-                    ? 'unlimited'
-                    : 'free'
-
-        const response = await createYookassaPayment({
-            tariffId: tariff.id,
-            plan,
-            price: tariff.price,
-            description: `Оплата тарифа ${tariff.name}`,
+      if (response.data) {
+        setMessage({
+          type: "success",
+          text: response.data.message,
         })
 
-        if (response.data?.confirmation_url) {
-            window.location.href = response.data.confirmation_url
-            return
-        }
-
-        setMessage({ type: "error", text: response.error || "Не удалось инициировать платёж" })
-        setPurchaseMap((prev) => ({ ...prev, [tariff.id]: false }))
-    }
-
-    const formatDuration = (months: number) => {
-        if (months === 0) {
-            return "1 день"
-        }
-        return `${months} мес.`
-    }
-
-    const subscriptionInfo = useMemo(() => {
-        if (loadingSubscription) {
-            return "Загрузка статуса подписки..."
-        }
-        if (!subscription) {
-            return "Активная подписка отсутствует."
-        }
-        const expireDate = subscription.expire_date ? formatDate(subscription.expire_date) : "—"
-        return `Текущий план — ${subscription.plan}, продление ${expireDate}`
-    }, [loadingSubscription, subscription])
-
-    const formatDate = (dateString?: string) => {
-        if (!dateString) return "—"
-        return new Date(dateString).toLocaleDateString("ru-RU", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
+        // Redirect to keys page after 2 seconds
+        setTimeout(() => {
+          router.push("/account/keys")
+        }, 2000)
+      } else {
+        setMessage({
+          type: "error",
+          text: response.error || "Ошибка активации тарифа",
         })
+      }
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: "Произошла ошибка. Попробуйте позже.",
+      })
+    } finally {
+      setPurchasing(null)
     }
+  }
 
-    const visibleTariffs = tariffs
+  const formatDuration = (months: number) => {
+    if (months === 0) return "1 день"
+    if (months === 1) return "1 месяц"
+    if (months < 12) return `${months} месяца`
+    return `${months / 12} год`
+  }
 
+  const formatDataLimit = (gb: number) => {
+    if (gb === 0) return "Безлимитный"
+    if (gb < 1000) return `${gb} ГБ`
+    return `${gb / 1000} ТБ`
+  }
+
+  if (loading) {
     return (
-        <>
-            <Suspense fallback={null}>
-                <PaymentHandler onPaymentConfirmed={handlePaymentConfirmed} />
-            </Suspense>
-        <div className="min-h-screen bg-background relative">
-            <PixelStars />
-            <Header />
-
-            <main className="pt-32 pb-20 px-4">
-                <div className="max-w-5xl mx-auto space-y-10">
-                    <header className="bg-card border border-border p-6 flex flex-col gap-2">
-                        <p className="text-accent text-[9px] tracking-[0.35em]">[ ТАРИФЫ ]</p>
-                        <h1 className="text-foreground text-2xl">Продлите действие ключа</h1>
-                        <p className="text-muted-foreground text-[11px]">
-                            Активный пользователь: {user?.full_name || user?.username || "—"}. {subscriptionInfo}
-                        </p>
-                        {message && (
-                            <p className={`text-[11px] ${message.type === "success" ? "text-primary" : "text-red-400"}`}>
-                                {message.text}
-                            </p>
-                        )}
-                    </header>
-
-                    {loadingTariffs ? (
-                        <div className="bg-card border border-border p-6 text-muted-foreground text-[11px]">Загрузка тарифов...</div>
-                    ) : (
-                        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {visibleTariffs.map((tariff) => (
-                                <div key={tariff.id} className="border border-border bg-card p-5 flex flex-col gap-4">
-                                    <div>
-                                        <p className="text-accent text-[8px] tracking-[0.3em]">{tariff.name}</p>
-                                        <h3 className="text-foreground text-base mt-2">{formatDuration(tariff.duration_months)}</h3>
-                                    </div>
-                                    <p className="text-muted-foreground text-[10px] flex-1">{tariff.description || "Гибкий тариф Space VPN"}</p>
-                                    <p className="text-muted-foreground text-[9px]">
-                                        Лимит: {tariff.data_limit_gb === 0 ? "Безлимит" : `${tariff.data_limit_gb} GB`}
-                                    </p>
-                                    <div className="flex items-baseline gap-2">
-                                        <span className="text-primary text-3xl">{tariff.price}</span>
-                                        <span className="text-muted-foreground text-[11px]">₽ за период</span>
-                                    </div>
-                                    <button
-                                        onClick={() => handlePurchase(tariff)}
-                                        disabled={purchaseMap[tariff.id]}
-                                        className="w-full bg-primary text-primary-foreground py-2 text-[10px] hover:bg-primary/80 disabled:opacity-50"
-                                    >
-                                        {purchaseMap[tariff.id] ? "Оформление..." : "Купить тариф"}
-                                    </button>
-                                </div>
-                            ))}
-                        </section>
-                    )}
-                </div>
-            </main>
-
-            <Footer />
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-        </>
+      </div>
     )
-}
+  }
 
-export default function AccountTariffsPage() {
-    return (
-        <Suspense fallback={
-            <div className="min-h-screen bg-background relative">
-                <PixelStars />
-                <Header />
-                <main className="pt-32 pb-20 px-4">
-                    <div className="max-w-5xl mx-auto">
-                        <div className="bg-card border border-border p-6 text-muted-foreground text-[11px]">
-                            Загрузка...
-                        </div>
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Тарифы</h1>
+        <p className="text-muted-foreground">
+          Выберите подходящий тариф для вашего VPN подключения
+        </p>
+      </div>
+
+      {message && (
+        <Alert className={`mb-6 ${message.type === "success" ? "border-green-500 bg-green-50" : "border-red-500 bg-red-50"}`}>
+          {message.type === "success" ? (
+            <CheckCircle2 className="h-4 w-4 text-green-600" />
+          ) : (
+            <XCircle className="h-4 w-4 text-red-600" />
+          )}
+          <AlertDescription className={message.type === "success" ? "text-green-800" : "text-red-800"}>
+            {message.text}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {tariffs.length === 0 ? (
+        <Card>
+          <CardContent className="p-8 text-center text-muted-foreground">
+            <p>Нет доступных тарифов</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tariffs.map((tariff) => (
+            <Card key={tariff.id} className={tariff.is_featured ? "border-primary shadow-lg" : ""}>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-xl mb-1">{tariff.name}</CardTitle>
+                    {tariff.tagline && (
+                      <p className="text-xs text-muted-foreground">{tariff.tagline}</p>
+                    )}
+                  </div>
+                  {tariff.is_featured && (
+                    <Badge variant="default" className="text-xs">
+                      Популярный
+                    </Badge>
+                  )}
+                </div>
+                {tariff.description && (
+                  <CardDescription className="mt-2">{tariff.description}</CardDescription>
+                )}
+              </CardHeader>
+
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="text-center py-4 border-y">
+                    <div className="text-4xl font-bold">
+                      {tariff.price === 0 ? (
+                        <span className="text-green-600">Бесплатно</span>
+                      ) : (
+                        <>
+                          {tariff.price}
+                          <span className="text-lg text-muted-foreground ml-1">₽</span>
+                        </>
+                      )}
                     </div>
-                </main>
-                <Footer />
-            </div>
-        }>
-            <AccountTariffsContent />
-        </Suspense>
-    )
+                    <div className="text-sm text-muted-foreground mt-1">
+                      {formatDuration(tariff.duration_months)}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Трафик:</span>
+                      <span className="font-medium">{formatDataLimit(tariff.data_limit_gb)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Устройств:</span>
+                      <span className="font-medium">{tariff.devices_count}</span>
+                    </div>
+                  </div>
+
+                  {tariff.features && (
+                    <div className="pt-2 border-t">
+                      <p className="text-xs text-muted-foreground whitespace-pre-wrap">
+                        {tariff.features}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+
+              <CardFooter>
+                <Button
+                  className="w-full"
+                  onClick={() => handlePurchase(tariff.id, tariff.name)}
+                  disabled={purchasing !== null}
+                  variant={tariff.price === 0 ? "outline" : "default"}
+                >
+                  {purchasing === tariff.id ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Активация...
+                    </>
+                  ) : tariff.price === 0 ? (
+                    "Активировать"
+                  ) : (
+                    "Купить"
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }

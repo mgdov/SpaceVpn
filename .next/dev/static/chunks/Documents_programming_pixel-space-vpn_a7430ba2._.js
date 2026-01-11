@@ -2271,12 +2271,27 @@ function AdminPage() {
         posts
     ]);
     // Обработка логина
-    const handleLogin = (e)=>{
+    const handleLogin = async (e)=>{
         e.preventDefault();
         setLoginError("");
         if (loginUsername === ADMIN_USERNAME && loginPassword === ADMIN_PASSWORD) {
-            sessionStorage.setItem(ADMIN_AUTH_KEY, "true");
-            setIsAuthenticated(true);
+            // Пытаемся залогиниться через API для получения токена
+            try {
+                const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["loginUser"])(loginUsername, loginPassword);
+                if (response.error) {
+                    // API логин не удался, но разрешаем вход для управления блогом
+                    console.warn("API авторизация не удалась:", response.error);
+                    setLoginError("⚠️ Вход выполнен, но API недоступен. Функции тарифов и ключей ограничены.");
+                }
+                // В любом случае разрешаем вход в админку
+                sessionStorage.setItem(ADMIN_AUTH_KEY, "true");
+                setIsAuthenticated(true);
+            } catch (error) {
+                // Ошибка подключения, но разрешаем вход
+                setLoginError("⚠️ Вход выполнен, но не удалось подключиться к API");
+                sessionStorage.setItem(ADMIN_AUTH_KEY, "true");
+                setIsAuthenticated(true);
+            }
         } else {
             setLoginError("Неверный логин или пароль");
         }
@@ -2284,6 +2299,10 @@ function AdminPage() {
     // Обработка выхода
     const handleLogout = ()=>{
         sessionStorage.removeItem(ADMIN_AUTH_KEY);
+        // Удаляем токен из localStorage
+        if ("TURBOPACK compile-time truthy", 1) {
+            localStorage.removeItem('auth_token');
+        }
         setIsAuthenticated(false);
         setLoginUsername("");
         setLoginPassword("");
@@ -2638,12 +2657,12 @@ function AdminPage() {
                 children: "Загрузка..."
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 503,
+                lineNumber: 523,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-            lineNumber: 502,
+            lineNumber: 522,
             columnNumber: 7
         }, this);
     }
@@ -2653,7 +2672,7 @@ function AdminPage() {
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$components$2f$pixel$2d$stars$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PixelStars"], {}, void 0, false, {
                     fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                    lineNumber: 511,
+                    lineNumber: 531,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2670,17 +2689,17 @@ function AdminPage() {
                                         children: "S"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 517,
+                                        lineNumber: 537,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                    lineNumber: 516,
+                                    lineNumber: 536,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 515,
+                                lineNumber: 535,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -2688,7 +2707,7 @@ function AdminPage() {
                                 children: "ADMIN PANEL"
                             }, void 0, false, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 521,
+                                lineNumber: 541,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2696,7 +2715,7 @@ function AdminPage() {
                                 children: "Вход в панель администратора"
                             }, void 0, false, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 522,
+                                lineNumber: 542,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -2711,7 +2730,7 @@ function AdminPage() {
                                                 children: "Логин"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 526,
+                                                lineNumber: 546,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2724,13 +2743,13 @@ function AdminPage() {
                                                 required: true
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 529,
+                                                lineNumber: 549,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 525,
+                                        lineNumber: 545,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2741,7 +2760,7 @@ function AdminPage() {
                                                 children: "Пароль"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 541,
+                                                lineNumber: 561,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2757,7 +2776,7 @@ function AdminPage() {
                                                         required: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 545,
+                                                        lineNumber: 565,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2768,30 +2787,30 @@ function AdminPage() {
                                                             size: 16
                                                         }, void 0, false, {
                                                             fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                            lineNumber: 559,
+                                                            lineNumber: 579,
                                                             columnNumber: 37
                                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"], {
                                                             size: 16
                                                         }, void 0, false, {
                                                             fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                            lineNumber: 559,
+                                                            lineNumber: 579,
                                                             columnNumber: 60
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 554,
+                                                        lineNumber: 574,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 544,
+                                                lineNumber: 564,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 540,
+                                        lineNumber: 560,
                                         columnNumber: 15
                                     }, this),
                                     loginError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2799,7 +2818,7 @@ function AdminPage() {
                                         children: loginError
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 565,
+                                        lineNumber: 585,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2808,30 +2827,30 @@ function AdminPage() {
                                         children: "Войти"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 570,
+                                        lineNumber: 590,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 524,
+                                lineNumber: 544,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                        lineNumber: 514,
+                        lineNumber: 534,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                    lineNumber: 513,
+                    lineNumber: 533,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-            lineNumber: 510,
+            lineNumber: 530,
             columnNumber: 7
         }, this);
     }
@@ -2844,12 +2863,12 @@ function AdminPage() {
                 children: "Загрузка..."
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 587,
+                lineNumber: 607,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-            lineNumber: 586,
+            lineNumber: 606,
             columnNumber: 7
         }, this);
     }
@@ -2858,14 +2877,14 @@ function AdminPage() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$components$2f$pixel$2d$stars$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PixelStars"], {}, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 594,
+                lineNumber: 614,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$admin$2d$header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AdminHeader"], {
                 onLogout: handleLogout
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 596,
+                lineNumber: 616,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2877,7 +2896,7 @@ function AdminPage() {
                         balance: balance
                     }, void 0, false, {
                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                        lineNumber: 599,
+                        lineNumber: 619,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -2893,7 +2912,7 @@ function AdminPage() {
                                                 children: "VPN КЛЮЧИ"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 607,
+                                                lineNumber: 627,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2908,20 +2927,20 @@ function AdminPage() {
                                                         size: 14
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 616,
+                                                        lineNumber: 636,
                                                         columnNumber: 19
                                                     }, this),
                                                     "Создать ключ"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 608,
+                                                lineNumber: 628,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 606,
+                                        lineNumber: 626,
                                         columnNumber: 15
                                     }, this),
                                     keysError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2929,7 +2948,7 @@ function AdminPage() {
                                         children: keysError
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 620,
+                                        lineNumber: 640,
                                         columnNumber: 29
                                     }, this),
                                     keysLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2937,7 +2956,7 @@ function AdminPage() {
                                         children: "Загрузка ключей..."
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 622,
+                                        lineNumber: 642,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$keys$2f$key$2d$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["KeyTable"], {
                                         keys: vpnClients,
@@ -2947,13 +2966,13 @@ function AdminPage() {
                                         onToggle: ()=>{}
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 624,
+                                        lineNumber: 644,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 605,
+                                lineNumber: 625,
                                 columnNumber: 13
                             }, this),
                             activeTab === "blog" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2966,7 +2985,7 @@ function AdminPage() {
                                                 children: "БЛОГ"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 639,
+                                                lineNumber: 659,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2981,20 +3000,20 @@ function AdminPage() {
                                                         size: 14
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 648,
+                                                        lineNumber: 668,
                                                         columnNumber: 19
                                                     }, this),
                                                     "Создать статью"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 640,
+                                                lineNumber: 660,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 638,
+                                        lineNumber: 658,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$blog$2f$post$2d$list$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PostList"], {
@@ -3003,13 +3022,13 @@ function AdminPage() {
                                         onDelete: handleDeletePost
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 653,
+                                        lineNumber: 673,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 637,
+                                lineNumber: 657,
                                 columnNumber: 13
                             }, this),
                             activeTab === "tariffs" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3022,7 +3041,7 @@ function AdminPage() {
                                                 children: "ТАРИФЫ"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 661,
+                                                lineNumber: 681,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3037,20 +3056,20 @@ function AdminPage() {
                                                         size: 14
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 670,
+                                                        lineNumber: 690,
                                                         columnNumber: 19
                                                     }, this),
                                                     "Добавить тариф"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 662,
+                                                lineNumber: 682,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 660,
+                                        lineNumber: 680,
                                         columnNumber: 15
                                     }, this),
                                     tariffsError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3058,7 +3077,7 @@ function AdminPage() {
                                         children: tariffsError
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 674,
+                                        lineNumber: 694,
                                         columnNumber: 32
                                     }, this),
                                     tariffsLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3066,7 +3085,7 @@ function AdminPage() {
                                         children: "Загрузка тарифов..."
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 676,
+                                        lineNumber: 696,
                                         columnNumber: 17
                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$tariffs$2f$tariff$2d$table$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TariffTable"], {
                                         tariffs: tariffs,
@@ -3075,13 +3094,13 @@ function AdminPage() {
                                         onToggle: handleToggleTariff
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 678,
+                                        lineNumber: 698,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 659,
+                                lineNumber: 679,
                                 columnNumber: 13
                             }, this),
                             activeTab === "balance" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3091,7 +3110,7 @@ function AdminPage() {
                                         children: "БАЛАНС"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 686,
+                                        lineNumber: 706,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3105,7 +3124,7 @@ function AdminPage() {
                                                         children: "ОБЩИЙ БАЛАНС"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 690,
+                                                        lineNumber: 710,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3116,13 +3135,13 @@ function AdminPage() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 691,
+                                                        lineNumber: 711,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 689,
+                                                lineNumber: 709,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3133,7 +3152,7 @@ function AdminPage() {
                                                         children: "АКТИВНЫХ КЛЮЧЕЙ"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 694,
+                                                        lineNumber: 714,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3141,13 +3160,13 @@ function AdminPage() {
                                                         children: activeKeys
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 695,
+                                                        lineNumber: 715,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 693,
+                                                lineNumber: 713,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3158,7 +3177,7 @@ function AdminPage() {
                                                         children: "АКТИВНЫХ ПОДПИСОК"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 698,
+                                                        lineNumber: 718,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3166,19 +3185,19 @@ function AdminPage() {
                                                         children: activeSubscriptions
                                                     }, void 0, false, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 699,
+                                                        lineNumber: 719,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 697,
+                                                lineNumber: 717,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 688,
+                                        lineNumber: 708,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3189,7 +3208,7 @@ function AdminPage() {
                                                 children: "ИСТОРИЯ ПОСТУПЛЕНИЙ"
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 704,
+                                                lineNumber: 724,
                                                 columnNumber: 17
                                             }, this),
                                             balanceError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3197,7 +3216,7 @@ function AdminPage() {
                                                 children: balanceError
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 705,
+                                                lineNumber: 725,
                                                 columnNumber: 34
                                             }, this),
                                             subscriptionsLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3205,7 +3224,7 @@ function AdminPage() {
                                                 children: "Загрузка подписок..."
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 707,
+                                                lineNumber: 727,
                                                 columnNumber: 19
                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "space-y-3",
@@ -3222,7 +3241,7 @@ function AdminPage() {
                                                                         children: subscription.user?.email || subscription.user_id
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                                        lineNumber: 716,
+                                                                        lineNumber: 736,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3234,13 +3253,13 @@ function AdminPage() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                                        lineNumber: 717,
+                                                                        lineNumber: 737,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                                lineNumber: 715,
+                                                                lineNumber: 735,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3252,43 +3271,43 @@ function AdminPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                                lineNumber: 721,
+                                                                lineNumber: 741,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, subscription.id, true, {
                                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                        lineNumber: 714,
+                                                        lineNumber: 734,
                                                         columnNumber: 25
                                                     }, this);
                                                 })
                                             }, void 0, false, {
                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                                lineNumber: 709,
+                                                lineNumber: 729,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                        lineNumber: 703,
+                                        lineNumber: 723,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                                lineNumber: 685,
+                                lineNumber: 705,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                        lineNumber: 602,
+                        lineNumber: 622,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 598,
+                lineNumber: 618,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$keys$2f$key$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["KeyModal"], {
@@ -3301,7 +3320,7 @@ function AdminPage() {
                 onClose: closeKeyModal
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 733,
+                lineNumber: 753,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$blog$2f$post$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PostModal"], {
@@ -3313,7 +3332,7 @@ function AdminPage() {
                 onClose: closePostModal
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 743,
+                lineNumber: 763,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$components$2f$admin$2f$tariffs$2f$tariff$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["TariffModal"], {
@@ -3325,13 +3344,13 @@ function AdminPage() {
                 onClose: closeTariffModal
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-                lineNumber: 752,
+                lineNumber: 772,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Documents/programming/pixel-space-vpn/app/admin/page.tsx",
-        lineNumber: 593,
+        lineNumber: 613,
         columnNumber: 5
     }, this);
 }

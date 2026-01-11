@@ -4,8 +4,45 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { getPublicTariffs, type Tariff } from "@/lib/api"
 
+// Тестовые тарифы
+const testTariffs: Tariff[] = [
+  {
+    id: 1,
+    name: "ПРОБНЫЙ",
+    description: "🚀 Идеально для знакомства с сервисом! Полный доступ ко всем функциям на 2 дня",
+    duration_months: 0,
+    price: 0,
+    data_limit_gb: 10,
+    devices_count: 1,
+    is_active: true,
+    is_featured: false,
+  },
+  {
+    id: 2,
+    name: "ЛУНА-1",
+    description: "✨ Месяц космической свободы! Быстрая скорость, стабильное соединение и защита данных по цене чашки кофе в неделю",
+    duration_months: 1,
+    price: 100,
+    data_limit_gb: 100,
+    devices_count: 3,
+    is_active: true,
+    is_featured: true,
+  },
+  {
+    id: 3,
+    name: "КОСМОС-6",
+    description: "🌟 Полгода без забот! Лучшее соотношение цены и качества для активных пользователей",
+    duration_months: 6,
+    price: 500,
+    data_limit_gb: 1000,
+    devices_count: 5,
+    is_active: true,
+    is_featured: false,
+  },
+]
+
 export function PricingSection() {
-  const [tariffs, setTariffs] = useState<Tariff[]>([])
+  const [tariffs, setTariffs] = useState<Tariff[]>(testTariffs)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -14,6 +51,9 @@ export function PricingSection() {
       const response = await getPublicTariffs()
       if (response.data?.length) {
         setTariffs(response.data.filter((tariff) => tariff.is_active))
+      } else {
+        // Если тарифов с сервера нет, используем тестовые
+        setTariffs(testTariffs)
       }
       setLoading(false)
     }
@@ -54,11 +94,11 @@ export function PricingSection() {
     <section className="py-20 px-4 relative z-10">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <span className="text-accent text-[10px] tracking-widest">[ ТАРИФЫ ]</span>
-          <h2 className="text-xl md:text-2xl text-foreground mt-4 mb-4">
-            ВЫБЕРИТЕ СВОЙ <span className="text-primary">ПЛАН</span>
+          <span className="text-accent text-[11px] tracking-[0.4em]">[ ТАРИФЫ ]</span>
+          <h2 className="text-5xl md:text-7xl text-foreground font-bold tracking-tight mt-4 mb-4">
+            ВЫБЕРИТЕ<br />СВОЙ <span className="text-primary">ПЛАН</span>
           </h2>
-          <p className="text-muted-foreground text-[10px] max-w-xl mx-auto">
+          <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
             Гибкие тарифы для любых потребностей. Начните с бесплатного пробного периода.
           </p>
         </div>
@@ -107,15 +147,23 @@ export function PricingSection() {
 
                   <p className="flex-1 text-muted-foreground text-[11px] leading-relaxed">{tariff.description || "Стабильный туннель и поддержка 24/7"}</p>
 
-                  <Link
-                    href={tariff.price === 0 ? "/register" : "/login"}
-                    className={`text-center py-3 text-[11px] tracking-[0.15em] transition-colors ${tariff.id === highlightTariffId
-                      ? "bg-primary text-primary-foreground hover:bg-primary/80"
-                      : "border border-border text-foreground hover:border-primary hover:text-primary"
-                      }`}
-                  >
-                    {tariff.price === 0 ? "ПОПРОБОВАТЬ" : "ВЫБРАТЬ"}
-                  </Link>
+                  <div className="flex gap-2">
+                    <Link
+                      href={tariff.price === 0 ? "/register" : "/login"}
+                      className={`flex-1 flex items-center justify-center py-4 px-3 text-[10px] tracking-[0.12em] transition-colors ${tariff.id === highlightTariffId
+                        ? "bg-primary text-primary-foreground hover:bg-primary/80"
+                        : "border border-border text-foreground hover:border-primary hover:text-primary"
+                        }`}
+                    >
+                      {tariff.price === 0 ? "ПОПРОБОВАТЬ" : "ВЫБРАТЬ"}
+                    </Link>
+                    <Link
+                      href="#"
+                      className="flex-1 flex items-center justify-center py-4 px-3 text-[10px] tracking-[0.12em] transition-colors bg-transparent border border-green-500 text-green-500 hover:bg-green-500/10 hover:border-green-400 hover:text-green-400"
+                    >
+                      КУПИТЬ БЕЗ РЕГИСТРАЦИИ
+                    </Link>
+                  </div>
                 </div>
               )
             })}

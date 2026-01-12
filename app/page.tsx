@@ -14,7 +14,7 @@ export default function HomePage() {
       <main>
         {/* Hero Section with Title and Action Buttons */}
         <section className="relative z-10 px-4 sm:px-6 md:px-8 pt-20 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20">
-          <div className="max-w-5xl mx-auto text-center">
+          <div className="max-w-5xl mt-30 mx-auto text-center">
             {/* Title */}
             <div>
               <h1 className="text-accent text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.3em] sm:tracking-[0.35em] md:tracking-[0.4em] mb-3 sm:mb-4">

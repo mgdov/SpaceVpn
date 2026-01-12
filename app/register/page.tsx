@@ -199,6 +199,14 @@ export default function RegisterPage() {
           </button>
         </form>
 
+        {/* Buy without registration button */}
+        <Link
+          href="/buy-no-register"
+          className="mt-4 w-full bg-card border-2 border-border hover:border-primary text-foreground py-3 text-[10px] hover:bg-accent/5 transition-colors flex items-center justify-center"
+        >
+          💳 Купить без регистрации
+        </Link>
+
         <p className="text-center mt-4 text-muted-foreground text-[8px]">
           Уже есть аккаунт?{" "}
           <Link href="/login" className="text-primary hover:underline">

@@ -5,3 +5,78 @@
 [00:09:28.365] Server  LOG      ✓ Compiled in 110ms
 [00:10:01.998] Server  LOG      ✓ Compiled in 49ms
 [00:16:02.994] Server  LOG      ✓ Compiled in 113ms
+[07:39:50.308] Server  LOG      ✓ Compiled in 156ms
+[18:31:17.864] Server  LOG      ✓ Compiled in 186ms
+[18:31:17.989] Server  LOG      ✓ Compiled in 119ms
+[18:38:21.336] Server  LOG      ✓ Compiled in 116ms
+[18:38:39.663] Server  LOG      ✓ Compiled in 244ms
+[18:38:39.914] Browser ERROR   ./Documents/programming/pixel-space-vpn/components/pricing-section.tsx:170:11
+Parsing ecmascript source code failed
+  168 |               )
+  169 |             })}
+> 170 |           </div>
+      |           ^
+  171 |         )}
+  172 |       </div>
+  173 |     </section>
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./Documents/programming/pixel-space-vpn/components/pricing-section.tsx
+    ./Documents/programming/pixel-space-vpn/app/page.tsx
+[18:38:39.914] Browser ERROR   ./Documents/programming/pixel-space-vpn/components/pricing-section.tsx:170:12
+Parsing ecmascript source code failed
+  168 |               )
+  169 |             })}
+> 170 |           </div>
+      |            ^^^^^
+  171 |         )}
+  172 |       </div>
+  173 |     </section>
+
+Unterminated regexp literal
+
+Import trace:
+  Server Component:
+    ./Documents/programming/pixel-space-vpn/components/pricing-section.tsx
+    ./Documents/programming/pixel-space-vpn/app/page.tsx
+[18:38:48.913] Browser ERROR   ./Documents/programming/pixel-space-vpn/components/pricing-section.tsx:172:11
+Parsing ecmascript source code failed
+  170 |               })
+  171 |             }
+> 172 |           </div>
+      |           ^
+  173 |         )}
+  174 |       </div>
+  175 |     </section>
+
+Expression expected
+
+Import trace:
+  Server Component:
+    ./Documents/programming/pixel-space-vpn/components/pricing-section.tsx
+    ./Documents/programming/pixel-space-vpn/app/page.tsx
+[18:38:48.913] Browser ERROR   ./Documents/programming/pixel-space-vpn/components/pricing-section.tsx:172:12
+Parsing ecmascript source code failed
+  170 |               })
+  171 |             }
+> 172 |           </div>
+      |            ^^^^^
+  173 |         )}
+  174 |       </div>
+  175 |     </section>
+
+Unterminated regexp literal
+
+Import trace:
+  Server Component:
+    ./Documents/programming/pixel-space-vpn/components/pricing-section.tsx
+    ./Documents/programming/pixel-space-vpn/app/page.tsx
+[18:42:04.032] Server  LOG      ✓ Compiled in 190ms
+[18:43:41.290] Server  LOG      ✓ Compiled in 228ms
+[18:45:17.918] Server  LOG      ✓ Compiled in 205ms
+[18:46:15.364] Server  LOG      ✓ Compiled in 101ms
+[18:49:11.632] Server  LOG      ✓ Compiled in 426ms
+[18:51:05.390] Server  LOG      ✓ Compiled in 169ms

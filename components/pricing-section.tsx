@@ -91,14 +91,14 @@ export function PricingSection() {
   }
 
   return (
-    <section className="py-20 px-4 relative z-10">
+    <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 relative z-10">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <span className="text-accent text-[11px] tracking-[0.4em]">[ ТАРИФЫ ]</span>
-          <h2 className="text-5xl md:text-7xl text-foreground font-bold tracking-tight mt-4 mb-4">
+        <div className="text-center mb-10 sm:mb-12">
+          <span className="text-accent text-[9px] sm:text-[10px] md:text-[11px] tracking-[0.3em] sm:tracking-[0.35em] md:tracking-[0.4em]">[ ТАРИФЫ ]</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-foreground font-bold tracking-tight mt-3 sm:mt-4 mb-3 sm:mb-4 px-4">
             ВЫБЕРИТЕ<br />СВОЙ <span className="text-primary">ПЛАН</span>
           </h2>
-          <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+          <p className="text-muted-foreground text-xs sm:text-sm md:text-base max-w-2xl mx-auto leading-relaxed px-4">
             Гибкие тарифы для любых потребностей. Начните с бесплатного пробного периода.
           </p>
         </div>
@@ -108,7 +108,7 @@ export function PricingSection() {
             Загрузка тарифов...
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
             {displayTariffs.map((tariff) => {
               const months = Math.max(1, tariff.duration_months)
               const nominalPrice = baseMonthlyPrice * months
@@ -119,7 +119,7 @@ export function PricingSection() {
               return (
                 <div
                   key={tariff.id}
-                  className={`relative bg-card border ${tariff.id === highlightTariffId ? "border-primary" : "border-border"} p-8 flex flex-col gap-6`}
+                  className={`relative bg-card border ${tariff.id === highlightTariffId ? "border-primary" : "border-border"} p-5 sm:p-6 md:p-8 flex flex-col gap-6`}
                 >
                   {tariff.id === highlightTariffId && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 text-[8px]">
@@ -147,10 +147,10 @@ export function PricingSection() {
 
                   <p className="flex-1 text-muted-foreground text-[11px] leading-relaxed">{tariff.description || "Стабильный туннель и поддержка 24/7"}</p>
 
-                  <div className="flex gap-2">
+                  <div className="flex flex-col xs:flex-row gap-2">
                     <Link
                       href={tariff.price === 0 ? "/register" : "/login"}
-                      className={`flex-1 flex items-center justify-center py-4 px-3 text-[10px] tracking-[0.12em] transition-colors ${tariff.id === highlightTariffId
+                      className={`flex-1 flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.1em] md:tracking-[0.12em] transition-colors ${tariff.id === highlightTariffId
                         ? "bg-primary text-primary-foreground hover:bg-primary/80"
                         : "border border-border text-foreground hover:border-primary hover:text-primary"
                         }`}
@@ -158,8 +158,8 @@ export function PricingSection() {
                       {tariff.price === 0 ? "ПОПРОБОВАТЬ" : "ВЫБРАТЬ"}
                     </Link>
                     <Link
-                      href="#"
-                      className="flex-1 flex items-center justify-center py-4 px-3 text-[10px] tracking-[0.12em] transition-colors bg-transparent border border-green-500 text-green-500 hover:bg-green-500/10 hover:border-green-400 hover:text-green-400"
+                      href="/buy-no-register"
+                      className="flex-1 flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.1em] md:tracking-[0.12em] transition-colors bg-transparent border border-green-500 text-green-500 hover:bg-green-500/10 hover:border-green-400 hover:text-green-400 text-center leading-tight"
                     >
                       КУПИТЬ БЕЗ РЕГИСТРАЦИИ
                     </Link>

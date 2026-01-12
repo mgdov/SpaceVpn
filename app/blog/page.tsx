@@ -1,8 +1,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
-import { blogPosts } from "@/lib/blog-data"
-import Link from "next/link"
+import { Construction } from "lucide-react"
 
 export default function BlogPage() {
   return (
@@ -18,35 +17,24 @@ export default function BlogPage() {
             </h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts.map((post) => (
-              <article
-                key={post.id}
-                className="bg-card border border-border overflow-hidden hover:border-primary transition-colors group"
-              >
-                <div className="aspect-video bg-secondary overflow-hidden">
-                  <img
-                    src={post.image || "/placeholder.svg"}
-                    alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                  />
+          {/* Under Development Message */}
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-card border-2 border-border p-12 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Construction className="w-10 h-10 text-primary" />
                 </div>
-                <div className="p-4">
-                  <div className="flex items-center justify-between text-[8px] mb-2">
-                    <span className="text-primary uppercase tracking-[0.25em]">{post.heroHighlight}</span>
-                    <span className="text-muted-foreground tracking-normal">
-                      {post.publishedAt} • Space VPN Team
-                    </span>
-                  </div>
-                  <p className="text-muted-foreground text-[8px] mb-2">{post.heroDescription}</p>
-                  <h2 className="text-foreground text-[10px] mt-2 mb-2 line-clamp-2">{post.title}</h2>
-                  <p className="text-muted-foreground text-[8px] line-clamp-2 mb-4">{post.excerpt}</p>
-                  <Link href={`/blog/${post.id}`} className="text-primary text-[8px] hover:underline">
-                    Читать далее →
-                  </Link>
-                </div>
-              </article>
-            ))}
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                Страница в разработке
+              </h2>
+              <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-6">
+                Мы работаем над созданием интересного контента для вас. Скоро здесь появятся полезные статьи о VPN, безопасности и приватности в интернете.
+              </p>
+              <div className="text-accent text-xs tracking-wider">
+                [ COMING SOON ]
+              </div>
+            </div>
           </div>
         </div>
       </main>

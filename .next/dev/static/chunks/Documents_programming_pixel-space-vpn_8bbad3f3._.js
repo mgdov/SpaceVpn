@@ -540,6 +540,15 @@ function RegisterPage() {
                         lineNumber: 128,
                         columnNumber: 9
                     }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                        href: "/buy-no-register",
+                        className: "mt-4 w-full bg-card border-2 border-border hover:border-primary text-foreground py-3 text-[10px] hover:bg-accent/5 transition-colors flex items-center justify-center",
+                        children: "💳 Купить без регистрации"
+                    }, void 0, false, {
+                        fileName: "[project]/Documents/programming/pixel-space-vpn/app/register/page.tsx",
+                        lineNumber: 203,
+                        columnNumber: 9
+                    }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         className: "text-center mt-4 text-muted-foreground text-[8px]",
                         children: [
@@ -551,13 +560,13 @@ function RegisterPage() {
                                 children: "Войти"
                             }, void 0, false, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/register/page.tsx",
-                                lineNumber: 204,
+                                lineNumber: 212,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Documents/programming/pixel-space-vpn/app/register/page.tsx",
-                        lineNumber: 202,
+                        lineNumber: 210,
                         columnNumber: 9
                     }, this)
                 ]

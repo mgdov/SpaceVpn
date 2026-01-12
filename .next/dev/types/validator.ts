@@ -110,6 +110,33 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../../app/buy-no-register/extend-key/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/buy-no-register/extend-key">> = Specific
+  const handler = {} as typeof import("../../../app/buy-no-register/extend-key/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/buy-no-register/new-key/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/buy-no-register/new-key">> = Specific
+  const handler = {} as typeof import("../../../app/buy-no-register/new-key/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/buy-no-register/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/buy-no-register">> = Specific
+  const handler = {} as typeof import("../../../app/buy-no-register/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/faq/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/faq">> = Specific

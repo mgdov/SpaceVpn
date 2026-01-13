@@ -85,13 +85,15 @@ function AccountKeysPageContent() {
 
         // Получить активную подписку через /subscriptions/my
         const subscriptionsResponse = await getUserSubscriptions()
-        if (!subscriptionsResponse.data || subscriptionsResponse.data.length === 0) {
+        const subscriptions = subscriptionsResponse.data?.subscriptions || []
+        
+        if (subscriptions.length === 0) {
             setError("У вас нет активной подписки. Сначала оформите подписку.")
             setCreating(false)
             return
         }
 
-        const activeSubscription = subscriptionsResponse.data.find((sub) => sub.status === 'active') || subscriptionsResponse.data[0]
+        const activeSubscription = subscriptions.find((sub) => sub.status === 'active') || subscriptions[0]
         if (!activeSubscription) {
             setError("Не найдена активная подписка для создания VPN ключа")
             setCreating(false)

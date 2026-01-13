@@ -6,7 +6,7 @@ import { PixelStars } from "@/components/pixel-stars"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { useAuth, withAuth } from "@/lib/auth-context"
-import { getUserVPNStatus, type VPNStatus } from "@/lib/api"
+import { getMySubscriptions, listUserVPNClients, type VPNStatus } from "@/lib/api"
 
 const sections = [
     {
@@ -36,9 +36,34 @@ function AccountPageContent() {
 
     useEffect(() => {
         const loadVPNStatus = async () => {
-            const response = await getUserVPNStatus()
-            if (response.data) {
-                setVpnStatus(response.data)
+            // Получаем подписки и VPN клиенты отдельно
+            const [subsResponse, clientsResponse] = await Promise.all([
+                getMySubscriptions(),
+                listUserVPNClients()
+            ])
+            
+            if (subsResponse.data && subsResponse.data.subscriptions.length > 0) {
+                const activeSub = subsResponse.data.subscriptions.find(s => s.status === 'active') || subsResponse.data.subscriptions[0]
+                const firstClient = clientsResponse.data?.[0]
+                
+                // Собираем VPNStatus из полученных данных
+                const vpnStatusData: VPNStatus = {
+                    status: activeSub.status as any,
+                    expires_at: activeSub.expire_date,
+                    traffic_used: activeSub.used_traffic,
+                    traffic_limit: activeSub.data_limit,
+                    traffic_used_gb: activeSub.used_traffic / (1024**3),
+                    traffic_limit_gb: activeSub.data_limit > 0 ? activeSub.data_limit / (1024**3) : 0,
+                    traffic_percentage: activeSub.data_limit > 0 
+                        ? (activeSub.used_traffic / activeSub.data_limit) * 100 
+                        : 0,
+                    vless_uri: firstClient?.subscription_url || null,
+                    qr_code: firstClient?.qr_code || null,
+                    subscription_id: activeSub.id,
+                    tariff_name: null,
+                }
+                
+                setVpnStatus(vpnStatusData)
             }
             setLoading(false)
         }

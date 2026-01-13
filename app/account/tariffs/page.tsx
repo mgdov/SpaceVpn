@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { getPublicTariffs, purchaseFreeTariff, createYookassaPayment, type Tariff } from "@/lib/api"
+import { getPublicTariffs, purchaseFreeTariff, type Tariff } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -59,24 +59,12 @@ export default function TariffsPage() {
           })
         }
       } else {
-        // Если тариф платный, создаем платёж через YooKassa
-        const response = await createYookassaPayment({
-          tariffId: tariffId,
-          plan: tariffName,
-          price: tariffPrice,
-          description: `Оплата тарифа ${tariffName}`,
+        // Платные тарифы временно недоступны (до интеграции YooKassa)
+        setMessage({
+          type: "error",
+          text: "Платные тарифы временно недоступны. Используйте бесплатный тариф.",
         })
-
-        if (response.data?.confirmation_url) {
-          // Перенаправляем пользователя на страницу оплаты YooKassa
-          window.location.href = response.data.confirmation_url
-        } else {
-          setMessage({
-            type: "error",
-            text: response.error || "Ошибка создания платежа",
-          })
-          setPurchasing(null)
-        }
+        setPurchasing(null)
       }
     } catch (error) {
       setMessage({

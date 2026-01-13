@@ -51,9 +51,13 @@ export interface VPNClient {
   subscription_id?: number
   client_uuid: string
   name: string
+  status: 'active' | 'expired' | 'blocked' | 'disabled'
+  pasarguard_username?: string | null
   device_info?: string | null
+  xray_config?: string | null
   subscription_url?: string | null
   qr_code?: string | null
+  last_connected_at?: string | null
   created_at: string
   updated_at?: string
 }
@@ -387,9 +391,11 @@ export async function getCurrentUserInfo(): Promise<ApiResponse<User>> {
   return response
 }
 
-export async function getUserVPNStatus(): Promise<ApiResponse<VPNStatus>> {
-  return apiRequest<VPNStatus>('/users/me/vpn')
-}
+// ВРЕМЕННО ОТКЛЮЧЕНО: Endpoint /users/me/vpn вызывает 500 error
+// Используйте комбинацию getMySubscriptions() + listUserVPNClients()
+// export async function getUserVPNStatus(): Promise<ApiResponse<VPNStatus>> {
+//   return apiRequest<VPNStatus>('/users/me/vpn')
+// }
 
 export async function updateCurrentUser(payload: UpdateProfilePayload): Promise<ApiResponse<User>> {
   const response = await apiRequest<User>('/users/me', {
@@ -435,8 +441,8 @@ export async function adminMakeSuperuser(userId: string): Promise<ApiResponse<Us
 /**
  * Subscription endpoints (user)
  */
-export async function getUserSubscriptions(): Promise<ApiResponse<Subscription[]>> {
-  return apiRequest<Subscription[]>('/subscriptions/')  // Add trailing slash
+export async function getUserSubscriptions(): Promise<ApiResponse<MySubscriptionsResponse>> {
+  return apiRequest<MySubscriptionsResponse>('/subscriptions/my')
 }
 
 export async function getMySubscriptions(): Promise<ApiResponse<MySubscriptionsResponse>> {
@@ -587,7 +593,7 @@ export interface CreateVPNClientResponse {
 export async function createUserVPNClient(
   payload: CreateVPNClientPayload
 ): Promise<ApiResponse<CreateVPNClientResponse>> {
-  return apiRequest<CreateVPNClientResponse>('/vpn-clients/', {
+  return apiRequest<CreateVPNClientResponse>('/vpn-clients', {
     method: 'POST',
     body: JSON.stringify(payload),
   })
@@ -597,7 +603,7 @@ export async function createUserVPNClient(
  * VPN client endpoints (user)
  */
 export async function listUserVPNClients(): Promise<ApiResponse<VPNClient[]>> {
-  return apiRequest<VPNClient[]>('/vpn-clients/')  // Add trailing slash
+  return apiRequest<VPNClient[]>('/vpn-clients')
 }
 
 export async function getUserVPNClient(id: string): Promise<ApiResponse<VPNClient>> {
@@ -705,6 +711,9 @@ export async function getApiInfo(): Promise<ApiResponse<ApiInfoResponse>> {
   return apiRequest<ApiInfoResponse>('/')
 }
 
+// ВРЕМЕННО ОТКЛЮЧЕНО: YooKassa endpoints не реализованы на backend
+// Будет добавлено позже при интеграции платежного шлюза
+/*
 export interface CreateYookassaPaymentPayload {
   tariffId: number
   plan: string
@@ -782,4 +791,5 @@ export async function confirmYookassaPayment(
     return { error: error instanceof Error ? error.message : 'Network error' }
   }
 }
+*/
 

@@ -106,7 +106,7 @@ export function Header() {
               </button>
             </div>
 
-            <nav className="flex flex-col gap-4">
+            <nav className="mt-5 flex flex-col gap-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}

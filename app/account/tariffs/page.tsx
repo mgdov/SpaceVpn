@@ -1,13 +1,17 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { getPublicTariffs, purchaseFreeTariff, type Tariff } from "@/lib/api"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { CheckCircle2, XCircle, Loader2 } from "lucide-react"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { BypassPresetSelector } from "@/components/bypass-preset-selector"
+import { CheckCircle2, XCircle, Loader2, ArrowLeft } from "lucide-react"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
+import { PixelStars } from "@/components/pixel-stars"
 
 export default function TariffsPage() {
   const router = useRouter()
@@ -15,6 +19,9 @@ export default function TariffsPage() {
   const [loading, setLoading] = useState(true)
   const [purchasing, setPurchasing] = useState<number | null>(null)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+  const [selectedTariff, setSelectedTariff] = useState<Tariff | null>(null)
+  const [bypassPreset, setBypassPreset] = useState<string>("yandex")
+  const [showPresetDialog, setShowPresetDialog] = useState(false)
 
   useEffect(() => {
     loadTariffs()
@@ -22,6 +29,41 @@ export default function TariffsPage() {
 
   const loadTariffs = async () => {
     setLoading(true)
+
+    // Проверяем, используется ли тестовый пользователь
+    const token = localStorage.getItem('auth_token')
+    if (token === 'test_token_12345') {
+      const mockTariffs: Tariff[] = [
+        {
+          id: 1,
+          name: 'Бесплатный',
+          description: 'Базовый доступ для тестирования',
+          tagline: 'Для начала',
+          duration_months: 0,
+          price: 0,
+          data_limit_gb: 10,
+          devices_count: 1,
+          is_active: true,
+          is_featured: false,
+        },
+        {
+          id: 2,
+          name: 'Стандарт',
+          description: 'Полный доступ с безлимитным трафиком',
+          tagline: 'Лучший выбор',
+          duration_months: 1,
+          price: 299,
+          data_limit_gb: 0,
+          devices_count: 3,
+          is_active: true,
+          is_featured: true,
+        },
+      ]
+      setTariffs(mockTariffs)
+      setLoading(false)
+      return
+    }
+
     const response = await getPublicTariffs()
     if (response.data?.length) {
       setTariffs(response.data.filter((tariff) => tariff.is_active))
@@ -30,56 +72,64 @@ export default function TariffsPage() {
   }
 
   const handlePurchase = async (tariffId: number, tariffName: string, tariffPrice: number) => {
+    // Если тариф бесплатный, сначала показываем диалог выбора bypass preset
+    if (tariffPrice === 0) {
+      setSelectedTariff(tariffs.find(t => t.id === tariffId) || null)
+      setShowPresetDialog(true)
+      return
+    }
+
+    // Платные тарифы временно недоступны (до интеграции YooKassa)
+    setMessage({
+      type: "error",
+      text: "Платные тарифы временно недоступны. Используйте бесплатный тариф.",
+    })
+  }
+
+  const confirmPurchase = async () => {
+    if (!selectedTariff) return
+
     // Clear previous messages
     setMessage(null)
-    setPurchasing(tariffId)
+    setPurchasing(selectedTariff.id)
+    setShowPresetDialog(false)
 
     try {
-      // Если тариф бесплатный, активируем сразу
-      if (tariffPrice === 0) {
-        const response = await purchaseFreeTariff({
-          tariff_id: tariffId,
-          bypass_preset: "chrome",
+      const response = await purchaseFreeTariff({
+        tariff_id: selectedTariff.id,
+        bypass_preset: bypassPreset,
+      })
+
+      if (response.data) {
+        setMessage({
+          type: "success",
+          text: response.data.message,
         })
 
-        if (response.data) {
-          setMessage({
-            type: "success",
-            text: response.data.message,
-          })
-
-          // Redirect to keys page after 2 seconds
-          setTimeout(() => {
-            router.push("/account/keys")
-          }, 2000)
-        } else {
-          setMessage({
-            type: "error",
-            text: response.error || "Ошибка активации тарифа",
-          })
-        }
+        // Redirect to keys page after 2 seconds
+        setTimeout(() => {
+          router.push("/account/keys")
+        }, 2000)
       } else {
-        // Платные тарифы временно недоступны (до интеграции YooKassa)
         setMessage({
           type: "error",
-          text: "Платные тарифы временно недоступны. Используйте бесплатный тариф.",
+          text: response.error || "Ошибка активации тарифа",
         })
-        setPurchasing(null)
       }
     } catch (error) {
       setMessage({
         type: "error",
         text: "Произошла ошибка. Попробуйте позже.",
       })
+    } finally {
       setPurchasing(null)
+      setSelectedTariff(null)
     }
   }
 
   const formatDuration = (months: number) => {
     if (months === 0) return "1 день"
-    if (months === 1) return "1 месяц"
-    if (months < 12) return `${months} месяца`
-    return `${months / 12} год`
+    return `${months} мес.`
   }
 
   const formatDataLimit = (gb: number) => {
@@ -88,129 +138,218 @@ export default function TariffsPage() {
     return `${gb / 1000} ТБ`
   }
 
+  const baseMonthlyPrice = useMemo(() => {
+    if (!tariffs.length) return 0
+    const perMonthPrices = tariffs.map((tariff) => {
+      const months = tariff.duration_months === 0 ? 1 : Math.max(1, tariff.duration_months)
+      return tariff.price / months
+    })
+    return Math.min(...perMonthPrices)
+  }, [tariffs])
+
+  const highlightTariffId = useMemo(() => {
+    if (!tariffs.length) return null
+    return tariffs.reduce((best, current) => {
+      const currentMonths = current.duration_months === 0 ? 1 : Math.max(1, current.duration_months)
+      const bestMonths = best.duration_months === 0 ? 1 : Math.max(1, best.duration_months)
+      const currentRatio = current.price / currentMonths
+      const bestRatio = best.price / bestMonths
+      return currentRatio < bestRatio ? current : best
+    }).id
+  }, [tariffs])
+
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-100">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-background relative">
+        <PixelStars />
+        <Header />
+        <div className="container mx-auto px-4 py-32">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
         </div>
+        <Footer />
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Тарифы</h1>
-        <p className="text-muted-foreground">
-          Выберите подходящий тариф для вашего VPN подключения
-        </p>
-      </div>
+    <div className="min-h-screen bg-background relative">
+      <PixelStars />
+      <Header />
 
-      {message && (
-        <Alert className={`mb-6 ${message.type === "success" ? "border-green-500 bg-green-50" : "border-red-500 bg-red-50"}`}>
-          {message.type === "success" ? (
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
-          ) : (
-            <XCircle className="h-4 w-4 text-red-600" />
+      <main className="pt-24 pb-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          {/* Кнопка назад */}
+          <Link
+            href="/account"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm mb-6"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Назад в личный кабинет
+          </Link>
+
+          {/* Заголовок */}
+          <div className="bg-card border border-border p-8 mb-10">
+            <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ ТАРИФЫ ]</p>
+            <h1 className="text-3xl md:text-4xl text-foreground font-bold mb-3">
+              Выберите свой план
+            </h1>
+            <p className="text-muted-foreground text-base max-w-2xl">
+              Гибкие тарифы для любых потребностей. Начните с бесплатного пробного периода.
+            </p>
+          </div>
+
+          {message && (
+            <Alert className={`mb-6 ${message.type === "success" ? "border-2 border-green-500 bg-green-500/10" : "border-2 border-red-500 bg-red-500/10"}`}>
+              {message.type === "success" ? (
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
+              ) : (
+                <XCircle className="h-5 w-5 text-red-500" />
+              )}
+              <AlertDescription className={`text-base ${message.type === "success" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+                {message.text}
+              </AlertDescription>
+            </Alert>
           )}
-          <AlertDescription className={message.type === "success" ? "text-green-800" : "text-red-800"}>
-            {message.text}
-          </AlertDescription>
-        </Alert>
-      )}
 
-      {tariffs.length === 0 ? (
-        <Card>
-          <CardContent className="p-8 text-center text-muted-foreground">
-            <p>Нет доступных тарифов</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tariffs.map((tariff) => (
-            <Card key={tariff.id} className={tariff.is_featured ? "border-primary shadow-lg" : ""}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-xl mb-1">{tariff.name}</CardTitle>
-                    {tariff.tagline && (
-                      <p className="text-xs text-muted-foreground">{tariff.tagline}</p>
+          {tariffs.length === 0 ? (
+            <div className="bg-card border border-border p-6 text-center text-muted-foreground text-[11px]">
+              Нет доступных тарифов
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
+              {tariffs.map((tariff) => {
+                const months = Math.max(1, tariff.duration_months)
+                const nominalPrice = baseMonthlyPrice * months
+                const discountPercent = nominalPrice > tariff.price && months > 1
+                  ? Math.round(((nominalPrice - tariff.price) / nominalPrice) * 100)
+                  : 0
+
+                return (
+                  <div
+                    key={tariff.id}
+                    className={`relative bg-card border-2 ${tariff.id === highlightTariffId ? "border-primary shadow-lg shadow-primary/20" : "border-border"} p-8 flex flex-col transition-all hover:shadow-xl`}
+                  >
+                    {tariff.id === highlightTariffId && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-6 py-2 text-xs font-semibold">
+                        ПОПУЛЯРНЫЙ
+                      </div>
                     )}
-                  </div>
-                  {tariff.is_featured && (
-                    <Badge variant="default" className="text-xs">
-                      Популярный
-                    </Badge>
-                  )}
-                </div>
-                {tariff.description && (
-                  <CardDescription className="mt-2">{tariff.description}</CardDescription>
-                )}
-              </CardHeader>
 
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="text-center py-4 border-y">
-                    <div className="text-4xl font-bold">
-                      {tariff.price === 0 ? (
-                        <span className="text-green-600">Бесплатно</span>
-                      ) : (
-                        <>
-                          {tariff.price}
-                          <span className="text-lg text-muted-foreground ml-1">₽</span>
-                        </>
+                    {discountPercent > 0 && (
+                      <div className="absolute top-4 right-4 bg-green-500/20 border-2 border-green-500 text-green-500 px-4 py-1 text-sm font-bold">
+                        -{discountPercent}%
+                      </div>
+                    )}
+
+                    <div className="text-center space-y-4 mb-6">
+                      <p className="text-accent text-[9px] tracking-[0.35em]">[ {tariff.name.toUpperCase()} ]</p>
+                      <h3 className="text-foreground text-xl font-bold">{formatDuration(tariff.duration_months)}</h3>
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="flex items-baseline justify-center gap-2">
+                          <span className="text-primary text-5xl font-bold">{tariff.price}</span>
+                          <span className="text-muted-foreground text-lg">₽</span>
+                        </div>
+                        <span className="text-muted-foreground text-xs uppercase tracking-wider">за весь период</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 mb-6 flex-1">
+                      <div className="flex items-start gap-3 text-muted-foreground text-sm">
+                        <svg className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>{formatDataLimit(tariff.data_limit_gb)} трафика</span>
+                      </div>
+                      <div className="flex items-start gap-3 text-muted-foreground text-sm">
+                        <svg className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>{tariff.devices_count} устройств{tariff.devices_count > 1 ? 'а' : 'о'}</span>
+                      </div>
+                      <div className="flex items-start gap-3 text-muted-foreground text-sm">
+                        <svg className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Поддержка 24/7</span>
+                      </div>
+                      {tariff.description && (
+                        <p className="text-muted-foreground text-sm pt-3 border-t border-border">
+                          {tariff.description}
+                        </p>
                       )}
                     </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      {formatDuration(tariff.duration_months)}
-                    </div>
+
+                    <button
+                      onClick={() => handlePurchase(tariff.id, tariff.name, tariff.price)}
+                      disabled={purchasing !== null}
+                      className={`w-full py-4 px-4 text-sm font-bold tracking-wider transition-colors ${tariff.id === highlightTariffId
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                        : "border-2 border-border text-foreground hover:border-primary hover:text-primary"
+                        } ${purchasing !== null ? "opacity-50 cursor-not-allowed" : ""}`}
+                    >
+                      {purchasing === tariff.id ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                          {tariff.price === 0 ? "АКТИВАЦИЯ..." : "ПОДГОТОВКА..."}
+                        </span>
+                      ) : tariff.price === 0 ? (
+                        "ПОПРОБОВАТЬ БЕСПЛАТНО"
+                      ) : (
+                        "ВЫБРАТЬ ПЛАН"
+                      )}
+                    </button>
                   </div>
-
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Трафик:</span>
-                      <span className="font-medium">{formatDataLimit(tariff.data_limit_gb)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Устройств:</span>
-                      <span className="font-medium">{tariff.devices_count}</span>
-                    </div>
-                  </div>
-
-                  {tariff.features && (
-                    <div className="pt-2 border-t">
-                      <p className="text-xs text-muted-foreground whitespace-pre-wrap">
-                        {tariff.features}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-
-              <CardFooter>
-                <Button
-                  className="w-full"
-                  onClick={() => handlePurchase(tariff.id, tariff.name, tariff.price)}
-                  disabled={purchasing !== null}
-                  variant={tariff.price === 0 ? "outline" : "default"}
-                >
-                  {purchasing === tariff.id ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {tariff.price === 0 ? "Активация..." : "Подготовка оплаты..."}
-                    </>
-                  ) : tariff.price === 0 ? (
-                    "Активировать"
-                  ) : (
-                    "Купить"
-                  )}
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                )
+              })}
+            </div>
+          )}
         </div>
-      )}
+      </main>
+
+      <Footer />
+
+      {/* Bypass Preset Selection Dialog */}
+      <Dialog open={showPresetDialog} onOpenChange={setShowPresetDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Настройка VPN подключения</DialogTitle>
+            <DialogDescription>
+              Выберите оптимальные настройки обхода блокировок для вашего региона
+            </DialogDescription>
+          </DialogHeader>
+
+          <BypassPresetSelector
+            value={bypassPreset}
+            onChange={setBypassPreset}
+            disabled={purchasing !== null}
+          />
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowPresetDialog(false)}
+              disabled={purchasing !== null}
+            >
+              Отмена
+            </Button>
+            <Button
+              onClick={confirmPurchase}
+              disabled={purchasing !== null}
+            >
+              {purchasing !== null ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Активация...
+                </>
+              ) : (
+                "Активировать тариф"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -64,6 +64,13 @@ export default function LoginPage() {
           </div>
         )}
 
+        {/* Тестовый пользователь подсказка */}
+        <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/50 text-blue-400 text-[10px]">
+          <p className="font-semibold mb-1">Тестовый доступ:</p>
+          <p>Логин: <span className="font-mono">test</span></p>
+          <p>Пароль: <span className="font-mono">test123</span></p>
+        </div>
+
         {/* Social Login */}
         <div className="flex gap-4 mb-6">
           <button className="flex-1 bg-card border border-border py-3 flex items-center justify-center gap-2 hover:border-primary transition-colors">

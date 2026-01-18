@@ -48,54 +48,64 @@ export default function SupportPage() {
             <PixelStars />
             <Header />
 
-            <main className="pt-32 pb-20 px-4">
-                <div className="max-w-5xl mx-auto space-y-12">
-                    <header className="bg-card border border-border p-6 flex flex-col gap-4">
-                        <div>
-                            <p className="text-accent text-[9px] tracking-[0.35em]">[ ПОДДЕРЖКА ]</p>
-                            <h1 className="text-foreground text-2xl mt-2">Всегда рядом, если что-то пошло не так</h1>
-                        </div>
-                        <p className="text-muted-foreground text-[11px] max-w-3xl">
-                            Мы отвечаем в течение 15 минут в Telegram и email. Расскажите, где возникла сложность — ключи, подключение, оплата — и мы подскажем точное решение.
+            <main className="pt-24 pb-20 px-4">
+                <div className="max-w-6xl mx-auto space-y-10">
+                    <header className="bg-card border border-border p-8">
+                        <Link
+                            href="/account"
+                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm mb-4"
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Назад в личный кабинет
+                        </Link>
+                        <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ ПОДДЕРЖКА ]</p>
+                        <h1 className="text-foreground text-4xl font-bold mb-4">Мы всегда на связи</h1>
+                        <p className="text-muted-foreground text-base max-w-3xl leading-relaxed">
+                            Отвечаем в течение 15 минут в Telegram и email. Расскажите, где возникла сложность — ключи, подключение, оплата — и мы подскажем точное решение.
                         </p>
-                        <div className="flex flex-wrap gap-3">
-                            <Link href="/account" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 text-[10px]">
-                                В личный кабинет
-                                <ArrowRight size={14} />
-                            </Link>
-                            <a
-                                href="https://t.me/pixelspace_support"
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-2 border border-border px-4 py-2 text-[10px] hover:border-primary"
-                            >
-                                Написать в Telegram
-                                <MessageCircle size={14} />
-                            </a>
-                        </div>
                     </header>
 
-                    <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {contacts.map(({ label, value, icon: Icon, href }) => (
-                            <a key={label} href={href} className="border border-border bg-card p-5 flex flex-col gap-2 hover:border-primary">
-                                <div className="flex items-center gap-2 text-muted-foreground text-[9px]">
-                                    <Icon size={14} />
-                                    {label}
-                                </div>
-                                <p className="text-foreground text-base">{value}</p>
-                                <span className="text-[8px] text-muted-foreground uppercase tracking-[0.35em]">ответ 24/7</span>
-                            </a>
-                        ))}
+                    <section>
+                        <p className="text-accent text-[9px] tracking-[0.35em] mb-6">[ СВЯЖИТЕСЬ С НАМИ ]</p>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {contacts.map(({ label, value, icon: Icon, href }) => (
+                                <a
+                                    key={label}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="group bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary hover:border-primary hover:from-primary/20 hover:to-primary/10 p-8 transition-all hover:shadow-lg hover:shadow-primary/20"
+                                >
+                                    <div className="flex items-start gap-4 mb-4">
+                                        <div className="bg-primary/20 p-3 rounded">
+                                            <Icon className="w-6 h-6 text-primary" />
+                                        </div>
+                                        <div>
+                                            <p className="text-muted-foreground text-xs uppercase tracking-wider mb-1">{label}</p>
+                                            <p className="text-foreground text-lg font-semibold">{value}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-green-500 font-semibold">Ответ 24/7</span>
+                                        <svg className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
                     </section>
 
-                    <section className="bg-card border border-border p-6">
-                        <p className="text-accent text-[9px] tracking-[0.35em]">[ FAQ ]</p>
-                        <h2 className="text-foreground text-xl mt-2 mb-6">Популярные вопросы</h2>
-                        <div className="space-y-4">
+                    <section className="bg-card border border-border p-8">
+                        <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ FAQ ]</p>
+                        <h2 className="text-foreground text-2xl font-bold mb-8">Популярные вопросы</h2>
+                        <div className="space-y-6">
                             {faqs.map(({ question, answer }) => (
-                                <div key={question} className="border border-border p-4 bg-background">
-                                    <h3 className="text-foreground text-base mb-2">{question}</h3>
-                                    <p className="text-muted-foreground text-[11px] leading-relaxed">{answer}</p>
+                                <div key={question} className="border-l-4 border-primary bg-background p-6">
+                                    <h3 className="text-foreground text-lg font-semibold mb-3">{question}</h3>
+                                    <p className="text-muted-foreground text-base leading-relaxed">{answer}</p>
                                 </div>
                             ))}
                         </div>

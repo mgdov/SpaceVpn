@@ -1,2 +1,81 @@
-[00:00:00.906] Server  LOG      ✓ Ready in 648ms
-[00:00:06.307] Server  LOG      ○ Compiling / ...
+[00:00:00.887] Server  LOG      ✓ Ready in 636ms
+[00:03:03.801] Server  LOG      ✓ Compiled in 128ms
+[00:03:22.298] Server  LOG      ✓ Compiled in 142ms
+[00:03:50.258] Server  LOG      ✓ Compiled in 157ms
+[00:04:20.693] Server  LOG      ✓ Compiled in 68ms
+[00:04:30.086] Server  LOG      ✓ Compiled in 36ms
+[00:04:38.730] Server  LOG      ✓ Compiled in 74ms
+[00:05:26.284] Server  LOG      ✓ Compiled in 160ms
+[00:05:50.229] Server  LOG      ✓ Compiled in 122ms
+[00:06:29.196] Server  LOG      ✓ Compiled in 127ms
+[00:06:42.440] Server  LOG      ✓ Compiled in 178ms
+[00:07:00.040] Server  LOG      ✓ Compiled in 82ms
+[00:11:42.410] Server  LOG      ✓ Compiled in 125ms
+[00:14:05.139] Server  LOG      ✓ Compiled in 177ms
+[00:14:05.240] Browser ERROR   uncaughtError: ReferenceError: vpnStatus is not defined
+[00:14:21.119] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:14:21.138] Server  LOG      ✓ Compiled in 59ms
+[00:14:33.899] Browser ERROR   uncaughtError: ReferenceError: vpnStatus is not defined
+[00:14:49.368] Server  LOG      ✓ Compiled in 139ms
+[00:14:49.492] Browser ERROR   ./Documents/programming/pixel-space-vpn/app/account/page.tsx:45:6
+Parsing ecmascript source code failed
+  43 |     }, [])
+  44 |
+> 45 |     }, [])
+     |      ^
+  46 |
+  47 |     return (
+  48 |         <div className="min-h-screen bg-background relative">
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Server Component]
+[00:15:00.492] Browser ERROR   ./Documents/programming/pixel-space-vpn/app/account/page.tsx:45:6
+Parsing ecmascript source code failed
+  43 |     }, [])
+  44 |
+> 45 |     }, [])
+     |      ^
+  46 |
+  47 |     return (
+  48 |         <div className="min-h-screen bg-background relative">
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Server Component]
+[00:15:10.493] Browser ERROR   ./Documents/programming/pixel-space-vpn/app/account/page.tsx:45:2
+Parsing ecmascript source code failed
+  43 |     }, [])
+  44 |
+> 45 | }, [])
+     |  ^
+  46 |
+  47 | return (
+  48 |     <div className="min-h-screen bg-background relative">
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Client Component Browser]
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Client Component SSR]
+    ./Documents/programming/pixel-space-vpn/app/account/page.tsx [Server Component]
+[00:15:24.542] Server  WARN     ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:15:25.692] Server  LOG      ✓ Compiled in 66ms

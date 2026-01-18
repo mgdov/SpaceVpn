@@ -49,6 +49,26 @@ function AccountKeysPageContent() {
         setLoadingClients(true)
         setError("")
 
+        // Проверяем, используется ли тестовый пользователь
+        const token = localStorage.getItem('auth_token')
+        if (token === 'test_token_12345') {
+            const mockClients: VPNClient[] = [
+                {
+                    id: 1,
+                    client_uuid: 'test-uuid-1234',
+                    name: 'Мой тестовый ключ',
+                    status: 'active',
+                    created_at: new Date().toISOString(),
+                }
+            ]
+            setClients(mockClients)
+            if (!selectedClientId) {
+                setSelectedClientId(mockClients[0]?.id || null)
+            }
+            setLoadingClients(false)
+            return
+        }
+
         const response = await listUserVPNClients()
         if (response.data) {
             setClients(response.data)
@@ -69,6 +89,24 @@ function AccountKeysPageContent() {
         setLoadingConfig(true)
         setConfigError("")
 
+        // Проверяем, используется ли тестовый пользователь
+        const token = localStorage.getItem('auth_token')
+        if (token === 'test_token_12345') {
+            const mockConfig: VPNConfig = {
+                client_uuid: 'test-uuid-1234',
+                name: 'Мой тестовый ключ',
+                xray_config: {
+                    protocol: 'vless',
+                    settings: { vnext: [] }
+                },
+                subscription_url: 'vless://test-uuid-1234@example.spacevpn.com:443?type=tcp&security=reality&flow=xtls-rprx-vision#SpaceVPN-Test',
+                qr_code: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...',
+            }
+            setVpnConfig(mockConfig)
+            setLoadingConfig(false)
+            return
+        }
+
         const response = await getUserVPNClientConfig(clientId.toString())
         if (response.data) {
             setVpnConfig(response.data)
@@ -86,7 +124,7 @@ function AccountKeysPageContent() {
         // Получить активную подписку через /subscriptions/my
         const subscriptionsResponse = await getUserSubscriptions()
         const subscriptions = subscriptionsResponse.data?.subscriptions || []
-        
+
         if (subscriptions.length === 0) {
             setError("У вас нет активной подписки. Сначала оформите подписку.")
             setCreating(false)
@@ -172,201 +210,175 @@ function AccountKeysPageContent() {
             <PixelStars />
             <Header />
 
-            <main className="pt-32 pb-20 px-4">
-                <div className="max-w-4xl mx-auto space-y-8">
+            <main className="pt-24 pb-20 px-4">
+                <div className="max-w-6xl mx-auto space-y-6">
+                    {/* Заголовок и навигация */}
                     <div className="bg-card border border-border p-6">
-                        <p className="text-accent text-[9px] tracking-[0.35em]">[ КЛЮЧ ]</p>
-                        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mt-4">
-                            <div>
-                                <h1 className="text-foreground text-2xl">
-                                    {user?.full_name || user?.username}
-                                </h1>
-                                <p className="text-muted-foreground text-[11px]">{user?.email}</p>
-                            </div>
-                            {hasClients && selectedClient && (
-                                <div className="flex flex-col items-start md:items-end gap-3 w-full md:w-auto">
-                                    <div className="w-full md:w-60">
-                                        <label className="text-muted-foreground text-[9px] uppercase tracking-[0.35em] block mb-2">
-                                            Активный ключ
-                                        </label>
-                                        <select
-                                            value={selectedClientId?.toString() ?? ""}
-                                            onChange={(event) => setSelectedClientId(parseInt(event.target.value) || null)}
-                                            className="w-full bg-background border border-border text-[10px] px-3 py-2 focus:outline-none focus:border-primary"
-                                        >
-                                            {clients.map((client) => (
-                                                <option key={client.id} value={client.id}>
-                                                    {client.name || client.client_uuid}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-muted-foreground text-[9px] uppercase tracking-[0.35em]">Тип</p>
-                                        <p className="text-foreground text-lg">VLESS / TLS Reality</p>
-                                        <p className="text-muted-foreground text-[10px]">
-                                            Создан: {formatDate(selectedClient.created_at)}
-                                        </p>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                        <Link
+                            href="/account"
+                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm mb-4"
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Назад в личный кабинет
+                        </Link>
+                        <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ МОИ VPN КЛЮЧИ ]</p>
+                        <h1 className="text-foreground text-3xl font-bold">
+                            Подключение к VPN
+                        </h1>
+                        <p className="text-muted-foreground text-sm mt-2">
+                            Скопируйте VLESS ссылку и вставьте в приложение V2Ray или аналогичное
+                        </p>
                     </div>
 
+                    {/* Сообщения об ошибках */}
                     {(error || configError) && (
-                        <div className="bg-card border border-border p-4 text-[11px] text-red-400">
-                            {error || configError}
+                        <div className="bg-red-500/10 border-2 border-red-500 p-6">
+                            <div className="flex items-start gap-3">
+                                <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <p className="text-red-400 text-sm">{error || configError}</p>
+                            </div>
                         </div>
                     )}
 
+                    {/* Состояние загрузки */}
                     {loadingClients && (
-                        <div className="bg-card border border-border p-6">
-                            <p className="text-muted-foreground text-[11px]">Загрузка...</p>
+                        <div className="bg-card border border-border p-12 text-center">
+                            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
+                            <p className="text-muted-foreground text-sm mt-4">Загрузка ваших ключей...</p>
                         </div>
                     )}
 
+                    {/* Нет ключей */}
                     {!loadingClients && !hasClients && (
-                        <div className="bg-card border border-border p-6 space-y-4">
-                            <p className="text-muted-foreground text-[11px]">
-                                У вас пока нет VPN ключа. Создайте первый, чтобы получить доступ к конфигурации.
-                            </p>
-                            <button
-                                onClick={handleCreateClient}
-                                disabled={creating}
-                                className="flex items-center gap-2 border border-primary bg-primary text-primary-foreground px-6 py-3 text-[10px] hover:bg-primary/80 transition-colors disabled:opacity-50"
+                        <div className="bg-gradient-to-br from-primary/10 to-accent/5 border-2 border-primary p-8 md:p-12 text-center space-y-6">
+                            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 mb-4">
+                                <Plus className="w-10 h-10 text-primary" />
+                            </div>
+                            <div>
+                                <h2 className="text-foreground text-2xl font-bold mb-3">
+                                    У вас пока нет VPN ключа
+                                </h2>
+                                <p className="text-muted-foreground text-base max-w-md mx-auto">
+                                    Активируйте тариф, чтобы получить доступ к защищенному VPN подключению
+                                </p>
+                            </div>
+                            <Link
+                                href="/account/tariffs"
+                                className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 text-sm font-semibold hover:bg-primary/90 transition-colors"
                             >
-                                <Plus size={16} />
-                                {creating ? "Создание..." : "Создать VPN ключ"}
-                            </button>
+                                <Plus size={20} />
+                                Выбрать тариф
+                            </Link>
                         </div>
                     )}
 
                     {hasClients && (
-                        <div className="flex flex-wrap gap-4">
-                            <button
-                                onClick={handleCreateClient}
-                                disabled={creating}
-                                className="flex-1 min-w-[220px] border border-border bg-card px-4 py-3 text-[10px] hover:border-primary disabled:opacity-50"
-                            >
-                                {creating ? "Создание..." : "Добавить ещё ключ"}
-                            </button>
-                            <button
-                                onClick={handleSync}
-                                disabled={!selectedClient || syncing}
-                                className="flex-1 min-w-[220px] border border-border bg-card px-4 py-3 text-[10px] hover:border-primary flex items-center justify-center gap-2 disabled:opacity-50"
-                            >
-                                <RefreshCw size={14} />
-                                {syncing ? "Синхронизация..." : "Синхронизировать"}
-                            </button>
-                            <button
-                                onClick={handleRegenerate}
-                                disabled={!selectedClient || regenerating}
-                                className="flex-1 min-w-[220px] border border-border bg-card px-4 py-3 text-[10px] hover:border-accent text-accent flex items-center justify-center gap-2 disabled:opacity-50"
-                            >
-                                <RotateCw size={14} />
-                                {regenerating ? "Обновление..." : "Перегенерировать"}
-                            </button>
-                        </div>
-                    )}
-
-                    {vpnConfig && selectedClient && !loadingConfig && (
                         <>
-                            <section className="bg-card border border-border p-6 space-y-4">
-                                <div className="flex flex-col gap-2">
-                                    <p className="text-muted-foreground text-[10px]">VLESS / TLS Reality ссылка</p>
-                                    <div className="flex flex-col md:flex-row md:items-center gap-3">
-                                        <code className="flex-1 text-foreground text-[11px] break-all bg-background border border-border p-3">
-                                            {vpnConfig.subscription_url}
-                                        </code>
+                            {/* Конфигурация выбранного ключа */}
+                            {selectedClient && !loadingConfig && vpnConfig && (
+                                <div className="bg-card border-2 border-primary p-6 md:p-8 space-y-6">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ ВАШ КЛЮЧ ]</p>
+                                            <h2 className="text-foreground text-2xl font-bold">{vpnConfig.name}</h2>
+                                            {selectedClient.created_at && (
+                                                <p className="text-muted-foreground text-sm mt-1">
+                                                    Создан: {formatDate(selectedClient.created_at)}
+                                                </p>
+                                            )}
+                                        </div>
                                         <div className="flex gap-2">
                                             <button
+                                                onClick={handleRegenerate}
+                                                disabled={regenerating}
+                                                className="border-2 border-border hover:border-accent px-4 py-3 transition-colors disabled:opacity-50"
+                                                title="Перегенерировать ключ"
+                                            >
+                                                <RotateCw size={20} className={regenerating ? "animate-spin" : ""} />
+                                            </button>
+                                            <button
+                                                onClick={handleSync}
+                                                disabled={syncing}
+                                                className="border-2 border-border hover:border-primary px-4 py-3 transition-colors disabled:opacity-50"
+                                                title="Синхронизировать"
+                                            >
+                                                <RefreshCw size={20} className={syncing ? "animate-spin" : ""} />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-background border-2 border-border p-6 space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-primary/20 p-2 rounded">
+                                                    <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <p className="text-muted-foreground text-xs uppercase tracking-wider">VLESS ССЫЛКА</p>
+                                                    <p className="text-foreground text-sm font-semibold">Скопируйте для подключения</p>
+                                                </div>
+                                            </div>
+                                            <button
                                                 onClick={() => handleCopy(vpnConfig.subscription_url, "link")}
-                                                className="border border-border px-4 py-2 text-[10px] hover:border-primary flex items-center gap-2"
+                                                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 text-sm font-semibold transition-colors flex items-center gap-2"
                                             >
                                                 {copiedField === "link" ? (
                                                     <>
-                                                        <CheckCircle2 size={16} />
-                                                        <span className="hidden sm:inline">Скопировано</span>
+                                                        <CheckCircle2 size={18} />
+                                                        Скопировано!
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <Copy size={16} />
-                                                        <span className="hidden sm:inline">Копировать</span>
+                                                        <Copy size={18} />
+                                                        Копировать
                                                     </>
                                                 )}
                                             </button>
-                                            <a
-                                                href={vpnConfig.subscription_url}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="border border-border px-4 py-2 text-[10px] hover:border-primary flex items-center gap-2"
-                                            >
-                                                Открыть
-                                                <ExternalLink size={14} />
-                                            </a>
+                                        </div>
+                                        <code className="block text-foreground text-xs break-all bg-muted/50 border border-border p-4 rounded">
+                                            {vpnConfig.subscription_url}
+                                        </code>
+                                    </div>
+
+                                    {/* Инструкция */}
+                                    <div className="bg-primary/5 border border-primary/20 p-6 space-y-3">
+                                        <div className="flex items-start gap-3">
+                                            <div className="bg-primary/20 p-2 rounded mt-1">
+                                                <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-foreground font-semibold mb-2">Как подключиться?</h3>
+                                                <ol className="text-muted-foreground text-sm space-y-2 list-decimal list-inside">
+                                                    <li>Скопируйте VLESS ссылку выше</li>
+                                                    <li>Откройте приложение V2Ray, V2RayNG или аналогичное</li>
+                                                    <li>Вставьте ссылку в приложение (обычно кнопка "+" или "Импорт")</li>
+                                                    <li>Подключитесь к VPN</li>
+                                                </ol>
+                                                <Link href="#" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-sm mt-3 font-semibold">
+                                                    Смотреть видеоинструкцию
+                                                    <ExternalLink size={16} />
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            )}
 
-                                <div className="pt-4 border-t border-border">
-                                    <p className="text-muted-foreground text-[10px] mb-3">QR код для быстрой настройки</p>
-                                    <div className="flex justify-center">
-                                        <img
-                                            src={vpnConfig.qr_code}
-                                            alt="VPN QR Code"
-                                            className="w-64 h-64 border border-border"
-                                        />
-                                    </div>
+                            {loadingConfig && selectedClient && (
+                                <div className="bg-card border border-border p-12 text-center">
+                                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
+                                    <p className="text-muted-foreground text-sm mt-4">Загрузка конфигурации...</p>
                                 </div>
-
-                                <div className="pt-4 border-t border-border">
-                                    <p className="text-muted-foreground text-[10px] mb-2">JSON конфигурация</p>
-                                    <details className="cursor-pointer">
-                                        <summary className="text-[10px] text-primary mb-2">Показать JSON</summary>
-                                        <code className="block text-[9px] text-foreground break-all bg-background border border-border p-3 max-h-60 overflow-y-auto">
-                                            {JSON.stringify(vpnConfig.xray_config, null, 2)}
-                                        </code>
-                                        <button
-                                            onClick={() => handleCopy(JSON.stringify(vpnConfig.xray_config, null, 2), "json")}
-                                            className="mt-2 border border-border px-4 py-2 text-[10px] hover:border-primary"
-                                        >
-                                            {copiedField === "json" ? "Скопировано!" : "Копировать JSON"}
-                                        </button>
-                                    </details>
-                                </div>
-
-                                <Link
-                                    href="/account/tariffs"
-                                    className="inline-flex items-center gap-2 text-[10px] text-muted-foreground hover:text-primary"
-                                >
-                                    Нужен другой тариф? Перейти к оплате →
-                                </Link>
-                            </section>
-
-                            <section className="bg-card border border-border p-6 space-y-3">
-                                <p className="text-foreground text-[11px] font-semibold">Информация о ключе</p>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    <div>
-                                        <p className="text-muted-foreground text-[9px]">UUID</p>
-                                        <p className="text-foreground text-[11px] font-mono break-all">{selectedClient.client_uuid}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-muted-foreground text-[9px]">Название</p>
-                                        <p className="text-foreground text-lg">{selectedClient.name}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-muted-foreground text-[9px]">Создан</p>
-                                        <p className="text-foreground text-lg">{formatDate(selectedClient.created_at)}</p>
-                                    </div>
-                                </div>
-                            </section>
+                            )}
                         </>
-                    )}
-
-                    {loadingConfig && hasClients && (
-                        <div className="bg-card border border-border p-6">
-                            <p className="text-muted-foreground text-[11px]">Загрузка конфигурации...</p>
-                        </div>
                     )}
                 </div>
             </main>

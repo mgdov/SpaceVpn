@@ -10,7 +10,11 @@ import { KeyModal } from "@/components/admin/keys/key-modal"
 import { KeyTable } from "@/components/admin/keys/key-table"
 import { TariffTable } from "@/components/admin/tariffs/tariff-table"
 import { TariffModal } from "@/components/admin/tariffs/tariff-modal"
+import { FinanceStats } from "@/components/admin/finance/finance-stats"
+import { FinanceChart } from "@/components/admin/finance/finance-chart"
+import { PaymentHistory } from "@/components/admin/finance/payment-history"
 import { Plus, Eye, EyeOff } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { BlogPost, KeyFormState, PostFormState, TariffFormState } from "@/types/admin"
 import {
   adminListVPNClients,
@@ -26,11 +30,17 @@ import {
   adminToggleTariff,
   adminListUsers,
   adminListSubscriptions,
+  getAdminFinanceStats,
+  getAdminFinanceChart,
+  getAdminPayments,
   loginUser,
   type AdminVPNClient,
   type Tariff as ApiTariff,
   type User,
   type AdminSubscription,
+  type AdminFinanceStats,
+  type AdminFinanceChartData,
+  type AdminPayment,
 } from "@/lib/api"
 
 // Константы для админской авторизации
@@ -76,7 +86,7 @@ export default function AdminPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState("")
 
-  const [activeTab, setActiveTab] = useState<"keys" | "blog" | "tariffs" | "balance">("keys")
+  const [activeTab, setActiveTab] = useState<"keys" | "blog" | "tariffs" | "finance">("keys")
   const [vpnClients, setVpnClients] = useState<AdminVPNClient[]>([])
   const [posts, setPosts] = useState<BlogPost[]>(() => {
     if (typeof window !== 'undefined') {
@@ -88,13 +98,18 @@ export default function AdminPage() {
   const [tariffs, setTariffs] = useState<ApiTariff[]>([])
   const [subscriptions, setSubscriptions] = useState<AdminSubscription[]>([])
   const [users, setUsers] = useState<User[]>([])
+  const [financeStats, setFinanceStats] = useState<AdminFinanceStats | null>(null)
+  const [financeChart, setFinanceChart] = useState<AdminFinanceChartData | null>(null)
+  const [financeChartPeriod, setFinanceChartPeriod] = useState<'7days' | '30days' | '12months'>('30days')
+  const [payments, setPayments] = useState<AdminPayment[]>([])
   const [keysLoading, setKeysLoading] = useState(true)
   const [tariffsLoading, setTariffsLoading] = useState(true)
   const [subscriptionsLoading, setSubscriptionsLoading] = useState(true)
   const [usersLoading, setUsersLoading] = useState(true)
+  const [financeLoading, setFinanceLoading] = useState(true)
   const [keysError, setKeysError] = useState("")
   const [tariffsError, setTariffsError] = useState("")
-  const [balanceError, setBalanceError] = useState("")
+  const [financeError, setFinanceError] = useState("")
   const [showKeyModal, setShowKeyModal] = useState(false)
   const [showPostModal, setShowPostModal] = useState(false)
   const [showTariffModal, setShowTariffModal] = useState(false)
@@ -231,9 +246,9 @@ export default function AdminPage() {
     const response = await adminListSubscriptions()
     if (response.data) {
       setSubscriptions(response.data)
-      setBalanceError("")
+      setFinanceError("")
     } else {
-      setBalanceError(response.error || "Не удалось загрузить подписки")
+      setFinanceError(response.error || "Не удалось загрузить подписки")
     }
     setSubscriptionsLoading(false)
   }
@@ -247,6 +262,32 @@ export default function AdminPage() {
     setUsersLoading(false)
   }
 
+  const refreshFinance = async () => {
+    setFinanceLoading(true)
+
+    // Load stats
+    const statsResponse = await getAdminFinanceStats()
+    if (statsResponse.data) {
+      setFinanceStats(statsResponse.data)
+    } else {
+      setFinanceError(statsResponse.error || "Не удалось загрузить статистику")
+    }
+
+    // Load chart
+    const chartResponse = await getAdminFinanceChart(financeChartPeriod)
+    if (chartResponse.data) {
+      setFinanceChart(chartResponse.data)
+    }
+
+    // Load payments
+    const paymentsResponse = await getAdminPayments({ limit: 100 })
+    if (paymentsResponse.data) {
+      setPayments(paymentsResponse.data)
+    }
+
+    setFinanceLoading(false)
+  }
+
   // Загрузка данных только если авторизован
   useEffect(() => {
     if (isAuthenticated && !isCheckingAuth) {
@@ -254,8 +295,22 @@ export default function AdminPage() {
       refreshTariffs()
       refreshSubscriptions()
       refreshUsers()
+      refreshFinance()
     }
   }, [isAuthenticated, isCheckingAuth])
+
+  // Reload chart when period changes
+  useEffect(() => {
+    if (isAuthenticated && !isCheckingAuth && activeTab === 'finance') {
+      const loadChart = async () => {
+        const chartResponse = await getAdminFinanceChart(financeChartPeriod)
+        if (chartResponse.data) {
+          setFinanceChart(chartResponse.data)
+        }
+      }
+      loadChart()
+    }
+  }, [financeChartPeriod, isAuthenticated, isCheckingAuth, activeTab])
 
   useEffect(() => {
     setKeyForm((prev) => (prev.userId ? prev : { ...prev, userId: users[0]?.id?.toString() ?? "" }))
@@ -499,23 +554,6 @@ export default function AdminPage() {
     resetTariffForm()
   }
 
-  const balance = useMemo(() => {
-    return subscriptions.reduce((acc, subscription) => {
-      const tariffId = typeof subscription.tariff_id === 'string' ? parseInt(subscription.tariff_id) : subscription.tariff_id
-      const matchedTariff = tariffs.find((tariff) => tariff.id === tariffId)
-      return acc + (matchedTariff?.price ?? 0)
-    }, 0)
-  }, [subscriptions, tariffs])
-
-  const activeKeys = vpnClients.length  // Все ключи активны, если есть в БД
-  const totalKeys = vpnClients.length
-  const activeSubscriptions = subscriptions.filter((subscription) => subscription.is_active).length
-  const latestSubscriptions = [...subscriptions].sort((a, b) => {
-    const aDate = new Date(a.created_at || a.start_date).getTime()
-    const bDate = new Date(b.created_at || b.start_date).getTime()
-    return bDate - aDate
-  }).slice(0, 10)
-
   // Форма входа
   if (isCheckingAuth) {
     return (
@@ -616,7 +654,7 @@ export default function AdminPage() {
       <AdminHeader onLogout={handleLogout} />
 
       <div className="flex pt-16">
-        <AdminSidebar activeTab={activeTab} onChange={setActiveTab} balance={balance} />
+        <AdminSidebar activeTab={activeTab} onChange={setActiveTab} />
 
         {/* Main Content */}
         <main className="flex-1 ml-64 p-6 relative z-10">
@@ -700,51 +738,42 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* Balance Tab */}
-          {activeTab === "balance" && (
+          {/* Finance Tab */}
+          {activeTab === "finance" && (
             <div>
-              <h1 className="text-foreground text-sm mb-6">БАЛАНС</h1>
+              <h1 className="text-foreground text-sm mb-6">ФИНАНСЫ</h1>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-card border border-border p-6">
-                  <div className="text-muted-foreground text-[8px] mb-2">ОБЩИЙ БАЛАНС</div>
-                  <div className="text-primary text-2xl">{balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽</div>
-                </div>
-                <div className="bg-card border border-border p-6">
-                  <div className="text-muted-foreground text-[8px] mb-2">АКТИВНЫХ КЛЮЧЕЙ</div>
-                  <div className="text-accent text-2xl">{activeKeys}</div>
-                </div>
-                <div className="bg-card border border-border p-6">
-                  <div className="text-muted-foreground text-[8px] mb-2">АКТИВНЫХ ПОДПИСОК</div>
-                  <div className="text-foreground text-2xl">{activeSubscriptions}</div>
-                </div>
-              </div>
+              {financeError && <p className="text-red-400 text-[10px] mb-3">{financeError}</p>}
 
-              <div className="bg-card border border-border p-6">
-                <h2 className="text-foreground text-[11px] mb-4">ИСТОРИЯ ПОСТУПЛЕНИЙ</h2>
-                {balanceError && <p className="text-red-400 text-[10px] mb-3">{balanceError}</p>}
-                {subscriptionsLoading ? (
-                  <div className="text-muted-foreground text-[10px]">Загрузка подписок...</div>
-                ) : (
-                  <div className="space-y-3">
-                    {latestSubscriptions.map((subscription) => {
-                      const tariffId = typeof subscription.tariff_id === 'string' ? parseInt(subscription.tariff_id) : subscription.tariff_id
-                      const tariff = tariffs.find((item) => item.id === tariffId)
-                      return (
-                        <div key={subscription.id} className="flex items-center justify-between py-2 border-b border-border">
-                          <div>
-                            <div className="text-foreground text-[9px]">{subscription.user?.email || subscription.user_id}</div>
-                            <div className="text-muted-foreground text-[8px]">
-                              {(tariff?.name || subscription.tariff_id || "Тариф")} • {formatDate(subscription.created_at || subscription.start_date)}
-                            </div>
-                          </div>
-                          <div className="text-primary text-[10px]">+{tariff?.price ?? 0} ₽</div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
+              {financeLoading ? (
+                <div className="bg-card border border-border p-6 text-[10px] text-muted-foreground">Загрузка финансовых данных...</div>
+              ) : (
+                <div className="space-y-6">
+                  {financeStats && <FinanceStats stats={financeStats} />}
+
+                  {financeChart && (
+                    <div>
+                      <Tabs value={financeChartPeriod} onValueChange={(v) => setFinanceChartPeriod(v as typeof financeChartPeriod)} className="mb-4">
+                        <TabsList>
+                          <TabsTrigger value="7days">7 дней</TabsTrigger>
+                          <TabsTrigger value="30days">30 дней</TabsTrigger>
+                          <TabsTrigger value="12months">12 месяцев</TabsTrigger>
+                        </TabsList>
+                      </Tabs>
+                      <FinanceChart data={financeChart} period={financeChartPeriod} />
+                    </div>
+                  )}
+
+                  {payments.length > 0 && (
+                    <PaymentHistory
+                      payments={payments}
+                      onLoadMore={() => {/* TODO: implement pagination */ }}
+                      hasMore={false}
+                      loading={false}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           )}
         </main>

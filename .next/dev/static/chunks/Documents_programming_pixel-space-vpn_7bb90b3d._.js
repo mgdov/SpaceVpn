@@ -57,20 +57,22 @@ __turbopack_context__.s([
     ()=>adminUpdateTariff,
     "adminUpdateVPNClient",
     ()=>adminUpdateVPNClient,
-    "confirmYookassaPayment",
-    ()=>confirmYookassaPayment,
     "createSubscription",
     ()=>createSubscription,
     "createUserVPNClient",
     ()=>createUserVPNClient,
-    "createYookassaPayment",
-    ()=>createYookassaPayment,
     "deleteSubscription",
     ()=>deleteSubscription,
     "deleteUserById",
     ()=>deleteUserById,
     "deleteUserVPNClient",
     ()=>deleteUserVPNClient,
+    "getAdminFinanceChart",
+    ()=>getAdminFinanceChart,
+    "getAdminFinanceStats",
+    ()=>getAdminFinanceStats,
+    "getAdminPayments",
+    ()=>getAdminPayments,
     "getApiInfo",
     ()=>getApiInfo,
     "getAuthToken",
@@ -99,8 +101,6 @@ __turbopack_context__.s([
     ()=>getUserVPNClient,
     "getUserVPNClientConfig",
     ()=>getUserVPNClientConfig,
-    "getUserVPNStatus",
-    ()=>getUserVPNStatus,
     "isAuthenticated",
     ()=>isAuthenticated,
     "listUserVPNClients",
@@ -280,9 +280,6 @@ async function getCurrentUserInfo() {
     }
     return response;
 }
-async function getUserVPNStatus() {
-    return apiRequest('/users/me/vpn');
-}
 async function updateCurrentUser(payload) {
     const response = await apiRequest('/users/me', {
         method: 'PUT',
@@ -324,8 +321,7 @@ async function adminMakeSuperuser(userId) {
     });
 }
 async function getUserSubscriptions() {
-    return apiRequest('/subscriptions/') // Add trailing slash
-    ;
+    return apiRequest('/subscriptions/my');
 }
 async function getMySubscriptions() {
     return apiRequest('/subscriptions/my');
@@ -419,14 +415,13 @@ async function purchaseFreeTariff(data) {
     });
 }
 async function createUserVPNClient(payload) {
-    return apiRequest('/vpn-clients/', {
+    return apiRequest('/vpn-clients', {
         method: 'POST',
         body: JSON.stringify(payload)
     });
 }
 async function listUserVPNClients() {
-    return apiRequest('/vpn-clients/') // Add trailing slash
-    ;
+    return apiRequest('/vpn-clients');
 }
 async function getUserVPNClient(id) {
     return apiRequest(`/vpn-clients/${id}`);
@@ -499,76 +494,101 @@ async function syncAllVpnClients() {
         method: 'POST'
     });
 }
+async function getAdminFinanceStats() {
+    return apiRequest('/admin/finance/stats');
+}
+async function getAdminFinanceChart(period) {
+    return apiRequest(`/admin/finance/chart/${period}`);
+}
+async function getAdminPayments(params) {
+    return apiRequest(withQuery('/admin/finance/payments', params));
+}
 async function getHealthStatus() {
     return apiRequest('/health');
 }
 async function getApiInfo() {
     return apiRequest('/');
+} // ВРЕМЕННО ОТКЛЮЧЕНО: YooKassa endpoints не реализованы на backend
+ // Будет добавлено позже при интеграции платежного шлюза
+ /*
+export interface CreateYookassaPaymentPayload {
+  tariffId: number
+  plan: string
+  price: number
+  description?: string
 }
-async function createYookassaPayment(payload) {
-    const token = getAuthToken();
-    if (!token) {
-        return {
-            error: 'Требуется авторизация для оплаты'
-        };
-    }
-    try {
-        const response = await fetch('/api/yookassa/create-payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify(payload)
-        });
-        const data = await response.json().catch(()=>({}));
-        if (!response.ok) {
-            return {
-                error: data?.error || data?.message || `HTTP ${response.status}`
-            };
-        }
-        return {
-            data
-        };
-    } catch (error) {
-        return {
-            error: error instanceof Error ? error.message : 'Network error'
-        };
-    }
+
+export interface CreateYookassaPaymentResponse {
+  payment_id: string
+  confirmation_url: string
+  status?: string
 }
-async function confirmYookassaPayment(paymentId) {
-    const token = getAuthToken();
-    if (!token) {
-        return {
-            error: 'Требуется авторизация для оплаты'
-        };
-    }
-    try {
-        const response = await fetch('/api/yookassa/confirm-payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                paymentId
-            })
-        });
-        const data = await response.json().catch(()=>({}));
-        if (!response.ok) {
-            return {
-                error: data?.error || data?.message || `HTTP ${response.status}`
-            };
-        }
-        return {
-            data
-        };
-    } catch (error) {
-        return {
-            error: error instanceof Error ? error.message : 'Network error'
-        };
-    }
+
+export interface ConfirmYookassaPaymentResponse {
+  success: boolean
+  plan?: string
+  subscription?: Subscription
+  message?: string
 }
+
+export async function createYookassaPayment(
+  payload: CreateYookassaPaymentPayload
+): Promise<ApiResponse<CreateYookassaPaymentResponse>> {
+  const token = getAuthToken()
+  if (!token) {
+    return { error: 'Требуется авторизация для оплаты' }
+  }
+
+  try {
+    const response = await fetch('/api/yookassa/create-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    })
+
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      return { error: data?.error || data?.message || `HTTP ${response.status}` }
+    }
+
+    return { data }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : 'Network error' }
+  }
+}
+
+export async function confirmYookassaPayment(
+  paymentId: string
+): Promise<ApiResponse<ConfirmYookassaPaymentResponse>> {
+  const token = getAuthToken()
+  if (!token) {
+    return { error: 'Требуется авторизация для оплаты' }
+  }
+
+  try {
+    const response = await fetch('/api/yookassa/confirm-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ paymentId }),
+    })
+
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      return { error: data?.error || data?.message || `HTTP ${response.status}` }
+    }
+
+    return { data }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : 'Network error' }
+  }
+}
+*/ 
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
@@ -630,6 +650,27 @@ function AuthProvider({ children }) {
     const login = async (username, password)=>{
         setLoading(true);
         try {
+            // Тестовый пользователь для локальной разработки
+            if (username === 'test' && password === 'test123') {
+                const testUser = {
+                    id: 999,
+                    username: 'test',
+                    email: 'test@spacevpn.com',
+                    full_name: 'Тестовый Пользователь',
+                    is_active: true,
+                    is_superuser: false,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                };
+                // Сохраняем тестовый токен и пользователя
+                localStorage.setItem('auth_token', 'test_token_12345');
+                localStorage.setItem('current_user', JSON.stringify(testUser));
+                setUser(testUser);
+                setLoading(false);
+                return {
+                    success: true
+                };
+            }
             const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["loginUser"])(username, password);
             if (response.data) {
                 // Get user info after login
@@ -702,7 +743,7 @@ function AuthProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-        lineNumber: 116,
+        lineNumber: 137,
         columnNumber: 5
     }, this);
 }
@@ -746,12 +787,12 @@ function withAuth(Component) {
                     children: "Загрузка..."
                 }, void 0, false, {
                     fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-                    lineNumber: 145,
+                    lineNumber: 166,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-                lineNumber: 144,
+                lineNumber: 165,
                 columnNumber: 9
             }, this);
         }
@@ -762,7 +803,7 @@ function withAuth(Component) {
             ...props
         }, void 0, false, {
             fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-            lineNumber: 154,
+            lineNumber: 175,
             columnNumber: 12
         }, this);
     }, "Zr2WDa/YWeMetzDhcnOimt0LiKE=", false, function() {

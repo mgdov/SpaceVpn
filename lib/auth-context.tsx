@@ -58,8 +58,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string) => {
     setLoading(true)
     try {
+      // Тестовый пользователь для локальной разработки
+      if (username === 'test' && password === 'test123') {
+        const testUser: User = {
+          id: 999,
+          username: 'test',
+          email: 'test@spacevpn.com',
+          full_name: 'Тестовый Пользователь',
+          is_active: true,
+          is_superuser: false,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }
+
+        // Сохраняем тестовый токен и пользователя
+        localStorage.setItem('auth_token', 'test_token_12345')
+        localStorage.setItem('current_user', JSON.stringify(testUser))
+        setUser(testUser)
+        setLoading(false)
+        return { success: true }
+      }
+
       const response = await apiLoginUser(username, password)
-      
+
       if (response.data) {
         // Get user info after login
         const userResponse = await getCurrentUserInfo()
@@ -69,7 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return { success: true }
         }
       }
-      
+
       setLoading(false)
       return { success: false, error: response.error || 'Login failed' }
     } catch (error) {
@@ -88,13 +109,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true)
     try {
       const response = await apiRegisterUser(username, email, password, fullName)
-      
+
       if (response.data) {
         // Auto-login after registration
         const loginResult = await login(username, password)
         return loginResult
       }
-      
+
       setLoading(false)
       return { success: false, error: response.error || 'Registration failed' }
     } catch (error) {

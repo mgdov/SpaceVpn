@@ -701,6 +701,56 @@ export async function syncAllVpnClients(): Promise<ApiResponse<PasarguardSyncRes
 }
 
 /**
+ * Admin Finance endpoints
+ */
+export interface AdminFinanceStats {
+  total_revenue: string
+  revenue_today: string
+  revenue_yesterday: string
+  revenue_this_week: string
+  revenue_this_month: string
+  revenue_last_month: string
+  total_payments: number
+  completed_payments: number
+  pending_payments: number
+  failed_payments: number
+  active_subscriptions: number
+  average_payment: string
+}
+
+export interface AdminFinanceChartData {
+  labels: string[]
+  values: string[]
+}
+
+export interface AdminPayment {
+  id: number
+  user_id: number
+  amount: string
+  status: string
+  payment_method?: string
+  created_at: string
+  updated_at: string
+  user?: User
+}
+
+export async function getAdminFinanceStats(): Promise<ApiResponse<AdminFinanceStats>> {
+  return apiRequest<AdminFinanceStats>('/admin/finance/stats')
+}
+
+export async function getAdminFinanceChart(
+  period: '7days' | '30days' | '12months'
+): Promise<ApiResponse<AdminFinanceChartData>> {
+  return apiRequest<AdminFinanceChartData>(`/admin/finance/chart/${period}`)
+}
+
+export async function getAdminPayments(
+  params?: { skip?: number; limit?: number }
+): Promise<ApiResponse<AdminPayment[]>> {
+  return apiRequest<AdminPayment[]>(withQuery('/admin/finance/payments', params))
+}
+
+/**
  * Health & meta endpoints
  */
 export async function getHealthStatus(): Promise<ApiResponse<HealthResponse>> {

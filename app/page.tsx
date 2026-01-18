@@ -1,3 +1,5 @@
+"use client"
+
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
@@ -5,8 +7,11 @@ import { PricingSection } from "@/components/pricing-section"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
 
 export default function HomePage() {
+  const { user } = useAuth()
+
   return (
     <div className="min-h-screen bg-background relative">
       <PixelStars />
@@ -30,68 +35,98 @@ export default function HomePage() {
 
             {/* Action Buttons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto">
-              {/* Попробовать бесплатно */}
-              <Link href="/register" className="group relative bg-primary hover:bg-primary/90 border-2 border-primary text-primary-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
-                <div className="flex items-center gap-3 sm:gap-4 md:gap-5 w-full justify-center">
-                  <div className="text-center flex-1">
-                    <div className="text-xs sm:text-sm font-semibold mb-1 sm:mb-2 tracking-wide">ПОПРОБОВАТЬ БЕСПЛАТНО</div>
-                    <div className="text-[9px] sm:text-[10px] text-primary-foreground/80 leading-relaxed">
-                      При регистрации аккаунта<br />бесплатный 2-дневный VPN-ключ!!!
+              {!user ? (
+                <>
+                  {/* Попробовать бесплатно */}
+                  <Link href="/register" className="group relative bg-primary hover:bg-primary/90 border-2 border-primary text-primary-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
+                    <div className="flex items-center gap-3 sm:gap-4 md:gap-5 w-full justify-center">
+                      <div className="text-center flex-1">
+                        <div className="text-xs sm:text-sm font-semibold mb-1 sm:mb-2 tracking-wide">ПОПРОБОВАТЬ БЕСПЛАТНО</div>
+                        <div className="text-[9px] sm:text-[10px] text-primary-foreground/80 leading-relaxed">
+                          При регистрации аккаунта<br />бесплатный 2-дневный VPN-ключ!!!
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-shrink-0">
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </Link>
+                  </Link>
 
-              {/* Войти в аккаунт */}
-              <Link href="/login" className="group bg-card hover:bg-accent/10 border-2 border-border hover:border-accent text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
-                <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
-                  <div className="flex-shrink-0">
-                    <LogIn className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xs sm:text-sm font-semibold tracking-wide">ВОЙТИ В АККАУНТ</div>
-                  </div>
-                </div>
-              </Link>
+                  {/* Войти в аккаунт */}
+                  <Link href="/login" className="group bg-card hover:bg-accent/10 border-2 border-border hover:border-accent text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
+                    <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+                      <div className="flex-shrink-0">
+                        <LogIn className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </div>
+                      <div className="text-center">
+                        <div className="text-xs sm:text-sm font-semibold tracking-wide">ВОЙТИ В АККАУНТ</div>
+                      </div>
+                    </div>
+                  </Link>
 
-              {/* Смотреть видеоинструкцию */}
-              <Link href="#" className="group bg-card hover:bg-primary/10 border-2 border-border hover:border-primary text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
-                <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
-                  <div className="flex-shrink-0">
-                    <PlayCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xs sm:text-sm font-semibold tracking-wide">СМОТРЕТЬ ВИДЕОИНСТРУКЦИЮ</div>
-                  </div>
-                </div>
-              </Link>
+                  {/* Смотреть видеоинструкцию */}
+                  <Link href="#" className="group bg-card hover:bg-primary/10 border-2 border-border hover:border-primary text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
+                    <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+                      <div className="flex-shrink-0">
+                        <PlayCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </div>
+                      <div className="text-center">
+                        <div className="text-xs sm:text-sm font-semibold tracking-wide">СМОТРЕТЬ ВИДЕОИНСТРУКЦИЮ</div>
+                      </div>
+                    </div>
+                  </Link>
 
-              {/* Продлить VPN ключ */}
-              <Link href="/buy-no-register/extend-key" className="group bg-card hover:bg-accent/10 border-2 border-border hover:border-accent text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
-                <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
-                  <div className="flex-shrink-0">
-                    <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-180 transition-transform duration-500" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xs sm:text-sm font-semibold tracking-wide">ПРОДЛИТЬ VPN КЛЮЧ</div>
-                  </div>
-                </div>
-              </Link>
+                  {/* Продлить VPN ключ */}
+                  <Link href="/buy-no-register/extend-key" className="group bg-card hover:bg-accent/10 border-2 border-border hover:border-accent text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
+                    <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+                      <div className="flex-shrink-0">
+                        <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-180 transition-transform duration-500" />
+                      </div>
+                      <div className="text-center">
+                        <div className="text-xs sm:text-sm font-semibold tracking-wide">ПРОДЛИТЬ VPN КЛЮЧ</div>
+                      </div>
+                    </div>
+                  </Link>
 
-              {/* Купить VPN без регистрации */}
-              <Link href="/buy-no-register" className="group bg-card hover:bg-green-500/10 border-2 border-green-500 hover:border-green-400 text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg hover:shadow-green-500/20 sm:col-span-2 lg:col-span-2 flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
-                <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
-                  <div className="flex-shrink-0">
-                    <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 group-hover:text-green-400" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-xs sm:text-sm font-semibold tracking-wide text-green-500 group-hover:text-green-400">КУПИТЬ VPN БЕЗ РЕГИСТРАЦИИ</div>
-                  </div>
-                </div>
-              </Link>
+                  {/* Купить VPN без регистрации */}
+                  <Link href="/buy-no-register" className="group bg-card hover:bg-green-500/10 border-2 border-green-500 hover:border-green-400 text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg hover:shadow-green-500/20 sm:col-span-2 lg:col-span-2 flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
+                    <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+                      <div className="flex-shrink-0">
+                        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 group-hover:text-green-400" />
+                      </div>
+                      <div className="text-center">
+                        <div className="text-xs sm:text-sm font-semibold tracking-wide text-green-500 group-hover:text-green-400">КУПИТЬ VPN БЕЗ РЕГИСТРАЦИИ</div>
+                      </div>
+                    </div>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  {/* Смотреть видеоинструкцию */}
+                  <Link href="#" className="group bg-card hover:bg-primary/10 border-2 border-border hover:border-primary text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
+                    <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+                      <div className="flex-shrink-0">
+                        <PlayCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </div>
+                      <div className="text-center">
+                        <div className="text-xs sm:text-sm font-semibold tracking-wide">СМОТРЕТЬ ВИДЕОИНСТРУКЦИЮ</div>
+                      </div>
+                    </div>
+                  </Link>
+
+                  {/* Продлить VPN ключ */}
+                  <Link href="/account/tariffs" className="group bg-card hover:bg-accent/10 border-2 border-border hover:border-accent text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
+                    <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+                      <div className="flex-shrink-0">
+                        <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-180 transition-transform duration-500" />
+                      </div>
+                      <div className="text-center">
+                        <div className="text-xs sm:text-sm font-semibold tracking-wide">ПРОДЛИТЬ VPN КЛЮЧ</div>
+                      </div>
+                    </div>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </section>

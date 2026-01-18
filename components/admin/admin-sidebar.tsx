@@ -1,21 +1,20 @@
 import { DollarSign, FileText, Key, Layers } from "lucide-react"
 
-type Tab = "keys" | "blog" | "tariffs" | "balance"
+type Tab = "keys" | "blog" | "tariffs" | "finance"
 
 interface AdminSidebarProps {
     activeTab: Tab
     onChange: (tab: Tab) => void
-    balance: number
 }
 
 const tabs: { key: Tab; label: string; icon: typeof Key }[] = [
     { key: "keys", label: "VPN Ключи", icon: Key },
     { key: "blog", label: "Блог", icon: FileText },
     { key: "tariffs", label: "Тарифы", icon: Layers },
-    { key: "balance", label: "Баланс", icon: DollarSign },
+    { key: "finance", label: "Финансы", icon: DollarSign },
 ]
 
-export function AdminSidebar({ activeTab, onChange, balance }: AdminSidebarProps) {
+export function AdminSidebar({ activeTab, onChange }: AdminSidebarProps) {
     return (
         <aside className="fixed left-0 top-16 bottom-0 w-64 bg-card border-r border-border p-4 z-40">
             <nav className="space-y-2">
@@ -30,11 +29,6 @@ export function AdminSidebar({ activeTab, onChange, balance }: AdminSidebarProps
                     </button>
                 ))}
             </nav>
-
-            <div className="mt-8 p-4 bg-secondary border border-border">
-                <div className="text-[8px] text-muted-foreground mb-2">БАЛАНС</div>
-                <div className="text-primary text-lg">{balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽</div>
-            </div>
         </aside>
     )
 }

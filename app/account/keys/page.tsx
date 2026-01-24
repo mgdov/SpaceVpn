@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Copy, CheckCircle2, ExternalLink, Plus, RefreshCw, RotateCw } from "lucide-react"
+import { Key, Download, Smartphone, Clock, Trash2, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -10,42 +10,22 @@ import { useAuth, withAuth } from "@/lib/auth-context"
 import {
     listUserVPNClients,
     getUserVPNClientConfig,
-    createUserVPNClient,
-    regenerateUserVPNClient,
-    syncUserVPNClient,
-    getUserSubscriptions,
     type VPNClient,
     type VPNConfig,
-    type Subscription,
 } from "@/lib/api"
 
 function AccountKeysPageContent() {
     const { user } = useAuth()
     const [clients, setClients] = useState<VPNClient[]>([])
-    const [selectedClientId, setSelectedClientId] = useState<number | null>(null)
-    const [vpnConfig, setVpnConfig] = useState<VPNConfig | null>(null)
-    const [copiedField, setCopiedField] = useState<"link" | "json" | null>(null)
+    const [vpnConfigs, setVpnConfigs] = useState<Map<number, VPNConfig>>(new Map())
     const [loadingClients, setLoadingClients] = useState(true)
-    const [loadingConfig, setLoadingConfig] = useState(false)
-    const [creating, setCreating] = useState(false)
-    const [regenerating, setRegenerating] = useState(false)
-    const [syncing, setSyncing] = useState(false)
     const [error, setError] = useState("")
-    const [configError, setConfigError] = useState("")
 
     useEffect(() => {
-        loadClients()
+        loadClientsAndConfigs()
     }, [])
 
-    useEffect(() => {
-        if (!selectedClientId) {
-            setVpnConfig(null)
-            return
-        }
-        loadConfig(selectedClientId)
-    }, [selectedClientId])
-
-    const loadClients = async () => {
+    const loadClientsAndConfigs = async () => {
         setLoadingClients(true)
         setError("")
 
@@ -56,45 +36,26 @@ function AccountKeysPageContent() {
                 {
                     id: 1,
                     client_uuid: 'test-uuid-1234',
-                    name: 'Мой тестовый ключ',
+                    name: 'TJWMW',
                     status: 'active',
                     created_at: new Date().toISOString(),
+                    expires_at: new Date(Date.now() + 20 * 60 * 60 * 1000).toISOString(), // 20 часов
+                },
+                {
+                    id: 2,
+                    client_uuid: 'test-uuid-5678',
+                    name: 'YCSMT',
+                    status: 'expired',
+                    created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    expires_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // истек 2 часа назад
                 }
             ]
             setClients(mockClients)
-            if (!selectedClientId) {
-                setSelectedClientId(mockClients[0]?.id || null)
-            }
-            setLoadingClients(false)
-            return
-        }
 
-        const response = await listUserVPNClients()
-        if (response.data) {
-            setClients(response.data)
-            if (!response.data.length) {
-                setSelectedClientId(null)
-                setVpnConfig(null)
-            } else if (!selectedClientId || !response.data.find((client) => client.id === selectedClientId)) {
-                setSelectedClientId(response.data[0]?.id || null)
-            }
-        } else {
-            setError(response.error || "Не удалось загрузить список VPN ключей")
-        }
-
-        setLoadingClients(false)
-    }
-
-    const loadConfig = async (clientId: number) => {
-        setLoadingConfig(true)
-        setConfigError("")
-
-        // Проверяем, используется ли тестовый пользователь
-        const token = localStorage.getItem('auth_token')
-        if (token === 'test_token_12345') {
-            const mockConfig: VPNConfig = {
+            // Загружаем конфиги для каждого ключа
+            const mockConfig1: VPNConfig = {
                 client_uuid: 'test-uuid-1234',
-                name: 'Мой тестовый ключ',
+                name: 'TJWMW',
                 xray_config: {
                     protocol: 'vless',
                     settings: { vnext: [] }
@@ -102,107 +63,98 @@ function AccountKeysPageContent() {
                 subscription_url: 'vless://test-uuid-1234@example.spacevpn.com:443?type=tcp&security=reality&flow=xtls-rprx-vision#SpaceVPN-Test',
                 qr_code: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...',
             }
-            setVpnConfig(mockConfig)
-            setLoadingConfig(false)
+            const mockConfig2: VPNConfig = {
+                client_uuid: 'test-uuid-5678',
+                name: 'YCSMT',
+                xray_config: {
+                    protocol: 'vless',
+                    settings: { vnext: [] }
+                },
+                subscription_url: 'vless://test-uuid-5678@example.spacevpn.com:443?type=tcp&security=reality&flow=xtls-rprx-vision#SpaceVPN-Test-2',
+                qr_code: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...',
+            }
+            const configs = new Map()
+            configs.set(1, mockConfig1)
+            configs.set(2, mockConfig2)
+            setVpnConfigs(configs)
+            setLoadingClients(false)
             return
         }
 
-        const response = await getUserVPNClientConfig(clientId.toString())
+        const response = await listUserVPNClients()
         if (response.data) {
-            setVpnConfig(response.data)
+            setClients(response.data)
+
+            // Загружаем конфиги для всех ключей
+            const configs = new Map()
+            for (const client of response.data) {
+                const configResponse = await getUserVPNClientConfig(client.id.toString())
+                if (configResponse.data) {
+                    configs.set(client.id, configResponse.data)
+                }
+            }
+            setVpnConfigs(configs)
         } else {
-            setConfigError(response.error || "Не удалось загрузить конфигурацию")
+            setError(response.error || "Не удалось загрузить список VPN ключей")
         }
 
-        setLoadingConfig(false)
+        setLoadingClients(false)
     }
 
-    const handleCreateClient = async () => {
-        setCreating(true)
-        setError("")
-
-        // Получить активную подписку через /subscriptions/my
-        const subscriptionsResponse = await getUserSubscriptions()
-        const subscriptions = subscriptionsResponse.data?.subscriptions || []
-
-        if (subscriptions.length === 0) {
-            setError("У вас нет активной подписки. Сначала оформите подписку.")
-            setCreating(false)
-            return
+    const handleInstallApp = () => {
+        // Определяем платформу и перенаправляем на соответствующее приложение
+        const userAgent = navigator.userAgent.toLowerCase()
+        if (userAgent.includes('android')) {
+            window.open('https://play.google.com/store/apps/details?id=com.v2ray.ang', '_blank')
+        } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
+            window.open('https://apps.apple.com/app/streisand/id6450534064', '_blank')
+        } else {
+            // Desktop - показываем инструкцию
+            window.open('https://github.com/2dust/v2rayN/releases', '_blank')
         }
+    }
 
-        const activeSubscription = subscriptions.find((sub) => sub.status === 'active') || subscriptions[0]
-        if (!activeSubscription) {
-            setError("Не найдена активная подписка для создания VPN ключа")
-            setCreating(false)
-            return
-        }
-
-        const response = await createUserVPNClient({
-            subscription_id: activeSubscription.id,
-            name: `Device ${new Date().toLocaleDateString()}`,
+    const handleAddToApp = (subscriptionUrl: string) => {
+        // Копируем ссылку для добавления в приложение
+        navigator.clipboard.writeText(subscriptionUrl).then(() => {
+            alert('Ссылка скопирована! Вставьте её в приложение VPN.')
         })
-        if (response.data) {
-            await loadClients()
-            setSelectedClientId(response.data.id)
-        } else {
-            setError(response.error || "Не удалось создать VPN клиент")
-        }
-
-        setCreating(false)
     }
 
-    const handleRegenerate = async () => {
-        if (!selectedClientId) return
-        setRegenerating(true)
-        setError("")
-
-        const response = await regenerateUserVPNClient(selectedClientId.toString())
-        if (response.data) {
-            setVpnConfig(response.data)
-        } else {
-            setError(response.error || "Не удалось перегенерировать конфигурацию")
-        }
-
-        setRegenerating(false)
-    }
-
-    const handleSync = async () => {
-        if (!selectedClientId) return
-        setSyncing(true)
-        setError("")
-
-        const response = await syncUserVPNClient(selectedClientId.toString())
-        if (!response.data && response.error) {
-            setError(response.error || "Не удалось синхронизировать ключ")
-        } else {
-            // Refresh stats to reflect backend state
-            await loadClients()
-        }
-
-        setSyncing(false)
-    }
-
-    const handleCopy = async (text: string, field: "link" | "json") => {
-        try {
-            await navigator.clipboard.writeText(text)
-            setCopiedField(field)
-            setTimeout(() => setCopiedField(null), 2000)
-        } catch (error) {
-            console.error("copy failed", error)
+    const handleDeleteKey = (clientId: number) => {
+        if (confirm('Вы уверены, что хотите удалить этот ключ?')) {
+            // TODO: Реализовать удаление ключа
+            console.log('Deleting key:', clientId)
         }
     }
 
-    const formatDate = (dateString: string) => {
+    const formatDateTime = (dateString: string) => {
         const date = new Date(dateString)
-        return date.toLocaleDateString('ru-RU', {
+        return date.toLocaleString('ru-RU', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         })
     }
 
-    const selectedClient = selectedClientId ? clients.find((client) => client.id === selectedClientId) || null : null
+    const getTimeRemaining = (expiresAt: string) => {
+        const now = new Date().getTime()
+        const expiry = new Date(expiresAt).getTime()
+        const diff = expiry - now
+
+        if (diff <= 0) return 'Истёк'
+
+        const hours = Math.floor(diff / (1000 * 60 * 60))
+        const days = Math.floor(hours / 24)
+
+        if (days > 0) {
+            return `${days} д.`
+        }
+        return `${hours} ч.`
+    }
+
     const hasClients = clients.length > 0
 
     return (
@@ -211,7 +163,7 @@ function AccountKeysPageContent() {
             <Header />
 
             <main className="pt-24 pb-20 px-4">
-                <div className="max-w-6xl mx-auto space-y-6">
+                <div className="max-w-7xl mx-auto space-y-6">
                     {/* Заголовок и навигация */}
                     <div className="bg-card border border-border p-6">
                         <Link
@@ -227,19 +179,16 @@ function AccountKeysPageContent() {
                         <h1 className="text-foreground text-3xl font-bold">
                             Подключение к VPN
                         </h1>
-                        <p className="text-muted-foreground text-sm mt-2">
-                            Скопируйте VLESS ссылку и вставьте в приложение V2Ray или аналогичное
-                        </p>
                     </div>
 
                     {/* Сообщения об ошибках */}
-                    {(error || configError) && (
+                    {error && (
                         <div className="bg-red-500/10 border-2 border-red-500 p-6">
                             <div className="flex items-start gap-3">
                                 <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <p className="text-red-400 text-sm">{error || configError}</p>
+                                <p className="text-red-400 text-sm">{error}</p>
                             </div>
                         </div>
                     )}
@@ -256,129 +205,144 @@ function AccountKeysPageContent() {
                     {!loadingClients && !hasClients && (
                         <div className="bg-gradient-to-br from-primary/10 to-accent/5 border-2 border-primary p-8 md:p-12 text-center space-y-6">
                             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 mb-4">
-                                <Plus className="w-10 h-10 text-primary" />
+                                <Key className="w-10 h-10 text-primary" />
                             </div>
                             <div>
                                 <h2 className="text-foreground text-2xl font-bold mb-3">
                                     У вас пока нет VPN ключа
                                 </h2>
                                 <p className="text-muted-foreground text-base max-w-md mx-auto">
-                                    Активируйте тариф, чтобы получить доступ к защищенному VPN подключению
+                                    Купите тариф, чтобы получить доступ к защищенному VPN подключению
                                 </p>
                             </div>
                             <Link
-                                href="/account/tariffs"
+                                href="/pricing"
                                 className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 text-sm font-semibold hover:bg-primary/90 transition-colors"
                             >
-                                <Plus size={20} />
-                                Выбрать тариф
+                                <Key size={20} />
+                                Купить доступ
                             </Link>
                         </div>
                     )}
 
-                    {hasClients && (
-                        <>
-                            {/* Конфигурация выбранного ключа */}
-                            {selectedClient && !loadingConfig && vpnConfig && (
-                                <div className="bg-card border-2 border-primary p-6 md:p-8 space-y-6">
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ ВАШ КЛЮЧ ]</p>
-                                            <h2 className="text-foreground text-2xl font-bold">{vpnConfig.name}</h2>
-                                            {selectedClient.created_at && (
-                                                <p className="text-muted-foreground text-sm mt-1">
-                                                    Создан: {formatDate(selectedClient.created_at)}
-                                                </p>
+                    {/* Список ключей в grid */}
+                    {!loadingClients && hasClients && (
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {clients.map((client) => {
+                                const config = vpnConfigs.get(client.id)
+                                const isExpired = client.expires_at && new Date(client.expires_at).getTime() < Date.now()
+                                const isExpiring = client.expires_at && !isExpired && new Date(client.expires_at).getTime() - Date.now() < 24 * 60 * 60 * 1000
+
+                                return (
+                                    <div key={client.id} className="bg-card border-2 border-border p-4 flex flex-col h-full">
+                                        {/* Шапка ключа */}
+                                        <div className="flex items-center justify-between mb-3">
+                                            <div className="flex items-center gap-2">
+                                                <div className="bg-primary/20 p-2 rounded">
+                                                    <Key className="w-4 h-4 text-primary" />
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-foreground text-base font-bold">Ключ</span>
+                                                    <span className="bg-accent/20 border border-accent text-accent px-2 py-0.5 text-xs font-mono font-semibold">
+                                                        {client.name}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            {isExpired ? (
+                                                <div className="bg-red-500/20 border-2 border-red-500 text-red-400 px-3 py-1 text-xs font-semibold">
+                                                    Истек
+                                                </div>
+                                            ) : (
+                                                <div className="bg-primary/20 border-2 border-primary text-primary px-3 py-1 text-xs font-semibold">
+                                                    Активен
+                                                </div>
                                             )}
                                         </div>
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={handleRegenerate}
-                                                disabled={regenerating}
-                                                className="border-2 border-border hover:border-accent px-4 py-3 transition-colors disabled:opacity-50"
-                                                title="Перегенерировать ключ"
-                                            >
-                                                <RotateCw size={20} className={regenerating ? "animate-spin" : ""} />
-                                            </button>
-                                            <button
-                                                onClick={handleSync}
-                                                disabled={syncing}
-                                                className="border-2 border-border hover:border-primary px-4 py-3 transition-colors disabled:opacity-50"
-                                                title="Синхронизировать"
-                                            >
-                                                <RefreshCw size={20} className={syncing ? "animate-spin" : ""} />
-                                            </button>
-                                        </div>
-                                    </div>
 
-                                    <div className="bg-background border-2 border-border p-6 space-y-4">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className="bg-primary/20 p-2 rounded">
-                                                    <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                                    </svg>
-                                                </div>
-                                                <div>
-                                                    <p className="text-muted-foreground text-xs uppercase tracking-wider">VLESS ССЫЛКА</p>
-                                                    <p className="text-foreground text-sm font-semibold">Скопируйте для подключения</p>
+                                        {/* Предупреждение об истечении/истёк */}
+                                        {client.expires_at && (
+                                            <div className="bg-orange-500/10 border-2 border-orange-500 p-2 mb-3">
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-1.5">
+                                                        <Clock className="w-4 h-4 text-orange-400" />
+                                                        <span className="text-orange-300 text-xs font-semibold">
+                                                            Истекает: {formatDateTime(client.expires_at)}
+                                                        </span>
+                                                    </div>
+                                                    <div className="bg-orange-500/20 border border-orange-500 text-orange-300 px-2 py-1 text-xs font-semibold">
+                                                        {isExpired ? 'Истёк' : `Осталось ${getTimeRemaining(client.expires_at)}`}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <button
-                                                onClick={() => handleCopy(vpnConfig.subscription_url, "link")}
-                                                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 text-sm font-semibold transition-colors flex items-center gap-2"
-                                            >
-                                                {copiedField === "link" ? (
-                                                    <>
-                                                        <CheckCircle2 size={18} />
-                                                        Скопировано!
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Copy size={18} />
-                                                        Копировать
-                                                    </>
+                                        )}
+
+                                        {/* Инструкция */}
+                                        <div className="bg-purple-500/10 border-2 border-purple-500 p-3 space-y-2 mb-3 flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <Smartphone className="w-4 h-4 text-purple-400" />
+                                                <h3 className="text-purple-300 text-sm font-semibold">Инструкция:</h3>
+                                            </div>
+                                            <ol className="space-y-1.5 text-muted-foreground text-xs">
+                                                <li className="flex gap-2">
+                                                    <span className="text-purple-400 font-bold flex-shrink-0">1.</span>
+                                                    <span>Установите приложение для VPN нажав на первую кнопку, а затем вернитесь снова на сайт</span>
+                                                </li>
+                                                <li className="flex gap-2">
+                                                    <span className="text-purple-400 font-bold flex-shrink-0">2.</span>
+                                                    <span>После установки приложения нажмите вторую кнопку «Добавить VPN в приложение»</span>
+                                                </li>
+                                            </ol>
+                                        </div>
+
+                                        {/* Кнопки действий */}
+                                        {isExpired ? (
+                                            <div className="mb-3">
+                                                <button
+                                                    onClick={() => window.location.href = '/pricing'}
+                                                    className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <Clock className="w-4 h-4" />
+                                                    <span>Продлить ключ</span>
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-2 mb-3">
+                                                <button
+                                                    onClick={handleInstallApp}
+                                                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <span className="text-base">1.</span>
+                                                    <Download className="w-4 h-4" />
+                                                    <span>Установить приложение для VPN</span>
+                                                </button>
+
+                                                {config && (
+                                                    <button
+                                                        onClick={() => handleAddToApp(config.subscription_url)}
+                                                        className="w-full bg-purple-600 hover:bg-purple-700 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                    >
+                                                        <span className="text-base">2.</span>
+                                                        <Smartphone className="w-4 h-4" />
+                                                        <span>Добавить VPN в приложение</span>
+                                                    </button>
                                                 )}
+                                            </div>
+                                        )}
+
+                                        {/* Кнопка удаления */}
+                                        <div className="flex justify-end pt-1 mt-auto">
+                                            <button
+                                                onClick={() => handleDeleteKey(client.id)}
+                                                className="text-red-500 hover:text-red-400 text-xs font-semibold transition-colors flex items-center gap-1"
+                                            >
+                                                Удалить
+                                                <Trash2 className="w-3 h-3" />
                                             </button>
                                         </div>
-                                        <code className="block text-foreground text-xs break-all bg-muted/50 border border-border p-4 rounded">
-                                            {vpnConfig.subscription_url}
-                                        </code>
                                     </div>
-
-                                    {/* Инструкция */}
-                                    <div className="bg-primary/5 border border-primary/20 p-6 space-y-3">
-                                        <div className="flex items-start gap-3">
-                                            <div className="bg-primary/20 p-2 rounded mt-1">
-                                                <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                            </div>
-                                            <div className="flex-1">
-                                                <h3 className="text-foreground font-semibold mb-2">Как подключиться?</h3>
-                                                <ol className="text-muted-foreground text-sm space-y-2 list-decimal list-inside">
-                                                    <li>Скопируйте VLESS ссылку выше</li>
-                                                    <li>Откройте приложение V2Ray, V2RayNG или аналогичное</li>
-                                                    <li>Вставьте ссылку в приложение (обычно кнопка "+" или "Импорт")</li>
-                                                    <li>Подключитесь к VPN</li>
-                                                </ol>
-                                                <Link href="#" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-sm mt-3 font-semibold">
-                                                    Смотреть видеоинструкцию
-                                                    <ExternalLink size={16} />
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {loadingConfig && selectedClient && (
-                                <div className="bg-card border border-border p-12 text-center">
-                                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
-                                    <p className="text-muted-foreground text-sm mt-4">Загрузка конфигурации...</p>
-                                </div>
-                            )}
-                        </>
+                                )
+                            })}
+                        </div>
                     )}
                 </div>
             </main>

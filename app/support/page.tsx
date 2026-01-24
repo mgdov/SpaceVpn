@@ -1,25 +1,8 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
-import { MessageCircle, Mail, Phone, ArrowRight } from "lucide-react"
+import { MessageCircle, Mail, Phone } from "lucide-react"
 import Link from "next/link"
-
-const faqs = [
-    {
-        question: "Как подключиться к TLS Reality?",
-        answer:
-            "Используйте ключ из личного кабинета. В клиенте укажите Endpoint, UUID и Public Key. Убедитесь, что включен протокол VLESS и Flow xtls-rprx-vision.",
-    },
-    {
-        question: "Как быстро активируется купленный тариф?",
-        answer: "Новый период подключается автоматически сразу после успешной оплаты — обновлять ключ вручную не нужно.",
-    },
-    {
-        question: "Что делать, если соединение нестабильное?",
-        answer:
-            "Попробуйте сменить SNI или endpoint. Также убедитесь, что время на устройстве синхронизировано. Если проблема сохраняется — напишите нам.",
-    },
-]
 
 const contacts = [
     {
@@ -94,19 +77,6 @@ export default function SupportPage() {
                                         </svg>
                                     </div>
                                 </a>
-                            ))}
-                        </div>
-                    </section>
-
-                    <section className="bg-card border border-border p-8">
-                        <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ FAQ ]</p>
-                        <h2 className="text-foreground text-2xl font-bold mb-8">Популярные вопросы</h2>
-                        <div className="space-y-6">
-                            {faqs.map(({ question, answer }) => (
-                                <div key={question} className="border-l-4 border-primary bg-background p-6">
-                                    <h3 className="text-foreground text-lg font-semibold mb-3">{question}</h3>
-                                    <p className="text-muted-foreground text-base leading-relaxed">{answer}</p>
-                                </div>
                             ))}
                         </div>
                     </section>

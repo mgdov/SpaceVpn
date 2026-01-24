@@ -9,9 +9,7 @@ import { useAuth, withAuth } from "@/lib/auth-context"
 import { listUserVPNClients } from "@/lib/api"
 import {
     Key,
-    CreditCard,
     PlayCircle,
-    RefreshCw,
     HelpCircle
 } from "lucide-react"
 
@@ -85,7 +83,7 @@ function AccountPageContent() {
                     {/* Быстрые действия */}
                     <div>
                         <p className="text-accent text-[9px] tracking-[0.35em] mb-4">[ БЫСТРЫЕ ДЕЙСТВИЯ ]</p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4">
                             {/* Инструкция по подключению */}
                             <Link
                                 href="#"
@@ -105,33 +103,13 @@ function AccountPageContent() {
                                     </div>
                                 </div>
                             </Link>
-
-                            {/* Продлить подписку */}
-                            <Link
-                                href="/account/tariffs"
-                                className="group bg-gradient-to-br from-green-500/20 to-green-500/5 border-2 border-green-500 hover:border-green-400 hover:from-green-500/30 hover:to-green-500/10 p-6 transition-all hover:shadow-lg hover:shadow-green-500/20"
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className="bg-green-500/20 p-3 rounded">
-                                        <RefreshCw className="w-6 h-6 text-green-500 group-hover:rotate-180 transition-transform duration-500" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="text-foreground text-lg font-semibold mb-1">
-                                            Продлить подписку
-                                        </h3>
-                                        <p className="text-muted-foreground text-sm">
-                                            Выберите тариф и продлите доступ к VPN
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
                         </div>
                     </div>
 
                     {/* Основные разделы */}
                     <div>
                         <p className="text-accent text-[9px] tracking-[0.35em] mb-4">[ МОИ ДАННЫЕ ]</p>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* VPN Ключи */}
                             <Link
                                 href="/account/keys"
@@ -148,26 +126,6 @@ function AccountPageContent() {
                                     Ваши VLESS ссылки для подключения
                                 </p>
                                 <span className="text-primary text-xs tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
-                                    ОТКРЫТЬ →
-                                </span>
-                            </Link>
-
-                            {/* Тарифы */}
-                            <Link
-                                href="/account/tariffs"
-                                className="group border-2 border-border hover:border-accent bg-card p-6 transition-all hover:shadow-lg"
-                            >
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="bg-accent/10 p-2 rounded">
-                                        <CreditCard className="w-5 h-5 text-accent" />
-                                    </div>
-                                    <span className="text-accent text-[9px] tracking-[0.35em]">ТАРИФЫ</span>
-                                </div>
-                                <h2 className="text-foreground text-lg font-semibold mb-2">Мои тарифы</h2>
-                                <p className="text-muted-foreground text-sm mb-4">
-                                    Управление подписками и оплата
-                                </p>
-                                <span className="text-accent text-xs tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
                                     ОТКРЫТЬ →
                                 </span>
                             </Link>

@@ -101,9 +101,9 @@ export default function HomePage() {
                   </Link>
                 </>
               ) : (
-                <>
+                <div className="col-span-full flex justify-center gap-3 sm:gap-4">
                   {/* Смотреть видеоинструкцию */}
-                  <Link href="#" className="group bg-card hover:bg-primary/10 border-2 border-border hover:border-primary text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
+                  <Link href="#" className="group bg-card hover:bg-primary/10 border-2 border-border hover:border-primary text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px] flex-1 max-w-md">
                     <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
                       <div className="flex-shrink-0">
                         <PlayCircle className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -115,7 +115,7 @@ export default function HomePage() {
                   </Link>
 
                   {/* Продлить VPN ключ */}
-                  <Link href="/account/tariffs" className="group bg-card hover:bg-accent/10 border-2 border-border hover:border-accent text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px]">
+                  <Link href="/account/tariffs" className="group bg-card hover:bg-accent/10 border-2 border-border hover:border-accent text-foreground p-4 sm:p-5 md:p-6 transition-all hover:shadow-lg flex items-center justify-center min-h-[100px] sm:min-h-[110px] flex-1 max-w-md">
                     <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
                       <div className="flex-shrink-0">
                         <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 group-hover:rotate-180 transition-transform duration-500" />
@@ -125,7 +125,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   </Link>
-                </>
+                </div>
               )}
             </div>
           </div>

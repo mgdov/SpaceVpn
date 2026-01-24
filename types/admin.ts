@@ -18,6 +18,8 @@ export interface KeyFormState {
     name: string
     deviceInfo: string
     expiresAt: string
+    expiryDays: string
+    dataLimitGb: string
 }
 
 export interface PostFormState {

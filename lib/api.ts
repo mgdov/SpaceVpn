@@ -52,7 +52,8 @@ export interface VPNClient {
   client_uuid: string
   name: string
   status: 'active' | 'expired' | 'blocked' | 'disabled'
-  pasarguard_username?: string | null
+  marzban_username?: string | null
+  pasarguard_username?: string | null  // Legacy field
   device_info?: string | null
   xray_config?: string | null
   subscription_url?: string | null
@@ -60,6 +61,54 @@ export interface VPNClient {
   last_connected_at?: string | null
   created_at: string
   updated_at?: string
+}
+
+/**
+ * Extended VPN Key status with expiration info
+ */
+export interface VPNKeyStatus {
+  id: number
+  key_id: string  // Short ID like "TJWMW"
+  status: 'active' | 'expired' | 'blocked' | 'disabled'
+  
+  // Expiration
+  expire_date: string | null
+  time_remaining: string | null  // "19 ч.", "3 дня"
+  time_remaining_seconds: number | null
+  is_expired: boolean
+  
+  // Traffic
+  traffic_used_bytes: number
+  traffic_limit_bytes: number | null
+  traffic_used_gb: number
+  traffic_limit_gb: number | null
+  traffic_percentage: number | null
+  
+  // VPN connection
+  subscription_url: string | null
+  qr_code: string | null
+  happ_deeplink: string | null
+  
+  // Actions
+  can_extend: boolean
+  can_delete: boolean
+}
+
+export interface VPNKeyListResponse {
+  keys: VPNKeyStatus[]
+  total: number
+}
+
+export interface ExtendKeyRequest {
+  tariff_id?: number
+  days?: number
+}
+
+export interface ExtendKeyResponse {
+  success: boolean
+  message: string
+  new_expire_date?: string
+  key_status?: VPNKeyStatus
 }
 
 export interface CreateVPNClientPayload {
@@ -189,18 +238,53 @@ export interface CreateTariffPayload {
 
 export type UpdateTariffPayload = Partial<CreateTariffPayload>
 
-export type AdminVPNClient = VPNClient & { user?: User }
+export interface AdminVPNClient {
+  id: number
+  user_id?: number
+  subscription_id?: number
+  client_uuid: string
+  marzban_username?: string
+  name?: string
+  device_info?: string
+  status: string
+  subscription_url?: string
+  qr_code?: string
+  created_at: string
+  updated_at?: string
+  
+  // Extended info
+  user?: {
+    id: number
+    username: string
+    email?: string
+  }
+  expire_date?: string
+  time_remaining?: string
+  is_expired: boolean
+  traffic_used_gb: number
+  traffic_limit_gb: number
+}
 
 export interface ExtendPayload {
   days?: number
   expires_at?: string
 }
 
-export interface PasarguardSyncResponse {
+export interface MarzbanSyncResponse {
+  total: number
   synced: number
-  failed?: number
-  skipped?: number
+  orphaned: number
+  errors: number
+  details?: Array<{
+    client_id: number
+    username: string
+    status: string
+    error?: string
+  }>
 }
+
+// Legacy alias
+export type PasarguardSyncResponse = MarzbanSyncResponse
 
 type QueryParams = Record<string, string | number | boolean | undefined>
 
@@ -362,6 +446,74 @@ export async function loginUser(username: string, password: string): Promise<Api
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: formData.toString(),
+  })
+
+  if (response.data?.access_token) {
+    setAuthToken(response.data.access_token)
+  }
+
+  return response
+}
+
+/**
+ * OAuth Providers
+ */
+export interface OAuthProvider {
+  id: string
+  name: string
+  enabled: boolean
+  bot_username?: string  // For Telegram
+}
+
+export interface OAuthProvidersResponse {
+  providers: OAuthProvider[]
+}
+
+export async function getOAuthProviders(): Promise<ApiResponse<OAuthProvidersResponse>> {
+  return apiRequest<OAuthProvidersResponse>('/auth/oauth-providers')
+}
+
+/**
+ * Google OAuth - Get auth URL
+ */
+export interface GoogleAuthResponse {
+  auth_url: string
+  state: string
+}
+
+export async function getGoogleAuthUrl(): Promise<ApiResponse<GoogleAuthResponse>> {
+  return apiRequest<GoogleAuthResponse>('/auth/google')
+}
+
+/**
+ * Telegram OAuth - Get bot info
+ */
+export interface TelegramAuthInfo {
+  bot_username: string
+  redirect_url: string
+}
+
+export async function getTelegramAuthInfo(): Promise<ApiResponse<TelegramAuthInfo>> {
+  return apiRequest<TelegramAuthInfo>('/auth/telegram')
+}
+
+/**
+ * Telegram OAuth - Callback
+ */
+export interface TelegramAuthData {
+  id: number
+  first_name: string
+  last_name?: string
+  username?: string
+  photo_url?: string
+  auth_date: number
+  hash: string
+}
+
+export async function telegramAuthCallback(data: TelegramAuthData): Promise<ApiResponse<TokenResponse>> {
+  const response = await apiRequest<TokenResponse>('/auth/telegram/callback', {
+    method: 'POST',
+    body: JSON.stringify(data),
   })
 
   if (response.data?.access_token) {
@@ -644,6 +796,37 @@ export async function syncUserVPNClient(id: string): Promise<ApiResponse<VPNClie
 }
 
 /**
+ * Get all VPN keys with extended status (expiration, traffic, deep links)
+ */
+export async function getUserVPNKeys(): Promise<ApiResponse<VPNKeyListResponse>> {
+  return apiRequest<VPNKeyListResponse>('/vpn-clients/keys')
+}
+
+/**
+ * Get single VPN key status
+ */
+export async function getVPNKeyStatus(keyId: number): Promise<ApiResponse<VPNKeyStatus>> {
+  return apiRequest<VPNKeyStatus>(`/vpn-clients/keys/${keyId}`)
+}
+
+/**
+ * Extend VPN key expiration
+ */
+export async function extendVPNKey(keyId: number, request?: ExtendKeyRequest): Promise<ApiResponse<ExtendKeyResponse>> {
+  return apiRequest<ExtendKeyResponse>(`/vpn-clients/keys/${keyId}/extend`, {
+    method: 'POST',
+    body: request ? JSON.stringify(request) : undefined,
+  })
+}
+
+/**
+ * Get Happ VPN deep link for a key
+ */
+export async function getHappDeeplink(keyId: number): Promise<ApiResponse<{ happ_link: string; vless_url: string; qr_code: string }>> {
+  return apiRequest(`/vpn-clients/keys/${keyId}/happ-link`)
+}
+
+/**
  * VPN client endpoints (admin)
  */
 export async function adminListVPNClients(): Promise<ApiResponse<AdminVPNClient[]>> {
@@ -696,8 +879,108 @@ export async function adminToggleVPNClient(id: string): Promise<ApiResponse<Admi
 /**
  * Internal maintenance endpoints
  */
-export async function syncAllVpnClients(): Promise<ApiResponse<PasarguardSyncResponse>> {
-  return apiRequest<PasarguardSyncResponse>('/internal/pasarguard/sync', { method: 'POST' })
+export async function syncAllVpnClients(): Promise<ApiResponse<MarzbanSyncResponse>> {
+  return apiRequest<MarzbanSyncResponse>('/internal/marzban/sync', { method: 'POST' })
+}
+
+// ============================================================================
+// Public API (без авторизации)
+// ============================================================================
+
+/**
+ * Public Tariffs
+ */
+export interface PublicTariff {
+  id: number
+  name: string
+  description: string | null
+  price: number
+  duration_months: number
+  duration_days: number
+  data_limit_gb: number
+  is_featured: boolean
+}
+
+export interface PublicTariffsResponse {
+  tariffs: PublicTariff[]
+}
+
+export async function getPublicTariffsNoAuth(): Promise<ApiResponse<PublicTariffsResponse>> {
+  return apiRequest<PublicTariffsResponse>('/public/tariffs')
+}
+
+/**
+ * Key Search
+ */
+export interface KeySearchRequest {
+  key_identifier: string
+}
+
+export interface KeySearchResult {
+  found: boolean
+  key_id?: string
+  client_id?: number
+  status?: 'active' | 'expired'
+  expires_at?: string
+  time_remaining?: string
+  is_expired: boolean
+  can_renew: boolean
+}
+
+export async function searchKeyPublic(keyIdentifier: string): Promise<ApiResponse<KeySearchResult>> {
+  return apiRequest<KeySearchResult>('/public/key/search', {
+    method: 'POST',
+    body: JSON.stringify({ key_identifier: keyIdentifier }),
+  })
+}
+
+/**
+ * Create Key Without Registration
+ */
+export interface CreateKeyRequest {
+  tariff_id: number
+  bypass_preset?: string
+}
+
+export interface CreateKeyResult {
+  success: boolean
+  key_id: string
+  client_id: number
+  subscription_url: string
+  qr_code?: string
+  expires_at: string
+  message: string
+}
+
+export async function createKeyPublic(request: CreateKeyRequest): Promise<ApiResponse<CreateKeyResult>> {
+  return apiRequest<CreateKeyResult>('/public/key/create', {
+    method: 'POST',
+    body: JSON.stringify(request),
+  })
+}
+
+/**
+ * Renew Key
+ */
+export interface RenewKeyRequest {
+  key_identifier: string
+  tariff_id: number
+}
+
+export interface RenewKeyResult {
+  success: boolean
+  key_id: string
+  client_id: number
+  new_expires_at: string
+  subscription_url: string
+  message: string
+}
+
+export async function renewKeyPublic(request: RenewKeyRequest): Promise<ApiResponse<RenewKeyResult>> {
+  return apiRequest<RenewKeyResult>('/public/key/renew', {
+    method: 'POST',
+    body: JSON.stringify(request),
+  })
 }
 
 /**

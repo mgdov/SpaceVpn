@@ -64,16 +64,3 @@ export async function getTariff(tariffId: number): Promise<ApiResponse<Tariff>> 
     }
   }
 }
-error: errorData.detail || errorData.message || `HTTP ${response.status}`,
-      }
-    }
-
-const data = await response.json()
-return { data }
-  } catch (error) {
-  return {
-    error: error instanceof Error ? error.message : 'Network error',
-  }
-}
-}
-

@@ -177,6 +177,8 @@ export default function AdminPage() {
     name: "",
     deviceInfo: "",
     expiresAt: "",
+    expiryDays: "30",
+    dataLimitGb: "0",
   })
 
   // Post form state
@@ -202,10 +204,12 @@ export default function AdminPage() {
   })
   const resetKeyForm = () =>
     setKeyForm({
-      userId: users[0]?.id ?? "",
+      userId: "",
       name: "",
       deviceInfo: "",
       expiresAt: "",
+      expiryDays: "30",
+      dataLimitGb: "0",
     })
 
   const formatDate = (dateString?: string) => {
@@ -312,22 +316,16 @@ export default function AdminPage() {
     }
   }, [financeChartPeriod, isAuthenticated, isCheckingAuth, activeTab])
 
-  useEffect(() => {
-    setKeyForm((prev) => (prev.userId ? prev : { ...prev, userId: users[0]?.id?.toString() ?? "" }))
-  }, [users])
+  // Removed auto-select first user - now allows anonymous keys
 
   const handleSaveKey = async () => {
-    if (!keyForm.userId) {
-      setKeysError("Выберите пользователя")
-      return
-    }
-
-    // Админский эндпоинт использует старую структуру, но пока оставляем так
-    // TODO: Обновить админский эндпоинт для использования новой структуры
+    // user_id теперь опционален для анонимных ключей
     const payload: any = {
-      user_id: parseInt(keyForm.userId),
+      user_id: keyForm.userId ? parseInt(keyForm.userId) : null,
       name: keyForm.name || undefined,
       device_info: keyForm.deviceInfo || undefined,
+      data_limit_gb: parseInt(keyForm.dataLimitGb) || 0,
+      expiry_days: parseInt(keyForm.expiryDays) || 30,
     }
 
     const response = editingKey
@@ -355,6 +353,14 @@ export default function AdminPage() {
 
   const handleDeleteKey = async (id: number) => {
     const response = await adminDeleteVPNClient(id.toString())
+    if (response.error) {
+      setKeysError(response.error)
+    }
+    refreshKeys()
+  }
+
+  const handleToggleKey = async (id: number) => {
+    const response = await adminToggleVPNClient(id.toString())
     if (response.error) {
       setKeysError(response.error)
     }
@@ -502,10 +508,12 @@ export default function AdminPage() {
   const openEditKey = (key: AdminVPNClient) => {
     setEditingKey(key)
     setKeyForm({
-      userId: key.user_id.toString(),
+      userId: key.user_id?.toString() || "",
       name: key.name || "",
       deviceInfo: key.device_info || "",
-      expiresAt: "",  // Убрано, так как expiry_date нет в VPNClient
+      expiresAt: "",
+      expiryDays: "30",
+      dataLimitGb: key.traffic_limit_gb?.toString() || "0",
     })
     setShowKeyModal(true)
   }
@@ -684,7 +692,7 @@ export default function AdminPage() {
                   onEdit={openEditKey}
                   onExtend={handleExtendKey}
                   onDelete={handleDeleteKey}
-                  onToggle={() => { }}  // Удалено, но оставлено для совместимости
+                  onToggle={handleToggleKey}
                 />
               )}
             </div>

@@ -30,13 +30,16 @@ export function KeyModal({ open, isEditing, form, users, onChange, onSubmit, onC
                             onChange={(e) => updateField("userId", e.target.value)}
                             className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
                         >
-                            <option value="">Выберите пользователя</option>
+                            <option value="">Без пользователя (анонимный ключ)</option>
                             {users.map((user) => (
                                 <option key={user.id} value={user.id}>
-                                    {user.email || user.username}
+                                    {user.username} ({user.email || "без email"})
                                 </option>
                             ))}
                         </select>
+                        <p className="text-[8px] text-muted-foreground mt-1">
+                            Оставьте пустым для создания анонимного ключа
+                        </p>
                     </div>
                     <div>
                         <label className="block text-foreground text-[10px] mb-2">Название устройства</label>
@@ -48,21 +51,38 @@ export function KeyModal({ open, isEditing, form, users, onChange, onSubmit, onC
                             className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
                         />
                     </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-foreground text-[10px] mb-2">Срок (дней)</label>
+                            <input
+                                type="number"
+                                value={form.expiryDays || "30"}
+                                onChange={(e) => updateField("expiryDays", e.target.value)}
+                                min="1"
+                                max="365"
+                                className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-foreground text-[10px] mb-2">Лимит трафика (ГБ)</label>
+                            <input
+                                type="number"
+                                value={form.dataLimitGb || "0"}
+                                onChange={(e) => updateField("dataLimitGb", e.target.value)}
+                                min="0"
+                                placeholder="0 = безлимит"
+                                className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
+                            />
+                            <p className="text-[8px] text-muted-foreground mt-1">0 = безлимит</p>
+                        </div>
+                    </div>
                     <div>
-                        <label className="block text-foreground text-[10px] mb-2">Описание устройства</label>
+                        <label className="block text-foreground text-[10px] mb-2">Описание</label>
                         <textarea
                             value={form.deviceInfo}
                             onChange={(e) => updateField("deviceInfo", e.target.value)}
-                            rows={3}
-                            className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-foreground text-[10px] mb-2">Дата истечения</label>
-                        <input
-                            type="date"
-                            value={form.expiresAt}
-                            onChange={(e) => updateField("expiresAt", e.target.value)}
+                            rows={2}
+                            placeholder="Дополнительная информация"
                             className="w-full bg-secondary border border-border px-4 py-2 text-foreground text-[10px] focus:outline-none focus:border-primary"
                         />
                     </div>

@@ -42,7 +42,10 @@ module.exports = mod;
     "withQuery",
     ()=>withQuery
 ]);
-const API_BASE_URL = '/api/v1';
+// Use environment variable for API URL, fallback to relative path
+const API_URL = ("TURBOPACK compile-time value", "http://72.56.92.136:8000") || 'http://localhost:8000';
+const API_PATH = ("TURBOPACK compile-time value", "/api/v1") || '/api/v1';
+const API_BASE_URL = `${API_URL}${API_PATH}`;
 function getAuthToken() {
     if ("TURBOPACK compile-time truthy", 1) return null;
     //TURBOPACK unreachable

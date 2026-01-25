@@ -18,7 +18,11 @@
     "withQuery",
     ()=>withQuery
 ]);
-const API_BASE_URL = '/api/v1';
+var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
+// Use environment variable for API URL, fallback to relative path
+const API_URL = ("TURBOPACK compile-time value", "http://72.56.92.136:8000") || 'http://localhost:8000';
+const API_PATH = ("TURBOPACK compile-time value", "/api/v1") || '/api/v1';
+const API_BASE_URL = `${API_URL}${API_PATH}`;
 function getAuthToken() {
     if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
     ;

@@ -29,58 +29,6 @@ function AccountKeysPageContent() {
         setLoadingClients(true)
         setError("")
 
-        // Проверяем, используется ли тестовый пользователь
-        const token = localStorage.getItem('auth_token')
-        if (token === 'test_token_12345') {
-            const mockClients: VPNClient[] = [
-                {
-                    id: 1,
-                    client_uuid: 'test-uuid-1234',
-                    name: 'TJWMW',
-                    status: 'active',
-                    created_at: new Date().toISOString(),
-                    expires_at: new Date(Date.now() + 20 * 60 * 60 * 1000).toISOString(), // 20 часов
-                },
-                {
-                    id: 2,
-                    client_uuid: 'test-uuid-5678',
-                    name: 'YCSMT',
-                    status: 'expired',
-                    created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-                    expires_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // истек 2 часа назад
-                }
-            ]
-            setClients(mockClients)
-
-            // Загружаем конфиги для каждого ключа
-            const mockConfig1: VPNConfig = {
-                client_uuid: 'test-uuid-1234',
-                name: 'TJWMW',
-                xray_config: {
-                    protocol: 'vless',
-                    settings: { vnext: [] }
-                },
-                subscription_url: 'vless://test-uuid-1234@example.spacevpn.com:443?type=tcp&security=reality&flow=xtls-rprx-vision#SpaceVPN-Test',
-                qr_code: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...',
-            }
-            const mockConfig2: VPNConfig = {
-                client_uuid: 'test-uuid-5678',
-                name: 'YCSMT',
-                xray_config: {
-                    protocol: 'vless',
-                    settings: { vnext: [] }
-                },
-                subscription_url: 'vless://test-uuid-5678@example.spacevpn.com:443?type=tcp&security=reality&flow=xtls-rprx-vision#SpaceVPN-Test-2',
-                qr_code: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUg...',
-            }
-            const configs = new Map()
-            configs.set(1, mockConfig1)
-            configs.set(2, mockConfig2)
-            setVpnConfigs(configs)
-            setLoadingClients(false)
-            return
-        }
-
         const response = await listUserVPNClients()
         if (response.data) {
             setClients(response.data)

@@ -30,40 +30,6 @@ export default function TariffsPage() {
   const loadTariffs = async () => {
     setLoading(true)
 
-    // Проверяем, используется ли тестовый пользователь
-    const token = localStorage.getItem('auth_token')
-    if (token === 'test_token_12345') {
-      const mockTariffs: Tariff[] = [
-        {
-          id: 1,
-          name: 'Бесплатный',
-          description: 'Базовый доступ для тестирования',
-          tagline: 'Для начала',
-          duration_months: 0,
-          price: 0,
-          data_limit_gb: 10,
-          devices_count: 1,
-          is_active: true,
-          is_featured: false,
-        },
-        {
-          id: 2,
-          name: 'Стандарт',
-          description: 'Полный доступ с безлимитным трафиком',
-          tagline: 'Лучший выбор',
-          duration_months: 1,
-          price: 299,
-          data_limit_gb: 0,
-          devices_count: 3,
-          is_active: true,
-          is_featured: true,
-        },
-      ]
-      setTariffs(mockTariffs)
-      setLoading(false)
-      return
-    }
-
     const response = await getPublicTariffs()
     if (response.data?.length) {
       setTariffs(response.data.filter((tariff) => tariff.is_active))

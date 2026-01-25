@@ -3,15 +3,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  User,
-  getCurrentUserInfo,
   loginUser as apiLoginUser,
   logoutUser as apiLogoutUser,
   registerUser as apiRegisterUser,
   isAuthenticated,
-  getAuthToken,
-  getCurrentUser as getStoredUser,
-} from './api'
+} from './api/auth'
+import {
+  getCurrentUser as apiGetCurrentUser,
+  getStoredUser,
+} from './api/users'
+import type { User } from '@/types/api'
 
 interface AuthContextType {
   user: User | null
@@ -40,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Then refresh from API
-        const response = await getCurrentUserInfo()
+        const response = await apiGetCurrentUser()
         if (response.data) {
           setUser(response.data)
         } else if (response.error) {
@@ -58,32 +59,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string) => {
     setLoading(true)
     try {
-      // Тестовый пользователь для локальной разработки
-      if (username === 'test' && password === 'test123') {
-        const testUser: User = {
-          id: 999,
-          username: 'test',
-          email: 'test@spacevpn.com',
-          full_name: 'Тестовый Пользователь',
-          is_active: true,
-          is_superuser: false,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }
-
-        // Сохраняем тестовый токен и пользователя
-        localStorage.setItem('auth_token', 'test_token_12345')
-        localStorage.setItem('current_user', JSON.stringify(testUser))
-        setUser(testUser)
-        setLoading(false)
-        return { success: true }
-      }
-
       const response = await apiLoginUser(username, password)
 
       if (response.data) {
         // Get user info after login
-        const userResponse = await getCurrentUserInfo()
+        const userResponse = await apiGetCurrentUser()
         if (userResponse.data) {
           setUser(userResponse.data)
           setLoading(false)
@@ -126,7 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = async () => {
     if (isAuthenticated()) {
-      const response = await getCurrentUserInfo()
+      const response = await apiGetCurrentUser()
       if (response.data) {
         setUser(response.data)
       }

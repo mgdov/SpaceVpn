@@ -4,45 +4,8 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { getPublicTariffs, type Tariff } from "@/lib/api"
 
-// Тестовые тарифы
-const testTariffs: Tariff[] = [
-  {
-    id: 1,
-    name: "ПРОБНЫЙ",
-    description: "🚀 Идеально для знакомства с сервисом! Полный доступ ко всем функциям на 2 дня",
-    duration_months: 0,
-    price: 0,
-    data_limit_gb: 10,
-    devices_count: 1,
-    is_active: true,
-    is_featured: false,
-  },
-  {
-    id: 2,
-    name: "ЛУНА-1",
-    description: "✨ Месяц космической свободы! Быстрая скорость, стабильное соединение и защита данных по цене чашки кофе в неделю",
-    duration_months: 1,
-    price: 100,
-    data_limit_gb: 100,
-    devices_count: 3,
-    is_active: true,
-    is_featured: true,
-  },
-  {
-    id: 3,
-    name: "КОСМОС-6",
-    description: "🌟 Полгода без забот! Лучшее соотношение цены и качества для активных пользователей",
-    duration_months: 6,
-    price: 500,
-    data_limit_gb: 1000,
-    devices_count: 5,
-    is_active: true,
-    is_featured: false,
-  },
-]
-
 export function PricingSection() {
-  const [tariffs, setTariffs] = useState<Tariff[]>(testTariffs)
+  const [tariffs, setTariffs] = useState<Tariff[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -51,9 +14,6 @@ export function PricingSection() {
       const response = await getPublicTariffs()
       if (response.data?.length) {
         setTariffs(response.data.filter((tariff) => tariff.is_active))
-      } else {
-        // Если тарифов с сервера нет, используем тестовые
-        setTariffs(testTariffs)
       }
       setLoading(false)
     }

@@ -1,66 +1,48 @@
-import { API_BASE_URL } from './api'
+/**
+ * @deprecated Используйте lib/api/public-api.ts вместо этого файла
+ */
+import { getPublicTariffs } from './api/public-api'
+import type { ApiResponse, PublicTariff } from '@/types/api'
 
-export interface Tariff {
-  id: number
-  name: string
-  description: string | null
-  tagline: string | null
-  price: number
-  duration_months: number
-  data_limit_gb: number
-  devices_count: number
-  is_active: boolean
-  is_featured: boolean
-  features: string | null
-}
-
-export interface ApiResponse<T = any> {
-  data?: T
-  error?: string
-}
+export interface Tariff extends PublicTariff { }
 
 /**
- * Get all active tariffs (PUBLIC endpoint)
+ * @deprecated Используйте getPublicTariffs из lib/api/public-api.ts
  */
 export async function getTariffs(): Promise<ApiResponse<Tariff[]>> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/tariffs/`)
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      return {
-        error: errorData.detail || errorData.message || `HTTP ${response.status}`,
-      }
-    }
-
-    const data = await response.json()
-    return { data }
-  } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : 'Network error',
-    }
+  const response = await getPublicTariffs()
+  return {
+    data: response.data?.tariffs,
+    error: response.error,
   }
 }
 
 /**
- * Get single tariff by ID
+ * @deprecated Используйте getPublicTariffs из lib/api/public-api.ts
  */
 export async function getTariff(tariffId: number): Promise<ApiResponse<Tariff>> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/tariffs/${tariffId}`)
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      return {
-        error: errorData.detail || errorData.message || `HTTP ${response.status}`,
-      }
-    }
-
-    const data = await response.json()
-    return { data }
-  } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : 'Network error',
+  const response = await getPublicTariffs()
+  if (response.data?.tariffs) {
+    const tariff = response.data.tariffs.find(t => t.id === tariffId)
+    if (tariff) {
+      return { data: tariff }
     }
   }
+  return { error: response.error || 'Тариф не найден' }
+}
+
+if (!response.ok) {
+  const errorData = await response.json().catch(() => ({}))
+  return {
+    error: errorData.detail || errorData.message || `HTTP ${response.status}`,
+  }
+}
+
+const data = await response.json()
+return { data }
+  } catch (error) {
+  return {
+    error: error instanceof Error ? error.message : 'Network error',
+  }
+}
 }

@@ -1,2 +1,14 @@
-[00:00:00.811] Server  LOG      ✓ Ready in 577ms
-[00:00:05.660] Server  LOG      ○ Compiling / ...
+[00:00:00.892] Server  LOG     
+[00:00:00.892] Server  LOG        We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+[00:00:00.893] Server  LOG        The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+[00:00:00.893] Server  LOG        	- include was updated to add '.next/dev/types/**/*.ts'
+[00:00:00.893] Server  LOG     
+[00:00:00.893] Server  LOG        The following mandatory changes were made to your tsconfig.json:
+
+[00:00:00.893] Server  LOG        	- jsx was set to react-jsx (next.js uses the React automatic runtime)
+[00:00:00.893] Server  LOG     
+[00:00:01.017] Server  LOG      ✓ Ready in 752ms
+[00:00:15.746] Server  LOG      ○ Compiling /account/keys ...
+[00:03:15.820] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./Documents/programming/pixel-space-vpn/lib/auth-context.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:03:15.928] Server  LOG      ✓ Compiled in 89ms

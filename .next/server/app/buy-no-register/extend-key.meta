@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/buy-no-register/layout,_N_T_/buy-no-register/extend-key/layout,_N_T_/buy-no-register/extend-key/page,_N_T_/buy-no-register/extend-key"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/buy-no-register/extend-key/__PAGE__",
+    "/buy-no-register/extend-key",
+    "/buy-no-register",
+    "/_index",
+    "/_head"
+  ]
+}

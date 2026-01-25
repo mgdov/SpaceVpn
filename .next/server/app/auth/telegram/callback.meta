@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/auth/layout,_N_T_/auth/telegram/layout,_N_T_/auth/telegram/callback/layout,_N_T_/auth/telegram/callback/page,_N_T_/auth/telegram/callback"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/auth/telegram/callback/__PAGE__",
+    "/auth/telegram/callback",
+    "/auth/telegram",
+    "/auth",
+    "/_index",
+    "/_head"
+  ]
+}

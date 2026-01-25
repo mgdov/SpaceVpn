@@ -20,7 +20,7 @@ export function VPNKeyCard({
   extending = false,
   deleting = false,
 }: VPNKeyCardProps) {
-  const expiresAt = keyData.expire_date || keyData.expires_at || null
+  const expiresAt = keyData.expire_date
   const isExpired =
     keyData.is_expired ||
     keyData.status === 'expired' ||

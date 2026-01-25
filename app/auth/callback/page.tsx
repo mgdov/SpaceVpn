@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Loader2, CheckCircle2, XCircle } from "lucide-react"
 import { PixelStars } from "@/components/pixel-stars"
 import { setAuthToken, getCurrentUserInfo, setCurrentUser } from "@/lib/api"
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
@@ -42,7 +42,7 @@ export default function AuthCallbackPage() {
       if (userResponse.data) {
         setCurrentUser(userResponse.data)
         setStatus("success")
-        
+
         // Redirect to account after short delay
         setTimeout(() => {
           router.push("/account")
@@ -100,5 +100,21 @@ export default function AuthCallbackPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
+        <PixelStars />
+        <div className="flex flex-col items-center gap-4 relative z-10">
+          <Loader2 className="w-12 h-12 animate-spin text-primary" />
+          <p className="text-foreground">Загрузка...</p>
+        </div>
+      </div>
+    }>
+      <AuthCallbackContent />
+    </Suspense>
   )
 }

@@ -4,7 +4,10 @@
 
 import type { ApiResponse } from '@/types/api'
 
-export const API_BASE_URL = '/api/v1'
+// Use environment variable for API URL, fallback to relative path
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_PATH = process.env.NEXT_PUBLIC_API_V1 || '/api/v1'
+export const API_BASE_URL = `${API_URL}${API_PATH}`
 
 /**
  * Get auth token from localStorage

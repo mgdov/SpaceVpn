@@ -3,7 +3,6 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
-import { PricingSection } from "@/components/pricing-section"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart } from "lucide-react"
@@ -130,11 +129,6 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-        {/* Pricing Section */}
-        <div id="pricing">
-          <PricingSection />
-        </div>
       </main>
       <Footer />
     </div>

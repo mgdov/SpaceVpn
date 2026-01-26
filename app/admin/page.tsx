@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
 import { PixelStars } from "@/components/pixel-stars"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
@@ -577,6 +578,16 @@ export default function AdminPage() {
         <PixelStars />
 
         <div className="relative z-10 w-full max-w-md p-8">
+          <Link
+            href="/"
+            className="absolute -top-2 left-0 text-muted-foreground hover:text-primary text-[10px] inline-flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Назад на сайт
+          </Link>
+
           <div className="bg-card border border-border rounded-lg p-8">
             <div className="flex items-center justify-center mb-8">
               <div className="w-12 h-12 bg-primary flex items-center justify-center">

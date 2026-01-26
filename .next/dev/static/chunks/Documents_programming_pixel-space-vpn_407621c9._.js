@@ -256,9 +256,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/lib/api/auth.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$users$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/lib/api/users.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/lib/api/client.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -284,10 +286,15 @@ function AuthProvider({ children }) {
                         const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$users$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getCurrentUser"])();
                         if (response.data) {
                             setUser(response.data);
-                        } else if (response.error) {
-                            // Token expired or invalid
+                        } else if (response.status === 401 || response.status === 403) {
+                            // Token expired or invalid — очищаем
                             (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["logoutUser"])();
                             setUser(null);
+                        } else {
+                            // Бэкенд недоступен/ошибка — оставляем локальное состояние
+                            if (!storedUser) {
+                                setUser(null);
+                            }
                         }
                     }
                     setLoading(false);
@@ -298,6 +305,29 @@ function AuthProvider({ children }) {
     }["AuthProvider.useEffect"], []);
     const login = async (username, password)=>{
         setLoading(true);
+        // Offline fallback for demo credentials
+        if (username === 'test' && password === 'test123') {
+            const now = new Date().toISOString();
+            const demoUser = {
+                id: 0,
+                username: 'test',
+                email: 'test@example.com',
+                full_name: 'Test User',
+                is_active: true,
+                is_superuser: false,
+                created_at: now,
+                updated_at: now
+            };
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["setAuthToken"])('test_token_12345');
+            if ("TURBOPACK compile-time truthy", 1) {
+                localStorage.setItem('current_user', JSON.stringify(demoUser));
+            }
+            setUser(demoUser);
+            setLoading(false);
+            return {
+                success: true
+            };
+        }
         try {
             const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["loginUser"])(username, password);
             if (response.data) {
@@ -305,6 +335,9 @@ function AuthProvider({ children }) {
                 const userResponse = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$users$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getCurrentUser"])();
                 if (userResponse.data) {
                     setUser(userResponse.data);
+                    if ("TURBOPACK compile-time truthy", 1) {
+                        localStorage.setItem('current_user', JSON.stringify(userResponse.data));
+                    }
                     setLoading(false);
                     return {
                         success: true
@@ -356,6 +389,12 @@ function AuthProvider({ children }) {
             const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$users$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getCurrentUser"])();
             if (response.data) {
                 setUser(response.data);
+                if ("TURBOPACK compile-time truthy", 1) {
+                    localStorage.setItem('current_user', JSON.stringify(response.data));
+                }
+            } else if (response.status === 401 || response.status === 403) {
+                (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["logoutUser"])();
+                setUser(null);
             }
         }
     };
@@ -371,7 +410,7 @@ function AuthProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-        lineNumber: 117,
+        lineNumber: 156,
         columnNumber: 5
     }, this);
 }
@@ -415,12 +454,12 @@ function withAuth(Component) {
                     children: "Загрузка..."
                 }, void 0, false, {
                     fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-                    lineNumber: 146,
+                    lineNumber: 185,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-                lineNumber: 145,
+                lineNumber: 184,
                 columnNumber: 9
             }, this);
         }
@@ -431,7 +470,7 @@ function withAuth(Component) {
             ...props
         }, void 0, false, {
             fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-            lineNumber: 155,
+            lineNumber: 194,
             columnNumber: 12
         }, this);
     }, "Zr2WDa/YWeMetzDhcnOimt0LiKE=", false, function() {

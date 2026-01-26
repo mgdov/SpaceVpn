@@ -33,16 +33,18 @@ export default function SupportPage() {
 
             <main className="pt-24 pb-20 px-4">
                 <div className="max-w-6xl mx-auto space-y-10">
+                    {/* Навигация назад вне рамки */}
+                    <Link
+                        href="/account"
+                        className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm"
+                    >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Назад в личный кабинет
+                    </Link>
+
                     <header className="bg-card border border-border p-8">
-                        <Link
-                            href="/account"
-                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm mb-4"
-                        >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Назад в личный кабинет
-                        </Link>
                         <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ ПОДДЕРЖКА ]</p>
                         <h1 className="text-foreground text-4xl font-bold mb-4">Мы всегда на связи</h1>
                         <p className="text-muted-foreground text-base max-w-3xl leading-relaxed">

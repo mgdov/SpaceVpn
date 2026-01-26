@@ -70,25 +70,25 @@ export interface VPNKeyStatus {
   id: number
   key_id: string  // Short ID like "TJWMW"
   status: 'active' | 'expired' | 'blocked' | 'disabled'
-  
+
   // Expiration
   expire_date: string | null
   time_remaining: string | null  // "19 ч.", "3 дня"
   time_remaining_seconds: number | null
   is_expired: boolean
-  
+
   // Traffic
   traffic_used_bytes: number
   traffic_limit_bytes: number | null
   traffic_used_gb: number
   traffic_limit_gb: number | null
   traffic_percentage: number | null
-  
+
   // VPN connection
   subscription_url: string | null
   qr_code: string | null
   happ_deeplink: string | null
-  
+
   // Actions
   can_extend: boolean
   can_delete: boolean
@@ -251,7 +251,7 @@ export interface AdminVPNClient {
   qr_code?: string
   created_at: string
   updated_at?: string
-  
+
   // Extended info
   user?: {
     id: number
@@ -999,6 +999,86 @@ export interface AdminFinanceStats {
   failed_payments: number
   active_subscriptions: number
   average_payment: string
+}
+
+// ----------------------------------------------------------------------------
+// YooKassa integration (frontend -> Next.js API routes)
+// ----------------------------------------------------------------------------
+export interface CreateYookassaPaymentPayload {
+  tariffId: number
+  plan: string
+  price: number
+  description?: string
+}
+
+export interface CreateYookassaPaymentResponse {
+  payment_id: string
+  confirmation_url: string
+  status?: string
+}
+
+export interface ConfirmYookassaPaymentResponse {
+  success: boolean
+  plan?: string
+  subscription?: Subscription
+  message?: string
+}
+
+export async function createYookassaPayment(
+  payload: CreateYookassaPaymentPayload
+): Promise<ApiResponse<CreateYookassaPaymentResponse>> {
+  const token = getAuthToken()
+  if (!token) {
+    return { error: 'Требуется авторизация для оплаты' }
+  }
+
+  try {
+    const response = await fetch('/api/yookassa/create-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    })
+
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      return { error: (data as any)?.error || (data as any)?.message || `HTTP ${response.status}` }
+    }
+
+    return { data }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : 'Network error' }
+  }
+}
+
+export async function confirmYookassaPayment(
+  paymentId: string
+): Promise<ApiResponse<ConfirmYookassaPaymentResponse>> {
+  const token = getAuthToken()
+  if (!token) {
+    return { error: 'Требуется авторизация для оплаты' }
+  }
+
+  try {
+    const response = await fetch('/api/yookassa/confirm-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ paymentId }),
+    })
+
+    const data = await response.json().catch(() => ({}))
+    if (!response.ok) {
+      return { error: (data as any)?.error || (data as any)?.message || `HTTP ${response.status}` }
+    }
+    return { data }
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : 'Network error' }
+  }
 }
 
 export interface AdminFinanceChartData {

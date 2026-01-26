@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { getPublicTariffs, purchaseFreeTariff, type Tariff } from "@/lib/api"
+import { getPublicTariffs, purchaseFreeTariff, createYookassaPayment, type Tariff } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -45,11 +45,26 @@ export default function TariffsPage() {
       return
     }
 
-    // Платные тарифы временно недоступны (до интеграции YooKassa)
-    setMessage({
-      type: "error",
-      text: "Платные тарифы временно недоступны. Используйте бесплатный тариф.",
-    })
+    // Платный тариф — создаём платёж в YooKassa и редиректим
+    setPurchasing(tariffId)
+    setMessage(null)
+    try {
+      const response = await createYookassaPayment({
+        tariffId,
+        plan: tariffName,
+        price: tariffPrice,
+        description: `Оплата тарифа ${tariffName}`,
+      })
+      if (response.data?.confirmation_url) {
+        window.location.href = response.data.confirmation_url
+        return
+      }
+      setMessage({ type: 'error', text: response.error || 'Не удалось инициировать оплату' })
+    } catch (e) {
+      setMessage({ type: 'error', text: 'Ошибка подключения к YooKassa' })
+    } finally {
+      setPurchasing(null)
+    }
   }
 
   const confirmPurchase = async () => {
@@ -241,7 +256,7 @@ export default function TariffsPage() {
                       ) : tariff.price === 0 ? (
                         "ПОПРОБОВАТЬ БЕСПЛАТНО"
                       ) : (
-                        "ВЫБРАТЬ ПЛАН"
+                        "КУПИТЬ VPN"
                       )}
                     </button>
                   </div>

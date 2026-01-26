@@ -10,7 +10,8 @@ import { listUserVPNClients } from "@/lib/api"
 import {
     Key,
     PlayCircle,
-    HelpCircle
+    HelpCircle,
+    CreditCard
 } from "lucide-react"
 
 function AccountPageContent() {
@@ -126,6 +127,26 @@ function AccountPageContent() {
                                     Ваши VLESS ссылки для подключения
                                 </p>
                                 <span className="text-primary text-xs tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
+                                    ОТКРЫТЬ →
+                                </span>
+                            </Link>
+
+                            {/* Тарифы */}
+                            <Link
+                                href="/account/tariffs"
+                                className="group border-2 border-border hover:border-accent bg-card p-6 transition-all hover:shadow-lg"
+                            >
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="bg-accent/10 p-2 rounded">
+                                        <CreditCard className="w-5 h-5 text-accent" />
+                                    </div>
+                                    <span className="text-accent text-[9px] tracking-[0.35em]">ТАРИФЫ</span>
+                                </div>
+                                <h2 className="text-foreground text-lg font-semibold mb-2">Тарифы и планы</h2>
+                                <p className="text-muted-foreground text-sm mb-4">
+                                    Выберите или продлите подписку
+                                </p>
+                                <span className="text-accent text-xs tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
                                     ОТКРЫТЬ →
                                 </span>
                             </Link>

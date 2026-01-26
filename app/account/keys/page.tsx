@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Key, Download, Smartphone, Clock, Trash2, RefreshCw } from "lucide-react"
+import { Key, Download, Smartphone, Clock, Trash2, RefreshCw, ExternalLink, ChevronUp, ChevronDown } from "lucide-react"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -19,6 +19,7 @@ function AccountKeysPageContent() {
     const [clients, setClients] = useState<VPNClient[]>([])
     const [vpnConfigs, setVpnConfigs] = useState<Map<number, VPNConfig>>(new Map())
     const [loadingClients, setLoadingClients] = useState(true)
+    const [installOpen, setInstallOpen] = useState<Record<number, boolean>>({})
     const [error, setError] = useState("")
 
     useEffect(() => {
@@ -49,24 +50,21 @@ function AccountKeysPageContent() {
         setLoadingClients(false)
     }
 
-    const handleInstallApp = () => {
-        // Определяем платформу и перенаправляем на соответствующее приложение
-        const userAgent = navigator.userAgent.toLowerCase()
-        if (userAgent.includes('android')) {
-            window.open('https://play.google.com/store/apps/details?id=com.v2ray.ang', '_blank')
-        } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
-            window.open('https://apps.apple.com/app/streisand/id6450534064', '_blank')
-        } else {
-            // Desktop - показываем инструкцию
-            window.open('https://github.com/2dust/v2rayN/releases', '_blank')
-        }
+    const platformLinks = [
+        { id: 'ios', label: 'iOS', href: 'https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973' },
+        { id: 'android', label: 'Android', href: 'https://play.google.com/store/apps/details?id=com.happproxy' },
+        { id: 'macos', label: 'macOS', href: 'https://apps.apple.com/ru/mac/search?term=happ' },
+        { id: 'windows', label: 'Windows', href: 'https://www.happ.su/main/ru' },
+    ] as const
+
+    const toggleInstall = (id: number) => {
+        setInstallOpen((prev) => ({ ...prev, [id]: !prev[id] }))
     }
 
     const handleAddToApp = (subscriptionUrl: string) => {
-        // Копируем ссылку для добавления в приложение
-        navigator.clipboard.writeText(subscriptionUrl).then(() => {
-            alert('Ссылка скопирована! Вставьте её в приложение VPN.')
-        })
+        if (!subscriptionUrl) return
+        const url = `/redirect?redirect_to=${encodeURIComponent(subscriptionUrl)}`
+        window.location.href = url
     }
 
     const handleDeleteKey = (clientId: number) => {
@@ -105,6 +103,9 @@ function AccountKeysPageContent() {
 
     const hasClients = clients.length > 0
 
+    const isClientExpired = (c: any) => !!(c.expires_at && new Date(c.expires_at).getTime() < Date.now())
+    const sortedClients = [...clients].sort((a, b) => Number(isClientExpired(a)) - Number(isClientExpired(b)))
+
     return (
         <div className="min-h-screen bg-background relative">
             <PixelStars />
@@ -112,17 +113,19 @@ function AccountKeysPageContent() {
 
             <main className="pt-24 pb-20 px-4">
                 <div className="max-w-7xl mx-auto space-y-6">
-                    {/* Заголовок и навигация */}
+                    {/* Навигация назад вне рамки */}
+                    <Link
+                        href="/account"
+                        className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm"
+                    >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Назад в личный кабинет
+                    </Link>
+
+                    {/* Заголовок */}
                     <div className="bg-card border border-border p-6">
-                        <Link
-                            href="/account"
-                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm mb-4"
-                        >
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                            Назад в личный кабинет
-                        </Link>
                         <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ МОИ VPN КЛЮЧИ ]</p>
                         <h1 className="text-foreground text-3xl font-bold">
                             Подключение к VPN
@@ -164,7 +167,7 @@ function AccountKeysPageContent() {
                                 </p>
                             </div>
                             <Link
-                                href="/pricing"
+                                href="/account/tariffs"
                                 className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 text-sm font-semibold hover:bg-primary/90 transition-colors"
                             >
                                 <Key size={20} />
@@ -176,9 +179,9 @@ function AccountKeysPageContent() {
                     {/* Список ключей в grid */}
                     {!loadingClients && hasClients && (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            {clients.map((client) => {
+                            {sortedClients.map((client) => {
                                 const config = vpnConfigs.get(client.id)
-                                const isExpired = client.expires_at && new Date(client.expires_at).getTime() < Date.now()
+                                const isExpired = isClientExpired(client)
                                 const isExpiring = client.expires_at && !isExpired && new Date(client.expires_at).getTime() - Date.now() < 24 * 60 * 60 * 1000
 
                                 return (
@@ -246,23 +249,45 @@ function AccountKeysPageContent() {
                                         {isExpired ? (
                                             <div className="mb-3">
                                                 <button
-                                                    onClick={() => window.location.href = '/pricing'}
-                                                    className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                    onClick={() => (window.location.href = '/account/tariffs')}
+                                                    className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
                                                 >
                                                     <Clock className="w-4 h-4" />
-                                                    <span>Продлить ключ</span>
+                                                    <span>Продлить VPN</span>
                                                 </button>
                                             </div>
                                         ) : (
                                             <div className="space-y-2 mb-3">
+                                                {/* Install app toggle */}
                                                 <button
-                                                    onClick={handleInstallApp}
+                                                    onClick={() => toggleInstall(client.id)}
                                                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
                                                 >
                                                     <span className="text-base">1.</span>
                                                     <Download className="w-4 h-4" />
                                                     <span>Установить приложение для VPN</span>
+                                                    {installOpen[client.id] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                                                 </button>
+
+                                                {/* Collapsible platform links */}
+                                                {installOpen[client.id] && (
+                                                    <div className="border-2 border-emerald-500 bg-emerald-500/10 p-3 space-y-2">
+                                                        <p className="text-[11px] text-emerald-400 mb-2">[ Выберите вашу платформу ]</p>
+                                                        <ul className="divide-y divide-emerald-500/30">
+                                                            {platformLinks.map((p) => (
+                                                                <li key={p.id} className="flex items-center justify-between py-3">
+                                                                    <div className="flex items-center gap-3">
+                                                                        <span className="text-foreground text-sm">{p.label}</span>
+                                                                        <span className="text-muted-foreground text-xs">Скачать приложение</span>
+                                                                    </div>
+                                                                    <a href={p.href} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary">
+                                                                        <ExternalLink className="w-4 h-4" />
+                                                                    </a>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
 
                                                 {config && (
                                                     <button
@@ -274,6 +299,15 @@ function AccountKeysPageContent() {
                                                         <span>Добавить VPN в приложение</span>
                                                     </button>
                                                 )}
+
+                                                {/* Extend even if not expired */}
+                                                <button
+                                                    onClick={() => (window.location.href = '/account/tariffs')}
+                                                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <Clock className="w-4 h-4" />
+                                                    <span>Продлить VPN</span>
+                                                </button>
                                             </div>
                                         )}
 

@@ -20,7 +20,6 @@ export function Header() {
   const navLinks = [
     { href: "/", label: "Главная" },
     { href: "/blog", label: "Блог" },
-    { href: "/pricing", label: "Тарифы" },
     { href: "/faq", label: "FAQ" },
     { href: "/about", label: "О нас" },
   ]
@@ -53,8 +52,8 @@ export function Header() {
             <div className="hidden md:flex items-center gap-4">
               {user ? (
                 <>
-                  <Link 
-                    href="/account" 
+                  <Link
+                    href="/account"
                     className="text-foreground hover:text-primary transition-colors text-[10px] flex items-center gap-2"
                   >
                     <User size={14} />

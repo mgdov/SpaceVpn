@@ -15,7 +15,7 @@ function normalizeOrigin(origin: string): string {
 
 function buildReturnUrl(origin: string, tariffId: number, plan: string) {
     const safePlan = encodeURIComponent(plan)
-    return `${normalizeOrigin(origin)}/account/tariffs?tariff_id=${tariffId}&plan=${safePlan}`
+    return `${normalizeOrigin(origin)}/account/keys?tariff_id=${tariffId}&plan=${safePlan}`
 }
 
 export async function POST(request: Request) {

@@ -6,7 +6,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
 import { ArrowLeft, Loader2, Search, CheckCircle2, Clock, AlertCircle, Copy } from "lucide-react"
-import { 
+import {
     searchKeyPublic,
     renewKeyPublic,
     getPublicTariffsNoAuth,
@@ -21,7 +21,7 @@ export default function ExtendKeyPage() {
     const [searchResult, setSearchResult] = useState<KeySearchResult | null>(null)
     const [tariffs, setTariffs] = useState<PublicTariff[]>([])
     const [renewResult, setRenewResult] = useState<RenewKeyResult | null>(null)
-    
+
     const [searching, setSearching] = useState(false)
     const [loadingTariffs, setLoadingTariffs] = useState(false)
     const [renewing, setRenewing] = useState(false)
@@ -39,7 +39,7 @@ export default function ExtendKeyPage() {
         setSearchResult(null)
 
         const response = await searchKeyPublic(keyIdentifier.trim())
-        
+
         if (response.data?.found) {
             setSearchResult(response.data)
             // Load tariffs for renewal
@@ -252,15 +252,14 @@ export default function ExtendKeyPage() {
                                         <p className="text-sm text-muted-foreground">Найден ключ:</p>
                                         <p className="text-2xl font-mono font-bold text-primary">{searchResult.key_id}</p>
                                     </div>
-                                    <span className={`px-3 py-1 text-xs font-semibold ${
-                                        searchResult.is_expired 
+                                    <span className={`px-3 py-1 text-xs font-semibold ${searchResult.is_expired
                                             ? 'bg-red-500/20 text-red-500 border border-red-500'
                                             : 'bg-green-500/20 text-green-500 border border-green-500'
-                                    }`}>
+                                        }`}>
                                         {searchResult.is_expired ? 'Истёк' : 'Активен'}
                                     </span>
                                 </div>
-                                
+
                                 {searchResult.expires_at && (
                                     <div className="flex items-center gap-2 text-muted-foreground text-sm">
                                         <Clock size={14} />
@@ -292,26 +291,12 @@ export default function ExtendKeyPage() {
                                                 key={tariff.id}
                                                 onClick={() => handleRenew(tariff.id)}
                                                 disabled={renewing || tariff.price > 0}
-                                                className={`p-4 border-2 text-left transition-all disabled:opacity-50 ${
-                                                    tariff.is_featured
-                                                        ? 'border-primary bg-primary/5 hover:bg-primary/10'
-                                                        : 'border-border hover:border-primary'
-                                                }`}
+                                                className="p-4 border-2 border-border hover:border-primary text-left transition-all disabled:opacity-50"
                                             >
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <div>
-                                                        <p className="font-semibold text-foreground">{tariff.name}</p>
-                                                        <p className="text-sm text-muted-foreground">
-                                                            +{tariff.duration_days} дней
-                                                        </p>
-                                                    </div>
-                                                    <span className={`font-bold ${tariff.price === 0 ? 'text-green-500' : 'text-primary'}`}>
-                                                        {tariff.price === 0 ? 'Бесплатно' : `${tariff.price} ₽`}
-                                                    </span>
+                                                <div className="flex justify-between items-center">
+                                                    <p className="text-sm text-foreground font-semibold">+{tariff.duration_days} дней</p>
+                                                    <span className="font-bold text-primary">{tariff.price} ₽</span>
                                                 </div>
-                                                {tariff.price > 0 && (
-                                                    <p className="text-xs text-muted-foreground">Скоро</p>
-                                                )}
                                             </button>
                                         ))}
                                     </div>

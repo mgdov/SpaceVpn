@@ -173,10 +173,6 @@ function Header() {
             label: "Блог"
         },
         {
-            href: "/pricing",
-            label: "Тарифы"
-        },
-        {
             href: "/faq",
             label: "FAQ"
         },
@@ -203,7 +199,7 @@ function Header() {
                                         "aria-hidden": "true"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                        lineNumber: 35,
+                                        lineNumber: 34,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -211,13 +207,13 @@ function Header() {
                                         children: "SPACE VPN"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                        lineNumber: 36,
+                                        lineNumber: 35,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                lineNumber: 34,
+                                lineNumber: 33,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -228,12 +224,12 @@ function Header() {
                                         children: link.label
                                     }, link.href, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                        lineNumber: 42,
+                                        lineNumber: 41,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                lineNumber: 40,
+                                lineNumber: 39,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -248,14 +244,14 @@ function Header() {
                                                     size: 14
                                                 }, void 0, false, {
                                                     fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                                    lineNumber: 60,
+                                                    lineNumber: 59,
                                                     columnNumber: 21
                                                 }, this),
                                                 user.username
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                            lineNumber: 56,
+                                            lineNumber: 55,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -266,14 +262,14 @@ function Header() {
                                                     size: 14
                                                 }, void 0, false, {
                                                     fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                                    lineNumber: 67,
+                                                    lineNumber: 66,
                                                     columnNumber: 21
                                                 }, this),
                                                 "Выход"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                            lineNumber: 63,
+                                            lineNumber: 62,
                                             columnNumber: 19
                                         }, this)
                                     ]
@@ -285,7 +281,7 @@ function Header() {
                                             children: "Вход"
                                         }, void 0, false, {
                                             fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                            lineNumber: 73,
+                                            lineNumber: 72,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -294,14 +290,14 @@ function Header() {
                                             children: "Регистрация"
                                         }, void 0, false, {
                                             fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                            lineNumber: 76,
+                                            lineNumber: 75,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true)
                             }, void 0, false, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                lineNumber: 53,
+                                lineNumber: 52,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -312,34 +308,34 @@ function Header() {
                                     size: 24
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                    lineNumber: 88,
+                                    lineNumber: 87,
                                     columnNumber: 29
                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$menu$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Menu$3e$__["Menu"], {
                                     size: 24
                                 }, void 0, false, {
                                     fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                    lineNumber: 88,
+                                    lineNumber: 87,
                                     columnNumber: 47
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                lineNumber: 87,
+                                lineNumber: 86,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                        lineNumber: 32,
+                        lineNumber: 31,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                    lineNumber: 31,
+                    lineNumber: 30,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                lineNumber: 30,
+                lineNumber: 29,
                 columnNumber: 7
             }, this),
             isMenuOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -351,7 +347,7 @@ function Header() {
                         "aria-hidden": "true"
                     }, void 0, false, {
                         fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                        lineNumber: 96,
+                        lineNumber: 95,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -367,7 +363,7 @@ function Header() {
                                         children: "Меню"
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                        lineNumber: 103,
+                                        lineNumber: 102,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -378,18 +374,18 @@ function Header() {
                                             size: 20
                                         }, void 0, false, {
                                             fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                            lineNumber: 105,
+                                            lineNumber: 104,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                        lineNumber: 104,
+                                        lineNumber: 103,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                lineNumber: 102,
+                                lineNumber: 101,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -401,12 +397,12 @@ function Header() {
                                         children: link.label
                                     }, link.href, false, {
                                         fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                        lineNumber: 111,
+                                        lineNumber: 110,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                lineNumber: 109,
+                                lineNumber: 108,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -422,14 +418,14 @@ function Header() {
                                                     size: 14
                                                 }, void 0, false, {
                                                     fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                                    lineNumber: 130,
+                                                    lineNumber: 129,
                                                     columnNumber: 21
                                                 }, this),
                                                 user.username
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                            lineNumber: 125,
+                                            lineNumber: 124,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -440,14 +436,14 @@ function Header() {
                                                     size: 14
                                                 }, void 0, false, {
                                                     fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                                    lineNumber: 137,
+                                                    lineNumber: 136,
                                                     columnNumber: 21
                                                 }, this),
                                                 "Выход"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                            lineNumber: 133,
+                                            lineNumber: 132,
                                             columnNumber: 19
                                         }, this)
                                     ]
@@ -460,7 +456,7 @@ function Header() {
                                             children: "Вход"
                                         }, void 0, false, {
                                             fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                            lineNumber: 143,
+                                            lineNumber: 142,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -470,26 +466,26 @@ function Header() {
                                             children: "Регистрация"
                                         }, void 0, false, {
                                             fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                            lineNumber: 150,
+                                            lineNumber: 149,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true)
                             }, void 0, false, {
                                 fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                                lineNumber: 122,
+                                lineNumber: 121,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                        lineNumber: 97,
+                        lineNumber: 96,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/components/header.tsx",
-                lineNumber: 95,
+                lineNumber: 94,
                 columnNumber: 9
             }, this)
         ]
@@ -599,7 +595,7 @@ function Footer() {
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                            href: "/pricing",
+                                            href: "/account/tariffs",
                                             className: "text-muted-foreground hover:text-primary text-[8px]",
                                             children: "Тарифы"
                                         }, void 0, false, {

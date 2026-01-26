@@ -6,11 +6,11 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
 import { ArrowLeft, Loader2, CheckCircle2, Copy, QrCode, Download } from "lucide-react"
-import { 
-    getPublicTariffsNoAuth, 
+import {
+    getPublicTariffsNoAuth,
     createKeyPublic,
     type PublicTariff,
-    type CreateKeyResult 
+    type CreateKeyResult
 } from "@/lib/api"
 
 export default function NewKeyPage() {
@@ -230,20 +230,9 @@ export default function NewKeyPage() {
                             {tariffs.map(tariff => (
                                 <div
                                     key={tariff.id}
-                                    className={`bg-card border-2 p-6 flex flex-col ${
-                                        tariff.is_featured ? 'border-primary' : 'border-border'
-                                    }`}
+                                    className="bg-card border-2 border-border p-6 flex flex-col items-center text-center"
                                 >
-                                    {tariff.is_featured && (
-                                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-3 py-1 text-xs">
-                                            ПОПУЛЯРНЫЙ
-                                        </div>
-                                    )}
-
-                                    <div className="text-center mb-6">
-                                        <p className="text-accent text-xs tracking-widest mb-2">
-                                            [ {tariff.name.toUpperCase()} ]
-                                        </p>
+                                    <div className="mb-6">
                                         <p className="text-foreground text-lg font-semibold">
                                             {tariff.duration_days} {tariff.duration_days === 1 ? 'день' : tariff.duration_days < 5 ? 'дня' : 'дней'}
                                         </p>
@@ -253,25 +242,10 @@ export default function NewKeyPage() {
                                         </div>
                                     </div>
 
-                                    <div className="flex-1 space-y-2 mb-6">
-                                        <p className="text-muted-foreground text-sm">
-                                            • {tariff.data_limit_gb > 0 ? `${tariff.data_limit_gb} ГБ` : 'Безлимит'} трафика
-                                        </p>
-                                        {tariff.description && (
-                                            <p className="text-muted-foreground text-sm">
-                                                {tariff.description}
-                                            </p>
-                                        )}
-                                    </div>
-
                                     <button
                                         onClick={() => handleCreateKey(tariff.id)}
                                         disabled={creating || tariff.price > 0}
-                                        className={`w-full py-3 font-semibold transition-colors disabled:opacity-50 ${
-                                            tariff.is_featured
-                                                ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                                                : 'border-2 border-border hover:border-primary text-foreground'
-                                        }`}
+                                        className="w-full py-3 font-semibold transition-colors disabled:opacity-50 border-2 border-border hover:border-primary text-foreground"
                                     >
                                         {creating ? (
                                             <span className="flex items-center justify-center gap-2">

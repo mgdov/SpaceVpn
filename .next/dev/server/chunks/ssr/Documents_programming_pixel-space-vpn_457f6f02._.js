@@ -130,12 +130,16 @@ __turbopack_context__.s([
     ()=>adminUpdateTariff,
     "adminUpdateVPNClient",
     ()=>adminUpdateVPNClient,
+    "confirmYookassaPayment",
+    ()=>confirmYookassaPayment,
     "createKeyPublic",
     ()=>createKeyPublic,
     "createSubscription",
     ()=>createSubscription,
     "createUserVPNClient",
     ()=>createUserVPNClient,
+    "createYookassaPayment",
+    ()=>createYookassaPayment,
     "deleteSubscription",
     ()=>deleteSubscription,
     "deleteUserById",
@@ -647,6 +651,70 @@ async function renewKeyPublic(request) {
         method: 'POST',
         body: JSON.stringify(request)
     });
+}
+async function createYookassaPayment(payload) {
+    const token = getAuthToken();
+    if (!token) {
+        return {
+            error: 'Требуется авторизация для оплаты'
+        };
+    }
+    try {
+        const response = await fetch('/api/yookassa/create-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json().catch(()=>({}));
+        if (!response.ok) {
+            return {
+                error: data?.error || data?.message || `HTTP ${response.status}`
+            };
+        }
+        return {
+            data
+        };
+    } catch (error) {
+        return {
+            error: error instanceof Error ? error.message : 'Network error'
+        };
+    }
+}
+async function confirmYookassaPayment(paymentId) {
+    const token = getAuthToken();
+    if (!token) {
+        return {
+            error: 'Требуется авторизация для оплаты'
+        };
+    }
+    try {
+        const response = await fetch('/api/yookassa/confirm-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                paymentId
+            })
+        });
+        const data = await response.json().catch(()=>({}));
+        if (!response.ok) {
+            return {
+                error: data?.error || data?.message || `HTTP ${response.status}`
+            };
+        }
+        return {
+            data
+        };
+    } catch (error) {
+        return {
+            error: error instanceof Error ? error.message : 'Network error'
+        };
+    }
 }
 async function getAdminFinanceStats() {
     return apiRequest('/admin/finance/stats');

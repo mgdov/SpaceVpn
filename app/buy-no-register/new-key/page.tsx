@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Header } from "@/components/header"
@@ -16,7 +16,7 @@ import {
 import { initiatePayment } from "@/lib/api/payments"
 import { pollKeyByPayment } from "@/lib/api/public-api"
 
-export default function NewKeyPage() {
+function NewKeyPageContent() {
     const [tariffs, setTariffs] = useState<PublicTariff[]>([])
     const [loading, setLoading] = useState(true)
     const [creating, setCreating] = useState(false)
@@ -366,5 +366,17 @@ export default function NewKeyPage() {
             </main>
             <Footer />
         </div>
+    )
+}
+
+export default function NewKeyPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+            </div>
+        }>
+            <NewKeyPageContent />
+        </Suspense>
     )
 }

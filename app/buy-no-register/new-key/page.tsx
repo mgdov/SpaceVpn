@@ -311,50 +311,73 @@ function NewKeyPageContent() {
 
                     {/* Tariffs */}
                     {!loading && tariffs.length > 0 && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="space-y-4 max-w-2xl mx-auto">
                             {tariffs.map(tariff => {
                                 const isSelected = selectedTariffId === tariff.id
                                 const isFree = tariff.price === 0
+
+                                // Determine duration text
+                                let durationText = ""
+                                if (tariff.duration_days === 1) {
+                                    durationText = "1 день"
+                                } else if (tariff.duration_days === 30) {
+                                    durationText = "1 месяц"
+                                } else if (tariff.duration_days === 90) {
+                                    durationText = "3 месяца"
+                                } else if (tariff.duration_days === 180) {
+                                    durationText = "6 месяцев"
+                                } else if (tariff.duration_days === 365) {
+                                    durationText = "12 месяцев"
+                                } else if (tariff.duration_days === 0) {
+                                    durationText = "0 дня"
+                                } else {
+                                    durationText = `${tariff.duration_days} ${tariff.duration_days < 5 ? 'дня' : 'дней'}`
+                                }
+
                                 return (
-                                    <div
-                                        key={tariff.id}
-                                        className={`bg-card p-6 flex flex-col text-center border-2 ${isSelected ? 'border-green-500' : 'border-border'}`}
-                                    >
+                                    <div key={tariff.id} className="space-y-3">
                                         <button
                                             onClick={() => handleSelectTariff(tariff)}
-                                            className="text-left w-full"
+                                            className={`w-full bg-slate-800/50 hover:bg-slate-800/70 border-2 ${isSelected ? 'border-green-500' : 'border-slate-700'
+                                                } p-4 transition-all flex items-center justify-between group`}
                                         >
-                                            <p className="text-foreground text-lg font-semibold">
-                                                {tariff.duration_days} {tariff.duration_days === 1 ? 'день' : tariff.duration_days < 5 ? 'дня' : 'дней'}
-                                            </p>
-                                            <div className="mt-4">
-                                                <span className="text-4xl font-bold text-primary">{tariff.price}</span>
-                                                <span className="text-muted-foreground ml-1">₽</span>
+                                            <div className="text-left">
+                                                <p className="text-white text-base font-semibold">
+                                                    {tariff.name}
+                                                </p>
+                                                <p className="text-slate-400 text-sm mt-1">
+                                                    {durationText}
+                                                </p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-white text-2xl font-bold">
+                                                    {tariff.price} ₽
+                                                </p>
                                             </div>
                                         </button>
 
                                         {isSelected && !isFree && (
-                                            <div className="mt-6">
-                                                <button
-                                                    onClick={handleProceedToPayment}
-                                                    className="w-full py-3 font-semibold bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-2"
-                                                    disabled={paying}
-                                                >
-                                                    {paying ? (
-                                                        <>
-                                                            <Loader2 size={16} className="animate-spin" />
-                                                            Переход к оплате...
-                                                        </>
-                                                    ) : (
-                                                        <>Перейти к оплате</>
-                                                    )}
-                                                </button>
-                                            </div>
+                                            <button
+                                                onClick={handleProceedToPayment}
+                                                className="w-full py-3 font-semibold bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-2 transition-colors"
+                                                disabled={paying}
+                                            >
+                                                {paying ? (
+                                                    <>
+                                                        <Loader2 size={16} className="animate-spin" />
+                                                        Переход к оплате...
+                                                    </>
+                                                ) : (
+                                                    <>Перейти к оплате</>
+                                                )}
+                                            </button>
                                         )}
 
                                         {isSelected && isFree && creating && (
-                                            <div className="mt-6 text-muted-foreground">
-                                                <span className="inline-flex items-center gap-2"><Loader2 size={16} className="animate-spin" /> Создание ключа...</span>
+                                            <div className="w-full py-3 text-muted-foreground text-center">
+                                                <span className="inline-flex items-center gap-2">
+                                                    <Loader2 size={16} className="animate-spin" /> Создание ключа...
+                                                </span>
                                             </div>
                                         )}
                                     </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -12,6 +13,8 @@ import {
     type PublicTariff,
     type CreateKeyResult
 } from "@/lib/api"
+import { initiatePayment } from "@/lib/api/payments"
+import { pollKeyByPayment } from "@/lib/api/public-api"
 
 export default function NewKeyPage() {
     const [tariffs, setTariffs] = useState<PublicTariff[]>([])
@@ -21,10 +24,49 @@ export default function NewKeyPage() {
     const [result, setResult] = useState<CreateKeyResult | null>(null)
     const [copied, setCopied] = useState(false)
     const [showQR, setShowQR] = useState(false)
+    const [selectedTariffId, setSelectedTariffId] = useState<number | null>(null)
+    const [paying, setPaying] = useState(false)
+
+    const searchParams = useSearchParams()
 
     useEffect(() => {
         loadTariffs()
     }, [])
+
+    // If redirected back after payment, poll for the created key
+    useEffect(() => {
+        let paymentId = searchParams?.get("payment_id")
+        if (!paymentId && typeof window !== 'undefined') {
+            paymentId = localStorage.getItem('last_payment_id') || undefined
+        }
+        if (!paymentId) return
+
+        const fetchKey = async () => {
+            setError("")
+            const response = await pollKeyByPayment(paymentId)
+            if (response.data) {
+                // Normalize to CreateKeyResult-like structure for display
+                setResult({
+                    success: true,
+                    key_id: response.data.key_id,
+                    client_id: response.data.client_id,
+                    subscription_url: response.data.subscription_url,
+                    qr_code: response.data.qr_code,
+                    expires_at: response.data.expires_at,
+                    message: "Оплата успешно выполнена. Ваш ключ создан!",
+                })
+                // cleanup saved payment id
+                if (typeof window !== 'undefined') {
+                    localStorage.removeItem('last_payment_id')
+                }
+            } else {
+                setError(response.error || "Не удалось получить ключ после оплаты")
+            }
+        }
+
+        fetchKey()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams])
 
     const loadTariffs = async () => {
         setLoading(true)
@@ -53,6 +95,38 @@ export default function NewKeyPage() {
         }
 
         setCreating(false)
+    }
+
+    const handleSelectTariff = (tariff: PublicTariff) => {
+        setSelectedTariffId(tariff.id)
+        setError("")
+        // For free tariffs – create immediately
+        if (tariff.price === 0) {
+            handleCreateKey(tariff.id)
+        }
+    }
+
+    const handleProceedToPayment = async () => {
+        if (!selectedTariffId) return
+        setPaying(true)
+        setError("")
+        try {
+            const returnUrl = `${window.location.origin}/buy-no-register/new-key`
+            const response = await initiatePayment(selectedTariffId, returnUrl)
+            if (response.data?.confirmation_url) {
+                if (response.data.payment_id && typeof window !== 'undefined') {
+                    localStorage.setItem('last_payment_id', response.data.payment_id)
+                }
+                // Redirect to YooKassa confirmation
+                window.location.href = response.data.confirmation_url
+            } else {
+                setError(response.error || "Не удалось инициировать оплату")
+            }
+        } catch (e) {
+            setError(e instanceof Error ? e.message : "Ошибка оплаты")
+        } finally {
+            setPaying(false)
+        }
     }
 
     const handleCopy = async (text: string) => {
@@ -190,6 +264,17 @@ export default function NewKeyPage() {
             <Header />
             <main className="relative z-10 px-4 pt-24 pb-20">
                 <div className="max-w-4xl mx-auto">
+                    {/* Warning banner */}
+                    <div className="bg-red-900/40 border-2 border-red-500 text-red-200 p-6 mb-8">
+                        <p className="font-bold text-red-100 mb-2">⚠️ ВАЖНО! Сохраните ваш ключ!</p>
+                        <p className="text-red-100 mb-3">После покупки обязательно сохраните subscription URL ключа!</p>
+                        <ul className="list-disc list-inside space-y-1 text-sm">
+                            <li>Скопируйте ключ и сохраните его в надежном месте</li>
+                            <li>Без ключа вы не сможете подключиться к VPN</li>
+                            <li>Ключ понадобится для продления подписки</li>
+                            <li>Восстановить потерянный ключ невозможно!</li>
+                        </ul>
+                    </div>
                     {/* Back Button */}
                     <Link
                         href="/buy-no-register"
@@ -227,39 +312,54 @@ export default function NewKeyPage() {
                     {/* Tariffs */}
                     {!loading && tariffs.length > 0 && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {tariffs.map(tariff => (
-                                <div
-                                    key={tariff.id}
-                                    className="bg-card border-2 border-border p-6 flex flex-col items-center text-center"
-                                >
-                                    <div className="mb-6">
-                                        <p className="text-foreground text-lg font-semibold">
-                                            {tariff.duration_days} {tariff.duration_days === 1 ? 'день' : tariff.duration_days < 5 ? 'дня' : 'дней'}
-                                        </p>
-                                        <div className="mt-4">
-                                            <span className="text-4xl font-bold text-primary">{tariff.price}</span>
-                                            <span className="text-muted-foreground ml-1">₽</span>
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        onClick={() => handleCreateKey(tariff.id)}
-                                        disabled={creating || tariff.price > 0}
-                                        className="w-full py-3 font-semibold transition-colors disabled:opacity-50 border-2 border-border hover:border-primary text-foreground"
+                            {tariffs.map(tariff => {
+                                const isSelected = selectedTariffId === tariff.id
+                                const isFree = tariff.price === 0
+                                return (
+                                    <div
+                                        key={tariff.id}
+                                        className={`bg-card p-6 flex flex-col text-center border-2 ${isSelected ? 'border-green-500' : 'border-border'}`}
                                     >
-                                        {creating ? (
-                                            <span className="flex items-center justify-center gap-2">
-                                                <Loader2 size={16} className="animate-spin" />
-                                                Создание...
-                                            </span>
-                                        ) : tariff.price > 0 ? (
-                                            'Скоро'
-                                        ) : (
-                                            'Получить ключ'
+                                        <button
+                                            onClick={() => handleSelectTariff(tariff)}
+                                            className="text-left w-full"
+                                        >
+                                            <p className="text-foreground text-lg font-semibold">
+                                                {tariff.duration_days} {tariff.duration_days === 1 ? 'день' : tariff.duration_days < 5 ? 'дня' : 'дней'}
+                                            </p>
+                                            <div className="mt-4">
+                                                <span className="text-4xl font-bold text-primary">{tariff.price}</span>
+                                                <span className="text-muted-foreground ml-1">₽</span>
+                                            </div>
+                                        </button>
+
+                                        {isSelected && !isFree && (
+                                            <div className="mt-6">
+                                                <button
+                                                    onClick={handleProceedToPayment}
+                                                    className="w-full py-3 font-semibold bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-2"
+                                                    disabled={paying}
+                                                >
+                                                    {paying ? (
+                                                        <>
+                                                            <Loader2 size={16} className="animate-spin" />
+                                                            Переход к оплате...
+                                                        </>
+                                                    ) : (
+                                                        <>Перейти к оплате</>
+                                                    )}
+                                                </button>
+                                            </div>
                                         )}
-                                    </button>
-                                </div>
-                            ))}
+
+                                        {isSelected && isFree && creating && (
+                                            <div className="mt-6 text-muted-foreground">
+                                                <span className="inline-flex items-center gap-2"><Loader2 size={16} className="animate-spin" /> Создание ключа...</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )
+                            })}
                         </div>
                     )}
                 </div>

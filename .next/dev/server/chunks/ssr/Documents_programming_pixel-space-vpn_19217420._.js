@@ -869,7 +869,7 @@ function HomePage() {
                                                                         lineNumber: 45,
                                                                         columnNumber: 51
                                                                     }, this),
-                                                                    "бесплатный 2-дневный VPN-ключ!!!"
+                                                                    "бесплатный 2-дневный VPN-ключ"
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/Documents/programming/pixel-space-vpn/app/page.tsx",

@@ -42,7 +42,7 @@ export default function HomePage() {
                       <div className="text-center flex-1">
                         <div className="text-xs sm:text-sm font-semibold mb-1 sm:mb-2 tracking-wide">ПОПРОБОВАТЬ БЕСПЛАТНО</div>
                         <div className="text-[9px] sm:text-[10px] text-primary-foreground/80 leading-relaxed">
-                          При регистрации аккаунта<br />бесплатный 2-дневный VPN-ключ!!!
+                          При регистрации аккаунта<br />бесплатный 2-дневный VPN-ключ
                         </div>
                       </div>
                       <div className="flex-shrink-0">

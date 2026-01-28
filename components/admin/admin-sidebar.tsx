@@ -1,6 +1,6 @@
-import { DollarSign, FileText, Key, Layers } from "lucide-react"
+import { DollarSign, FileText, Key, Layers, Users } from "lucide-react"
 
-type Tab = "keys" | "blog" | "tariffs" | "finance"
+type Tab = "keys" | "blog" | "tariffs" | "users" | "finance"
 
 interface AdminSidebarProps {
     activeTab: Tab
@@ -11,6 +11,7 @@ const tabs: { key: Tab; label: string; icon: typeof Key }[] = [
     { key: "keys", label: "VPN Ключи", icon: Key },
     { key: "blog", label: "Блог", icon: FileText },
     { key: "tariffs", label: "Тарифы", icon: Layers },
+    { key: "users", label: "Пользователи", icon: Users },
     { key: "finance", label: "Финансы", icon: DollarSign },
 ]
 

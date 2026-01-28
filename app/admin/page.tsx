@@ -11,6 +11,7 @@ import { KeyModal } from "@/components/admin/keys/key-modal"
 import { KeyTable } from "@/components/admin/keys/key-table"
 import { TariffTable } from "@/components/admin/tariffs/tariff-table"
 import { TariffModal } from "@/components/admin/tariffs/tariff-modal"
+import { UserTable } from "@/components/admin/users/user-table"
 import { FinanceStats } from "@/components/admin/finance/finance-stats"
 import { FinanceChart } from "@/components/admin/finance/finance-chart"
 import { PaymentHistory } from "@/components/admin/finance/payment-history"
@@ -30,6 +31,9 @@ import {
   adminDeleteTariff,
   adminToggleTariff,
   adminListUsers,
+  adminDeleteUser,
+  adminToggleUserActive,
+  getCurrentUserInfo,
   adminListSubscriptions,
   getAdminFinanceStats,
   getAdminFinanceChart,
@@ -87,7 +91,8 @@ export default function AdminPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState("")
 
-  const [activeTab, setActiveTab] = useState<"keys" | "blog" | "tariffs" | "finance">("keys")
+  const [activeTab, setActiveTab] = useState<"keys" | "blog" | "tariffs" | "users" | "finance">("keys")
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null)
   const [vpnClients, setVpnClients] = useState<AdminVPNClient[]>([])
   const [posts, setPosts] = useState<BlogPost[]>(() => {
     if (typeof window !== 'undefined') {
@@ -110,6 +115,7 @@ export default function AdminPage() {
   const [financeLoading, setFinanceLoading] = useState(true)
   const [keysError, setKeysError] = useState("")
   const [tariffsError, setTariffsError] = useState("")
+  const [usersError, setUsersError] = useState("")
   const [financeError, setFinanceError] = useState("")
   const [showKeyModal, setShowKeyModal] = useState(false)
   const [showPostModal, setShowPostModal] = useState(false)
@@ -267,6 +273,26 @@ export default function AdminPage() {
     setUsersLoading(false)
   }
 
+  const handleDeleteUser = async (id: number) => {
+    const response = await adminDeleteUser(id.toString())
+    if (response.error) {
+      setUsersError(response.error)
+      return
+    }
+    setUsersError("")
+    refreshUsers()
+  }
+
+  const handleToggleUserActive = async (id: number) => {
+    const response = await adminToggleUserActive(id.toString())
+    if (response.error) {
+      setUsersError(response.error)
+      return
+    }
+    setUsersError("")
+    refreshUsers()
+  }
+
   const refreshFinance = async () => {
     setFinanceLoading(true)
 
@@ -301,6 +327,9 @@ export default function AdminPage() {
       refreshSubscriptions()
       refreshUsers()
       refreshFinance()
+      getCurrentUserInfo().then((r) => {
+        if (r.data?.id) setCurrentUserId(r.data.id)
+      })
     }
   }, [isAuthenticated, isCheckingAuth])
 
@@ -728,6 +757,26 @@ export default function AdminPage() {
               </div>
 
               <PostList posts={posts} onEdit={openEditPost} onDelete={handleDeletePost} />
+            </div>
+          )}
+
+          {/* Users Tab */}
+          {activeTab === "users" && (
+            <div>
+              <h1 className="text-foreground text-sm mb-6">ПОЛЬЗОВАТЕЛИ</h1>
+              {usersError && <p className="text-red-400 text-[10px] mb-3">{usersError}</p>}
+              {usersLoading ? (
+                <div className="bg-card border border-border p-6 text-[10px] text-muted-foreground">
+                  Загрузка пользователей...
+                </div>
+              ) : (
+                <UserTable
+                  users={users}
+                  currentUserId={currentUserId ?? undefined}
+                  onToggleActive={handleToggleUserActive}
+                  onDelete={handleDeleteUser}
+                />
+              )}
             </div>
           )}
 

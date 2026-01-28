@@ -65,29 +65,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (username: string, password: string) => {
     setLoading(true)
 
-    // Offline fallback for demo credentials
-    if (username === 'test' && password === 'test123') {
-      const now = new Date().toISOString()
-      const demoUser: User = {
-        id: 0,
-        username: 'test',
-        email: 'test@example.com',
-        full_name: 'Test User',
-        is_active: true,
-        is_superuser: false,
-        created_at: now,
-        updated_at: now,
-      }
-
-      setAuthToken('test_token_12345')
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('current_user', JSON.stringify(demoUser))
-      }
-      setUser(demoUser)
-      setLoading(false)
-      return { success: true }
-    }
-
     try {
       const response = await apiLoginUser(username, password)
 

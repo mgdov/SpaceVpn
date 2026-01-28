@@ -92,13 +92,13 @@ export default function LoginPage() {
         const botUsername = response.data.bot_username
         const redirectUrl = encodeURIComponent(window.location.origin + "/auth/telegram/callback")
         const telegramUrl = `https://oauth.telegram.org/auth?bot_id=${botUsername}&origin=${window.location.origin}&request_access=write&return_to=${redirectUrl}`
-        
+
         // Open popup
         const width = 550
         const height = 470
         const left = window.screenX + (window.outerWidth - width) / 2
         const top = window.screenY + (window.outerHeight - height) / 2
-        
+
         window.open(
           telegramUrl,
           "telegram_auth",
@@ -144,16 +144,9 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* Тестовый пользователь подсказка */}
-        <div className="mb-4 p-3 bg-primary/10 border border-primary/50 text-primary text-[10px]">
-          <p className="font-semibold mb-1">Тестовый доступ:</p>
-          <p>Логин: <span className="font-mono">test</span></p>
-          <p>Пароль: <span className="font-mono">test123</span></p>
-        </div>
-
         {/* Social Login */}
         <div className="flex gap-4 mb-6">
-          <button 
+          <button
             onClick={handleGoogleLogin}
             disabled={oauthLoading !== null || !googleEnabled}
             className="flex-1 bg-card border border-border py-3 flex items-center justify-center gap-2 hover:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -182,7 +175,7 @@ export default function LoginPage() {
             )}
             <span className="text-foreground text-[10px]">Google</span>
           </button>
-          <button 
+          <button
             onClick={handleTelegramLogin}
             disabled={oauthLoading !== null || !telegramEnabled}
             className="flex-1 bg-card border border-border py-3 flex items-center justify-center gap-2 hover:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

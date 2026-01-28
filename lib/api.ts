@@ -1002,7 +1002,7 @@ export interface AdminFinanceStats {
 }
 
 // ----------------------------------------------------------------------------
-// YooKassa integration (frontend -> Next.js API routes)
+// YooKassa integration (frontend -> backend /payments API)
 // ----------------------------------------------------------------------------
 export interface CreateYookassaPaymentPayload {
   tariffId: number
@@ -1027,30 +1027,33 @@ export interface ConfirmYookassaPaymentResponse {
 export async function createYookassaPayment(
   payload: CreateYookassaPaymentPayload
 ): Promise<ApiResponse<CreateYookassaPaymentResponse>> {
-  const token = getAuthToken()
-  if (!token) {
-    return { error: 'Требуется авторизация для оплаты' }
-  }
+  // Используем основной backend API (/api/v1/payments/create),
+  // который уже интегрирован с YooKassa и знает про тарифы/подписки.
+  //
+  // Frontend передает тариф, план и цену, но на бэке источник правды — тарифы в БД.
+  // Поэтому на бэк отправляем только tariff_id и return_url.
 
-  try {
-    const response = await fetch('/api/yookassa/create-payment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    })
+  const { tariffId, plan } = payload
 
-    const data = await response.json().catch(() => ({}))
-    if (!response.ok) {
-      return { error: (data as any)?.error || (data as any)?.message || `HTTP ${response.status}` }
-    }
+  // После успешной оплаты YooKassa вернет пользователя на эту страницу,
+  // а статус платежа и подписки подтянем отдельными запросами.
+  const returnUrl =
+    (typeof window !== 'undefined' ? window.location.origin : '') +
+    `/account/keys?tariff_id=${encodeURIComponent(String(tariffId))}&plan=${encodeURIComponent(plan)}`
 
-    return { data }
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : 'Network error' }
-  }
+  // Прямая работа с backend API
+  // Тип CreatePaymentResponse на бэке совместим с CreateYookassaPaymentResponse
+  const response = await apiRequest<CreateYookassaPaymentResponse>('/payments/create', {
+    method: 'POST',
+    body: JSON.stringify({
+      tariff_id: tariffId,
+      return_url: returnUrl,
+    }),
+  })
+
+  // Backend уже создает запись Payment и, если тариф платный,
+  // возвращает confirmation_url от YooKassa.
+  return response
 }
 
 export async function confirmYookassaPayment(

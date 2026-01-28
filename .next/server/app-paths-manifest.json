@@ -18,7 +18,7 @@
   "/faq/page": "app/faq/page.js",
   "/login/page": "app/login/page.js",
   "/page": "app/page.js",
-  "/pricing/page": "app/pricing/page.js",
+  "/redirect/page": "app/redirect/page.js",
   "/register/page": "app/register/page.js",
   "/support/page": "app/support/page.js"
 }

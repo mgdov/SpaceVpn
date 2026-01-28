@@ -539,7 +539,7 @@ export default function AdminPage() {
     setEditingTariff(tariff)
     setTariffForm({
       name: tariff.name,
-      durationDays: tariff.duration_months.toString(),
+      durationDays: (tariff.duration_months * 30).toString(),
       price: tariff.price.toString(),
       description: tariff.description || "",
     })

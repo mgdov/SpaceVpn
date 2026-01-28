@@ -32,6 +32,7 @@ export function TariffModal({ open, isEditing, form, onChange, onSubmit, onClose
                     </div>
                     <div>
                         <label className="block text-foreground text-[10px] mb-2">Срок (дней)</label>
+                        <p className="text-muted-foreground text-[8px] mb-2">менее 30 дней = в днях, 30-365 = в месяцах, больше 365 = в годах</p>
                         <input
                             type="number"
                             min={1}

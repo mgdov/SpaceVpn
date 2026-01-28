@@ -12,6 +12,7 @@ import { CheckCircle2, XCircle, Loader2, ArrowLeft } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
+import { formatDuration } from "@/lib/utils/tariffs"
 
 export default function TariffsPage() {
   const router = useRouter()
@@ -106,11 +107,6 @@ export default function TariffsPage() {
       setPurchasing(null)
       setSelectedTariff(null)
     }
-  }
-
-  const formatDuration = (months: number) => {
-    if (months === 0) return "1 день"
-    return `${months} мес.`
   }
 
   const formatDataLimit = (gb: number) => {
@@ -226,7 +222,7 @@ export default function TariffsPage() {
 
                     <div className="text-center space-y-4">
                       <p className="text-accent text-[9px] tracking-[0.35em]"># {tariff.name}</p>
-                      <h3 className="text-foreground text-base">{formatDuration(tariff.duration_months)}</h3>
+                      <h3 className="text-foreground text-base">{formatDuration(tariff.duration_months * 30)}</h3>
                       <div className="flex flex-col items-center gap-2">
                         <div className="flex items-baseline justify-center gap-2">
                           <span className="text-primary text-3xl">{tariff.price}</span>

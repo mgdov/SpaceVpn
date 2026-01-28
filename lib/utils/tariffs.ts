@@ -18,12 +18,26 @@ export function monthsToDays(months: number): number {
 
 /**
  * Форматировать длительность тарифа
+ * @param days количество дней
  */
-export function formatDuration(months: number): string {
-  if (months === 1) return '1 месяц'
-  if (months < 5) return `${months} месяца`
-  if (months === 12) return '1 год'
-  return `${months} месяцев`
+export function formatDuration(days: number): string {
+  if (days < 30) {
+    if (days === 1) return '1 день'
+    if (days < 5) return `${days} дня`
+    return `${days} дней`
+  }
+
+  const months = Math.round(days / 30)
+  if (months < 12) {
+    if (months === 1) return '1 месяц'
+    if (months < 5) return `${months} месяца`
+    return `${months} месяцев`
+  }
+
+  const years = Math.round(months / 12)
+  if (years === 1) return '1 год'
+  if (years < 5) return `${years} года`
+  return `${years} лет`
 }
 
 /**

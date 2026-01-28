@@ -1,5 +1,6 @@
 import { Edit, Trash2, Power } from "lucide-react"
 import type { Tariff } from "@/lib/api"
+import { formatDuration } from "@/lib/utils/tariffs"
 
 interface TariffTableProps {
     tariffs: Tariff[]
@@ -25,7 +26,7 @@ export function TariffTable({ tariffs, onEdit, onDelete, onToggle }: TariffTable
                 <thead className="bg-secondary">
                     <tr>
                         <th className="px-4 py-3 text-left text-[8px] text-muted-foreground">НАЗВАНИЕ</th>
-                        <th className="px-4 py-3 text-left text-[8px] text-muted-foreground">СРОК (МЕС.)</th>
+                        <th className="px-4 py-3 text-left text-[8px] text-muted-foreground">СРОК</th>
                         <th className="px-4 py-3 text-left text-[8px] text-muted-foreground">СТОИМОСТЬ</th>
                         <th className="px-4 py-3 text-left text-[8px] text-muted-foreground">СТАТУС</th>
                         <th className="px-4 py-3 text-left text-[8px] text-muted-foreground">ДЕЙСТВИЯ</th>
@@ -38,7 +39,7 @@ export function TariffTable({ tariffs, onEdit, onDelete, onToggle }: TariffTable
                                 <div>{tariff.name}</div>
                                 <p className="text-muted-foreground text-[8px] mt-1">{tariff.description || "—"}</p>
                             </td>
-                            <td className="px-4 py-3 text-[9px] text-muted-foreground">{tariff.duration_months}</td>
+                            <td className="px-4 py-3 text-[9px] text-muted-foreground">{formatDuration(tariff.duration_months * 30)}</td>
                             <td className="px-4 py-3 text-[9px] text-primary">{tariff.price} ₽</td>
                             <td className="px-4 py-3 text-[9px] text-foreground">
                                 <span className={`text-[8px] px-2 py-1 ${tariff.is_active ? "bg-primary/20 text-primary" : "bg-border text-muted-foreground"}`}>

@@ -402,7 +402,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/pricing": {
+    "/redirect": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -415,8 +415,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/pricing",
-      "dataRoute": "/pricing.rsc",
+      "srcRoute": "/redirect",
+      "dataRoute": "/redirect.rsc",
       "prefetchDataRoute": null,
       "allowHeader": [
         "host",

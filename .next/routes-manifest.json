@@ -139,10 +139,10 @@
       "namedRegex": "^/login(?:/)?$"
     },
     {
-      "page": "/pricing",
-      "regex": "^/pricing(?:/)?$",
+      "page": "/redirect",
+      "regex": "^/redirect(?:/)?$",
       "routeKeys": {},
-      "namedRegex": "^/pricing(?:/)?$"
+      "namedRegex": "^/redirect(?:/)?$"
     },
     {
       "page": "/register",

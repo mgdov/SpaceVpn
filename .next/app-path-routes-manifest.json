@@ -18,7 +18,7 @@
   "/faq/page": "/faq",
   "/login/page": "/login",
   "/page": "/",
-  "/pricing/page": "/pricing",
+  "/redirect/page": "/redirect",
   "/register/page": "/register",
   "/support/page": "/support"
 }

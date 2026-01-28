@@ -2,7 +2,7 @@ var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/account/pag
 R.c("server/chunks/ssr/[root-of-the-server]__a24ecaa3._.js")
 R.c("server/chunks/ssr/eba22_next_dist_8347d64e._.js")
 R.c("server/chunks/ssr/Documents_programming_pixel-space-vpn_4d38f566._.js")
-R.c("server/chunks/ssr/[root-of-the-server]__0d32f52b._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__b56c6c72._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__c6867ce8._.js")
 R.c("server/chunks/ssr/eba22_next_dist_db1e9788._.js")
 R.c("server/chunks/ssr/eba22_next_dist_client_components_builtin_global-error_5130c6cc.js")

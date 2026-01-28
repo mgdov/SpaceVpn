@@ -4,10 +4,11 @@
 
 import type { ApiResponse } from '@/types/api'
 
-// Use environment variable for API URL, fallback to relative path
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+// Use environment variable for API URL, fallback to relative path (for nginx proxy)
+// If NEXT_PUBLIC_API_URL is not set, use relative path which works with nginx proxy
+const API_URL = process.env.NEXT_PUBLIC_API_URL || ''
 const API_PATH = process.env.NEXT_PUBLIC_API_V1 || '/api/v1'
-export const API_BASE_URL = `${API_URL}${API_PATH}`
+export const API_BASE_URL = API_URL ? `${API_URL}${API_PATH}` : API_PATH
 
 /**
  * Get auth token from localStorage

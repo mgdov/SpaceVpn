@@ -69,6 +69,91 @@ export interface TelegramAuthData {
   hash: string
 }
 
+/** Запрос на отправку кода верификации */
+export interface SendVerificationCodeRequest {
+  email: string
+  purpose: 'register' | 'reset_password' | 'login'
+}
+
+/** Запрос на проверку кода */
+export interface VerifyCodeRequest {
+  email: string
+  code: string
+  purpose: string
+}
+
+/** Запрос на верификацию email (возвращает token) */
+export interface VerifyEmailRequest {
+  email: string
+  code: string
+}
+
+/** Запрос на сброс пароля */
+export interface ResetPasswordRequest {
+  email: string
+  code: string
+  new_password: string
+}
+
+// ============================================================================
+// Subscription типы
+// ============================================================================
+
+export interface Subscription {
+  id: number
+  user_id?: number
+  tariff_id: number
+  status: 'active' | 'expired' | 'cancelled'
+  start_date: string
+  expire_date: string | null
+  data_limit: number
+  used_traffic: number
+  created_at?: string
+  updated_at?: string
+}
+
+export interface MySubscriptionsResponse {
+  subscriptions: Subscription[]
+}
+
+export interface AdminSubscription extends Subscription {
+  user?: User
+}
+
+export interface PurchaseFreeTariffRequest {
+  tariff_id: number
+  bypass_preset?: string
+}
+
+export interface PurchaseFreeTariffResponse {
+  subscription_id: number
+  vpn_client_id: number
+  vless_uri: string
+  qr_code: string
+  expire_date: string
+  message: string
+}
+
+export interface ExtendPayload {
+  days?: number
+  expires_at?: string
+}
+
+// ============================================================================
+// Plan типы (упрощённые тарифы)
+// ============================================================================
+
+export interface Plan {
+  id: number
+  name: string
+  days: number
+  price: number
+}
+
+export interface ApplyPlanRequest {
+  plan_id: number
+}
+
 // ============================================================================
 // Tariff типы
 // ============================================================================
@@ -203,9 +288,11 @@ export interface CreatePaymentRequest {
 }
 
 export interface CreatePaymentResponse {
-  payment_id: string
-  confirmation_url: string
+  payment_id: number | string
+  confirmation_url?: string | null
   status: string
+  amount?: number
+  message?: string
 }
 
 export interface Payment {
@@ -376,4 +463,67 @@ export interface PaginationParams {
 
 export interface PaymentQueryParams extends PaginationParams {
   status?: 'pending' | 'completed' | 'failed' | 'cancelled'
+}
+
+/** Параметры запроса транзакций (admin finance) */
+export interface TransactionQueryParams extends PaginationParams {
+  status?: string
+  method?: string
+  start_date?: string
+  end_date?: string
+}
+
+export interface PaymentListResponse {
+  total: number
+  payments: AdminPayment[]
+}
+
+/** Детальный платёж с user/tariff (admin) */
+export interface AdminPaymentDetail extends AdminPayment {
+  user?: User
+  tariff?: { id: number; name: string; price: number }
+  subscription_id?: number
+}
+
+export interface AdminFinanceSummary {
+  total_revenue: number
+  revenue_today: number
+  revenue_this_month: number
+  revenue_by_method: Record<string, number>
+  revenue_by_status: Record<string, number>
+  count_by_status: Record<string, number>
+  top_tariffs: Array<{ tariff_id: number; tariff_name: string; total_revenue: number; payment_count: number }>
+  recent_transactions_24h: number
+}
+
+/** Создание подписки админом */
+export interface AdminCreateSubscriptionPayload {
+  user_id: number
+  tariff_id: number
+}
+
+export interface VPNStatus {
+  status: 'none' | 'active' | 'expired' | 'cancelled'
+  expires_at: string | null
+  traffic_used: number | null
+  traffic_limit: number | null
+  traffic_used_gb: number | null
+  traffic_limit_gb: number | null
+  traffic_percentage: number | null
+  vless_uri: string | null
+  qr_code: string | null
+  subscription_id: number | null
+  tariff_name: string | null
+}
+
+export interface HealthResponse {
+  status: string
+  uptime?: number
+  version?: string
+}
+
+export interface ApiInfoResponse {
+  version: string
+  status: string
+  uptime?: number
 }

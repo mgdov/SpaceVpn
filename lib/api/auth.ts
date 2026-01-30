@@ -12,6 +12,10 @@ import type {
   GoogleAuthResponse,
   TelegramAuthInfo,
   TelegramAuthData,
+  SendVerificationCodeRequest,
+  VerifyCodeRequest,
+  VerifyEmailRequest,
+  ResetPasswordRequest,
 } from '@/types/api'
 
 /**
@@ -105,4 +109,52 @@ export async function telegramAuthCallback(data: TelegramAuthData): Promise<ApiR
   }
 
   return response
+}
+
+/**
+ * Отправить код верификации на email (регистрация / сброс пароля / логин)
+ */
+export async function sendVerificationCode(
+  body: SendVerificationCodeRequest
+): Promise<ApiResponse<{ detail: string }>> {
+  return fetchAPI('/auth/send-verification-code', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+/**
+ * Проверить код без побочных эффектов
+ */
+export async function verifyCode(body: VerifyCodeRequest): Promise<ApiResponse<{ detail: string }>> {
+  return fetchAPI('/auth/verify-code', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+/**
+ * Верифицировать email после регистрации — возвращает JWT
+ */
+export async function verifyEmail(body: VerifyEmailRequest): Promise<ApiResponse<TokenResponse>> {
+  const response = await fetchAPI<TokenResponse>('/auth/verify-email', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+  if (response.data?.access_token) {
+    setAuthToken(response.data.access_token)
+  }
+  return response
+}
+
+/**
+ * Сброс пароля по коду из email
+ */
+export async function resetPassword(
+  body: ResetPasswordRequest
+): Promise<ApiResponse<{ detail: string }>> {
+  return fetchAPI('/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
 }

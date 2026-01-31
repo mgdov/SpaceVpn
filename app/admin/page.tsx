@@ -461,11 +461,11 @@ export default function AdminPage() {
   const resetTariffForm = () => setTariffForm({ name: "", durationDays: "30", price: "0", description: "" })
 
   const normalizeTariffValues = (overrides?: Partial<ApiTariff>) => {
-    const rawDuration = overrides?.duration_months?.toString() ?? tariffForm.durationDays
+    const rawDuration = overrides?.duration_days?.toString() ?? overrides?.duration_months != null ? String((overrides.duration_months as number) * 30) : tariffForm.durationDays
     const rawPrice = overrides?.price?.toString() ?? tariffForm.price
     return {
       name: (overrides?.name ?? tariffForm.name).trim(),
-      durationMonths: Math.max(1, Number(rawDuration) || 1),
+      durationDays: Math.max(1, Number(rawDuration) || 1),
       price: Math.max(0, Number(rawPrice) || 0),
       description: (overrides?.description ?? tariffForm.description).trim(),
     }
@@ -475,7 +475,7 @@ export default function AdminPage() {
     const normalized = normalizeTariffValues()
     const response = await adminCreateTariff({
       name: normalized.name || `Тариф ${tariffs.length + 1}`,
-      duration_months: normalized.durationMonths,
+      duration_days: normalized.durationDays,
       price: normalized.price,
       description: normalized.description,
     })
@@ -501,7 +501,7 @@ export default function AdminPage() {
 
     const response = await adminUpdateTariff(editingTariff.id.toString(), {
       name: normalized.name,
-      duration_months: normalized.durationMonths,
+      duration_days: normalized.durationDays,
       price: normalized.price,
       description: normalized.description,
     })
@@ -566,9 +566,10 @@ export default function AdminPage() {
 
   const openEditTariff = (tariff: ApiTariff) => {
     setEditingTariff(tariff)
+    const days = tariff.duration_days ?? (tariff.duration_months != null ? tariff.duration_months * 30 : 30)
     setTariffForm({
       name: tariff.name,
-      durationDays: (tariff.duration_months * 30).toString(),
+      durationDays: days.toString(),
       price: tariff.price.toString(),
       description: tariff.description || "",
     })

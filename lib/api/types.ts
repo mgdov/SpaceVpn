@@ -24,7 +24,7 @@ export interface Tariff {
   description: string | null
   tagline: string | null
   price: number
-  duration_months: number
+  duration_days: number
   data_limit_gb: number
   devices_count: number
   is_active: boolean

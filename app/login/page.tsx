@@ -150,9 +150,9 @@ export default function LoginPage() {
         {error && (
           <div className="mb-3 sm:mb-4 p-2.5 sm:p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[9px] sm:text-[10px] space-y-2">
             <p>{error}</p>
-            {error.toLowerCase().includes("inactive user") && (
+            {(error.toLowerCase().includes("inactive user") || error.toLowerCase().includes("email not verified")) && (
               <p className="text-muted-foreground mt-2">
-                Подтвердите email: проверьте почту (письмо с кодом) или{" "}
+                Подтвердите email: проверьте почту (письмо с кодом), запросите новый код на странице восстановления пароля или{" "}
                 <Link href="/forgot-password" className="text-primary underline">восстановите пароль</Link>.
               </p>
             )}

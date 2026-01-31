@@ -144,22 +144,21 @@ export default function AdminPage() {
     setLoginError("")
 
     if (loginUsername === ADMIN_USERNAME && loginPassword === ADMIN_PASSWORD) {
-      // Пытаемся залогиниться через API для получения токена
+      // Логинимся через API — без токена админка не работает (все запросы дают 401)
       try {
         const response = await loginUser(loginUsername, loginPassword)
-        if (response.error) {
-          // API логин не удался, но разрешаем вход для управления блогом
-          console.warn("API авторизация не удалась:", response.error)
-          setLoginError("⚠️ Вход выполнен, но API недоступен. Функции тарифов и ключей ограничены.")
+        if (response.error || !response.data?.access_token) {
+          setLoginError(
+            response.error
+              ? `API: ${response.error}`
+              : "Не удалось получить токен. Проверьте, что пользователь admin активен (is_active)."
+          )
+          return
         }
-        // В любом случае разрешаем вход в админку
         sessionStorage.setItem(ADMIN_AUTH_KEY, "true")
         setIsAuthenticated(true)
       } catch (error) {
-        // Ошибка подключения, но разрешаем вход
-        setLoginError("⚠️ Вход выполнен, но не удалось подключиться к API")
-        sessionStorage.setItem(ADMIN_AUTH_KEY, "true")
-        setIsAuthenticated(true)
+        setLoginError("Не удалось подключиться к API. Проверьте сеть и доступность бэкенда.")
       }
     } else {
       setLoginError("Неверный логин или пароль")

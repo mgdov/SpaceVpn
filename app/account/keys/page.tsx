@@ -111,66 +111,66 @@ function AccountKeysPageContent() {
             <PixelStars />
             <Header />
 
-            <main className="pt-24 pb-20 px-4">
-                <div className="max-w-7xl mx-auto space-y-6">
+            <main className="pt-20 sm:pt-24 pb-12 sm:pb-20 px-3 sm:px-4">
+                <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
                     {/* Навигация назад вне рамки */}
                     <Link
                         href="/account"
-                        className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm"
+                        className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-xs sm:text-sm"
                     >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                         Назад в личный кабинет
                     </Link>
 
                     {/* Заголовок */}
-                    <div className="bg-card border border-border p-6">
-                        <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ МОИ VPN КЛЮЧИ ]</p>
-                        <h1 className="text-foreground text-3xl font-bold">
+                    <div className="bg-card border border-border p-4 sm:p-6">
+                        <p className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em] mb-2">[ МОИ VPN КЛЮЧИ ]</p>
+                        <h1 className="text-foreground text-2xl sm:text-3xl font-bold">
                             Подключение к VPN
                         </h1>
                     </div>
 
                     {/* Сообщения об ошибках */}
                     {error && (
-                        <div className="bg-red-500/10 border-2 border-red-500 p-6">
-                            <div className="flex items-start gap-3">
-                                <svg className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className="bg-red-500/10 border-2 border-red-500 p-4 sm:p-6">
+                            <div className="flex items-start gap-2 sm:gap-3">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <p className="text-red-400 text-sm">{error}</p>
+                                <p className="text-red-400 text-xs sm:text-sm">{error}</p>
                             </div>
                         </div>
                     )}
 
                     {/* Состояние загрузки */}
                     {loadingClients && (
-                        <div className="bg-card border border-border p-12 text-center">
-                            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
-                            <p className="text-muted-foreground text-sm mt-4">Загрузка ваших ключей...</p>
+                        <div className="bg-card border border-border p-8 sm:p-12 text-center">
+                            <div className="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-primary border-t-transparent"></div>
+                            <p className="text-muted-foreground text-xs sm:text-sm mt-4">Загрузка ваших ключей...</p>
                         </div>
                     )}
 
                     {/* Нет ключей */}
                     {!loadingClients && !hasClients && (
-                        <div className="bg-gradient-to-br from-primary/10 to-accent/5 border-2 border-primary p-8 md:p-12 text-center space-y-6">
-                            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/20 mb-4">
-                                <Key className="w-10 h-10 text-primary" />
+                        <div className="bg-gradient-to-br from-primary/10 to-accent/5 border-2 border-primary p-6 sm:p-8 md:p-12 text-center space-y-4 sm:space-y-6">
+                            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/20 mb-2 sm:mb-4">
+                                <Key className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-foreground text-2xl font-bold mb-3">
+                                <h2 className="text-foreground text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
                                     У вас пока нет VPN ключа
                                 </h2>
-                                <p className="text-muted-foreground text-base max-w-md mx-auto">
+                                <p className="text-muted-foreground text-sm sm:text-base max-w-md mx-auto">
                                     Купите тариф, чтобы получить доступ к защищенному VPN подключению
                                 </p>
                             </div>
                             <Link
                                 href="/account/tariffs"
-                                className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 text-sm font-semibold hover:bg-primary/90 transition-colors"
+                                className="inline-flex items-center gap-2 sm:gap-3 bg-primary text-primary-foreground px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-colors"
                             >
-                                <Key size={20} />
+                                <Key size={18} className="sm:w-5 sm:h-5" />
                                 Купить доступ
                             </Link>
                         </div>
@@ -178,7 +178,7 @@ function AccountKeysPageContent() {
 
                     {/* Список ключей в grid */}
                     {!loadingClients && hasClients && (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 gap-4 sm:gap-6">
                             {sortedClients.map((client) => {
                                 const config = vpnConfigs.get(client.id)
                                 const isExpired = isClientExpired(client)

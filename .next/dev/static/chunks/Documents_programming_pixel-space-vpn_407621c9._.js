@@ -19,10 +19,11 @@
     ()=>withQuery
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
-// Use environment variable for API URL, fallback to relative path
-const API_URL = __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Use environment variable for API URL, fallback to relative path (for nginx proxy)
+// If NEXT_PUBLIC_API_URL is not set, use relative path which works with nginx proxy
+const API_URL = ("TURBOPACK compile-time value", "https://space-vpn.tech") || '';
 const API_PATH = ("TURBOPACK compile-time value", "/api/v1") || '/api/v1';
-const API_BASE_URL = `${API_URL}${API_PATH}`;
+const API_BASE_URL = ("TURBOPACK compile-time truthy", 1) ? `${API_URL}${API_PATH}` : "TURBOPACK unreachable";
 function getAuthToken() {
     if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
     ;
@@ -129,8 +130,16 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
     ()=>logoutUser,
     "registerUser",
     ()=>registerUser,
+    "resetPassword",
+    ()=>resetPassword,
+    "sendVerificationCode",
+    ()=>sendVerificationCode,
     "telegramAuthCallback",
-    ()=>telegramAuthCallback
+    ()=>telegramAuthCallback,
+    "verifyCode",
+    ()=>verifyCode,
+    "verifyEmail",
+    ()=>verifyEmail
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/lib/api/client.ts [app-client] (ecmascript)");
 ;
@@ -189,6 +198,34 @@ async function telegramAuthCallback(data) {
     }
     return response;
 }
+async function sendVerificationCode(body) {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchAPI"])('/auth/send-verification-code', {
+        method: 'POST',
+        body: JSON.stringify(body)
+    });
+}
+async function verifyCode(body) {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchAPI"])('/auth/verify-code', {
+        method: 'POST',
+        body: JSON.stringify(body)
+    });
+}
+async function verifyEmail(body) {
+    const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchAPI"])('/auth/verify-email', {
+        method: 'POST',
+        body: JSON.stringify(body)
+    });
+    if (response.data?.access_token) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["setAuthToken"])(response.data.access_token);
+    }
+    return response;
+}
+async function resetPassword(body) {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchAPI"])('/auth/reset-password', {
+        method: 'POST',
+        body: JSON.stringify(body)
+    });
+}
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }
@@ -201,16 +238,22 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
  */ __turbopack_context__.s([
     "getCurrentUser",
     ()=>getCurrentUser,
+    "getCurrentUserInfo",
+    ()=>getCurrentUserInfo,
     "getStoredUser",
     ()=>getStoredUser,
     "getUserVPNStatus",
     ()=>getUserVPNStatus,
+    "removeCurrentUser",
+    ()=>removeCurrentUser,
+    "setCurrentUser",
+    ()=>setCurrentUser,
     "updateCurrentUser",
     ()=>updateCurrentUser
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/lib/api/client.ts [app-client] (ecmascript)");
 ;
-async function getCurrentUser() {
+async function getCurrentUserInfo() {
     const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchAPI"])('/users/me');
     if (response.data && ("TURBOPACK compile-time value", "object") !== 'undefined') {
         localStorage.setItem('current_user', JSON.stringify(response.data));
@@ -222,6 +265,19 @@ function getStoredUser() {
     ;
     const userJson = localStorage.getItem('current_user');
     return userJson ? JSON.parse(userJson) : null;
+}
+function getCurrentUser() {
+    return getStoredUser();
+}
+function setCurrentUser(user) {
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    localStorage.setItem('current_user', JSON.stringify(user));
+}
+function removeCurrentUser() {
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    localStorage.removeItem('current_user');
 }
 async function updateCurrentUser(payload) {
     const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["fetchAPI"])('/users/me', {
@@ -256,11 +312,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/lib/api/auth.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$users$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/lib/api/users.ts [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Documents/programming/pixel-space-vpn/lib/api/client.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
 "use client";
-;
 ;
 ;
 ;
@@ -305,29 +359,6 @@ function AuthProvider({ children }) {
     }["AuthProvider.useEffect"], []);
     const login = async (username, password)=>{
         setLoading(true);
-        // Offline fallback for demo credentials
-        if (username === 'test' && password === 'test123') {
-            const now = new Date().toISOString();
-            const demoUser = {
-                id: 0,
-                username: 'test',
-                email: 'test@example.com',
-                full_name: 'Test User',
-                is_active: true,
-                is_superuser: false,
-                created_at: now,
-                updated_at: now
-            };
-            (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["setAuthToken"])('test_token_12345');
-            if ("TURBOPACK compile-time truthy", 1) {
-                localStorage.setItem('current_user', JSON.stringify(demoUser));
-            }
-            setUser(demoUser);
-            setLoading(false);
-            return {
-                success: true
-            };
-        }
         try {
             const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["loginUser"])(username, password);
             if (response.data) {
@@ -410,7 +441,7 @@ function AuthProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-        lineNumber: 156,
+        lineNumber: 133,
         columnNumber: 5
     }, this);
 }
@@ -454,12 +485,12 @@ function withAuth(Component) {
                     children: "Загрузка..."
                 }, void 0, false, {
                     fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-                    lineNumber: 185,
+                    lineNumber: 162,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-                lineNumber: 184,
+                lineNumber: 161,
                 columnNumber: 9
             }, this);
         }
@@ -470,7 +501,7 @@ function withAuth(Component) {
             ...props
         }, void 0, false, {
             fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-            lineNumber: 194,
+            lineNumber: 171,
             columnNumber: 12
         }, this);
     }, "Zr2WDa/YWeMetzDhcnOimt0LiKE=", false, function() {

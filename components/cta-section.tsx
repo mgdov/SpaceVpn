@@ -2,10 +2,10 @@ import Link from "next/link"
 
 export function CTASection() {
   return (
-    <section className="py-20 px-4 relative z-10">
+    <section className="py-10 sm:py-20 px-3 sm:px-4 relative z-10">
       <div className="max-w-4xl mx-auto text-center">
         <div
-          className="bg-card border border-border p-12 relative overflow-hidden"
+          className="bg-card border border-border p-6 sm:p-12 relative overflow-hidden"
           style={{
             backgroundImage: `url('/images/img-2617.jpeg')`,
             backgroundSize: "cover",

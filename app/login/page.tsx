@@ -118,43 +118,43 @@ export default function LoginPage() {
   const telegramEnabled = oauthProviders.some(p => p.id === "telegram" && p.enabled)
 
   return (
-    <div className="min-h-screen bg-background relative flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background relative flex items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
       <PixelStars />
 
       {/* Back to home */}
-      <Link href="/" className="absolute top-4 left-4 text-muted-foreground hover:text-primary text-[10px] z-20">
+      <Link href="/" className="absolute top-3 left-3 sm:top-4 sm:left-4 text-muted-foreground hover:text-primary text-[9px] sm:text-[10px] z-20">
         ← Назад
       </Link>
 
       <div className="w-full max-w-md relative z-10">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-primary flex items-center justify-center">
-              <span className="text-background text-sm">S</span>
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary flex items-center justify-center">
+              <span className="text-background text-xs sm:text-sm">S</span>
             </div>
           </div>
-          <h1 className="text-foreground text-sm">SPACE VPN</h1>
+          <h1 className="text-foreground text-xs sm:text-sm">SPACE VPN</h1>
         </div>
 
         {/* Error message */}
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[10px]">
+          <div className="mb-3 sm:mb-4 p-2.5 sm:p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[9px] sm:text-[10px]">
             {error}
           </div>
         )}
 
         {/* Social Login */}
-        <div className="flex gap-4 mb-6">
+        <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6">
           <button
             onClick={handleGoogleLogin}
             disabled={oauthLoading !== null || !googleEnabled}
-            className="flex-1 bg-card border border-border py-3 flex items-center justify-center gap-2 hover:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 bg-card border border-border py-2.5 sm:py-3 flex items-center justify-center gap-1.5 sm:gap-2 hover:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {oauthLoading === "google" ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
             ) : (
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -173,28 +173,28 @@ export default function LoginPage() {
                 />
               </svg>
             )}
-            <span className="text-foreground text-[10px]">Google</span>
+            <span className="text-foreground text-[9px] sm:text-[10px]">Google</span>
           </button>
           <button
             onClick={handleTelegramLogin}
             disabled={oauthLoading !== null || !telegramEnabled}
-            className="flex-1 bg-card border border-border py-3 flex items-center justify-center gap-2 hover:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 bg-card border border-border py-2.5 sm:py-3 flex items-center justify-center gap-1.5 sm:gap-2 hover:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {oauthLoading === "telegram" ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
             ) : (
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#0088cc">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="#0088cc">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.37-.49 1.02-.74 3.98-1.73 6.64-2.87 7.97-3.43 3.79-1.6 4.58-1.88 5.1-1.89.11 0 .37.03.54.17.14.12.18.28.2.45-.01.06.01.24 0 .38z" />
               </svg>
             )}
-            <span className="text-foreground text-[10px]">Telegram</span>
+            <span className="text-foreground text-[9px] sm:text-[10px]">Telegram</span>
           </button>
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
           <div>
-            <label className="block text-foreground text-[10px] mb-2">Логин или E-mail</label>
+            <label className="block text-foreground text-[9px] sm:text-[10px] mb-1.5 sm:mb-2">Логин или E-mail</label>
             <input
               type="text"
               value={username}
@@ -202,14 +202,14 @@ export default function LoginPage() {
               placeholder="Введите логин или email"
               required
               disabled={loading}
-              className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary disabled:opacity-50"
+              className="w-full bg-card border border-border px-3 sm:px-4 py-2.5 sm:py-3 text-foreground text-[9px] sm:text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary disabled:opacity-50"
             />
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-foreground text-[10px]">Пароль</label>
-              <Link href="/forgot-password" className="text-muted-foreground hover:text-primary text-[10px]">
+            <div className="flex items-center justify-between mb-1.5 sm:mb-2">
+              <label className="text-foreground text-[9px] sm:text-[10px]">Пароль</label>
+              <Link href="/forgot-password" className="text-muted-foreground hover:text-primary text-[9px] sm:text-[10px]">
                 Забыли?
               </Link>
             </div>
@@ -221,15 +221,15 @@ export default function LoginPage() {
                 placeholder="Введите пароль"
                 required
                 disabled={loading}
-                className="w-full bg-card border border-border px-4 py-3 text-foreground text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary pr-12 disabled:opacity-50"
+                className="w-full bg-card border border-border px-3 sm:px-4 py-2.5 sm:py-3 text-foreground text-[9px] sm:text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary pr-10 sm:pr-12 disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 disabled={loading}
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showPassword ? <EyeOff size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Eye size={16} className="sm:w-[18px] sm:h-[18px]" />}
               </button>
             </div>
           </div>
@@ -237,11 +237,11 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary text-primary-foreground py-3 text-[10px] hover:bg-primary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-primary text-primary-foreground py-2.5 sm:py-3 text-[9px] sm:text-[10px] hover:bg-primary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {loading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
                 Вход...
               </>
             ) : (
@@ -252,7 +252,7 @@ export default function LoginPage() {
 
         <Link
           href="/register"
-          className="block w-full mt-4 bg-card border border-border py-3 text-center text-foreground text-[10px] hover:border-primary transition-colors"
+          className="block w-full mt-3 sm:mt-4 bg-card border border-border py-2.5 sm:py-3 text-center text-foreground text-[9px] sm:text-[10px] hover:border-primary transition-colors"
         >
           Создать аккаунт
         </Link>

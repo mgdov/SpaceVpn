@@ -25,22 +25,22 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-20 px-4 relative z-10 bg-card/50">
+    <section className="py-10 sm:py-20 px-3 sm:px-4 relative z-10 bg-card/50">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 sm:mb-12">
           <span className="text-accent text-[10px] tracking-widest">[ ВОЗМОЖНОСТИ ]</span>
-          <h2 className="text-xl md:text-2xl text-foreground mt-4 mb-4">
+          <h2 className="text-lg sm:text-xl md:text-2xl text-foreground mt-3 sm:mt-4 mb-2 sm:mb-4">
             ПОЧЕМУ <span className="text-primary">SPACE VPN</span>?
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="bg-card border border-border p-6 hover:border-primary transition-colors group"
+              className="bg-card border border-border p-4 sm:p-6 hover:border-primary transition-colors group"
             >
-              <feature.icon className="w-8 h-8 text-primary mb-4 group-hover:scale-110 transition-transform" />
+              <feature.icon className="w-7 h-7 sm:w-8 sm:h-8 text-primary mb-3 sm:mb-4 group-hover:scale-110 transition-transform" />
               <h3 className="text-foreground text-[10px] mb-2">{feature.title}</h3>
               <p className="text-muted-foreground text-[8px] leading-relaxed">{feature.description}</p>
             </div>

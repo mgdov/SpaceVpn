@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
 import { PixelStars } from "@/components/pixel-stars"
 import { useAuth } from "@/lib/auth-context"
@@ -28,6 +28,8 @@ export default function LoginPage() {
   const [oauthProviders, setOauthProviders] = useState<OAuthProvider[]>([])
   const { login } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const verifyEmailMessage = searchParams.get("message") === "verify-email"
 
   useEffect(() => {
     // Load OAuth providers
@@ -136,6 +138,13 @@ export default function LoginPage() {
           </div>
           <h1 className="text-foreground text-sm">SPACE VPN</h1>
         </div>
+
+        {/* Success: after registration, need to verify email */}
+        {verifyEmailMessage && !error && (
+          <div className="mb-4 p-3 bg-green-500/10 border border-green-500/50 text-green-600 dark:text-green-400 text-[10px]">
+            Регистрация прошла. Проверьте почту (письмо с кодом) и подтвердите email, затем войдите.
+          </div>
+        )}
 
         {/* Error message */}
         {error && (

@@ -20,7 +20,7 @@ interface AuthContextType {
   loading: boolean
   login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>
   logout: () => void
-  register: (username: string, email: string, password: string, fullName?: string) => Promise<{ success: boolean; error?: string }>
+  register: (username: string, email: string, password: string, fullName?: string) => Promise<{ success: boolean; error?: string; needsEmailVerification?: boolean }>
   refreshUser: () => Promise<void>
 }
 
@@ -101,6 +101,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await apiRegisterUser(username, email, password, fullName)
 
       if (response.data) {
+        // If user is not active (email not verified), don't auto-login — show "check email" and go to login
+        if (response.data.is_active === false) {
+          setLoading(false)
+          return { success: true, needsEmailVerification: true }
+        }
         // Auto-login after registration: use username/email from API (backend may derive username from email)
         const loginIdentifier = response.data.username || response.data.email || username
         const loginResult = await login(loginIdentifier, password)

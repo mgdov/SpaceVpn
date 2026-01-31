@@ -101,8 +101,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await apiRegisterUser(username, email, password, fullName)
 
       if (response.data) {
-        // Auto-login after registration
-        const loginResult = await login(username, password)
+        // Auto-login after registration: use username/email from API (backend may derive username from email)
+        const loginIdentifier = response.data.username || response.data.email || username
+        const loginResult = await login(loginIdentifier, password)
         return loginResult
       }
 

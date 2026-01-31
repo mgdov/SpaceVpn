@@ -163,8 +163,9 @@ export interface Tariff {
   name: string
   description: string | null
   tagline?: string | null
-  duration_months: number
-  duration_days?: number
+  duration_days: number
+  /** @deprecated Backend uses duration_days; kept for backward compat when reading old responses */
+  duration_months?: number
   price: number
   data_limit_gb: number
   devices_count?: number
@@ -430,7 +431,7 @@ export interface RegenerateVPNClientPayload {
 
 export interface CreateTariffPayload {
   name: string
-  duration_months: number
+  duration_days: number
   price: number
   description?: string | null
   tagline?: string | null

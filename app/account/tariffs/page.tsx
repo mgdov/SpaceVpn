@@ -115,20 +115,20 @@ export default function TariffsPage() {
     return `${gb / 1000} ТБ`
   }
 
+  const tariffMonths = (t: { duration_days?: number; duration_months?: number }) =>
+    t.duration_days != null ? Math.max(1, t.duration_days / 30) : (t.duration_months === 0 ? 1 : Math.max(1, t.duration_months ?? 1))
+
   const baseMonthlyPrice = useMemo(() => {
     if (!tariffs.length) return 0
-    const perMonthPrices = tariffs.map((tariff) => {
-      const months = tariff.duration_months === 0 ? 1 : Math.max(1, tariff.duration_months)
-      return tariff.price / months
-    })
+    const perMonthPrices = tariffs.map((tariff) => tariff.price / tariffMonths(tariff))
     return Math.min(...perMonthPrices)
   }, [tariffs])
 
   const highlightTariffId = useMemo(() => {
     if (!tariffs.length) return null
     return tariffs.reduce((best, current) => {
-      const currentMonths = current.duration_months === 0 ? 1 : Math.max(1, current.duration_months)
-      const bestMonths = best.duration_months === 0 ? 1 : Math.max(1, best.duration_months)
+      const currentMonths = tariffMonths(current)
+      const bestMonths = tariffMonths(best)
       const currentRatio = current.price / currentMonths
       const bestRatio = best.price / bestMonths
       return currentRatio < bestRatio ? current : best
@@ -197,7 +197,7 @@ export default function TariffsPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {tariffs.map((tariff) => {
-                const months = Math.max(1, tariff.duration_months)
+                const months = tariffMonths(tariff)
                 const nominalPrice = baseMonthlyPrice * months
                 const discountPercent = nominalPrice > tariff.price && months > 1
                   ? Math.round(((nominalPrice - tariff.price) / nominalPrice) * 100)
@@ -222,7 +222,7 @@ export default function TariffsPage() {
 
                     <div className="text-center space-y-4">
                       <p className="text-accent text-[9px] tracking-[0.35em]"># {tariff.name}</p>
-                      <h3 className="text-foreground text-base">{formatDuration(tariff.duration_months * 30)}</h3>
+                      <h3 className="text-foreground text-base">{formatDuration(tariff.duration_days ?? (tariff.duration_months != null ? tariff.duration_months * 30 : 0))}</h3>
                       <div className="flex flex-col items-center gap-2">
                         <div className="flex items-baseline justify-center gap-2">
                           <span className="text-primary text-3xl">{tariff.price}</span>

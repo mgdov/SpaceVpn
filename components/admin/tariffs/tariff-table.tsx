@@ -39,7 +39,7 @@ export function TariffTable({ tariffs, onEdit, onDelete, onToggle }: TariffTable
                                 <div>{tariff.name}</div>
                                 <p className="text-muted-foreground text-[8px] mt-1">{tariff.description || "—"}</p>
                             </td>
-                            <td className="px-4 py-3 text-[9px] text-muted-foreground">{formatDuration(tariff.duration_months * 30)}</td>
+                            <td className="px-4 py-3 text-[9px] text-muted-foreground">{formatDuration(tariff.duration_days ?? (tariff.duration_months != null ? tariff.duration_months * 30 : 0))}</td>
                             <td className="px-4 py-3 text-[9px] text-primary">{tariff.price} ₽</td>
                             <td className="px-4 py-3 text-[9px] text-foreground">
                                 <span className={`text-[8px] px-2 py-1 ${tariff.is_active ? "bg-primary/20 text-primary" : "bg-border text-muted-foreground"}`}>

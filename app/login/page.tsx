@@ -139,11 +139,7 @@ export default function LoginPage() {
 
         {/* Error message */}
         {error && (
-<<<<<<< HEAD
-          <div className="mb-3 sm:mb-4 p-2.5 sm:p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[9px] sm:text-[10px]">
-            {error}
-=======
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[10px] space-y-2">
+          <div className="mb-3 sm:mb-4 p-2.5 sm:p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[9px] sm:text-[10px] space-y-2">
             <p>{error}</p>
             {error.toLowerCase().includes("inactive user") && (
               <p className="text-muted-foreground mt-2">
@@ -151,7 +147,6 @@ export default function LoginPage() {
                 <Link href="/forgot-password" className="text-primary underline">восстановите пароль</Link>.
               </p>
             )}
->>>>>>> refs/remotes/origin/main
           </div>
         )}
 

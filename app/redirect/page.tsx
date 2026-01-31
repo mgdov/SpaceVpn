@@ -11,6 +11,7 @@ function RedirectContent() {
   const [showRetry, setShowRetry] = useState(false)
   const [showSpinner, setShowSpinner] = useState(true)
   const [decodedUrl, setDecodedUrl] = useState<string | null>(null)
+  const [copyDone, setCopyDone] = useState(false)
 
   useEffect(() => {
     if (!redirectTo) {
@@ -87,6 +88,17 @@ function RedirectContent() {
     if (decodedUrl) tryOpenApp(decodedUrl)
   }
 
+  const handleCopyLink = async () => {
+    if (!decodedUrl) return
+    try {
+      await navigator.clipboard.writeText(decodedUrl)
+      setCopyDone(true)
+      setMessage('Ссылка скопирована. Вставьте её в приложении (Импорт из буфера или + → по ссылке).')
+    } catch {
+      setMessage('Не удалось скопировать. Попробуйте кнопку «Добавить VPN в приложение» ещё раз.')
+    }
+  }
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 text-white p-5">
       <div className="text-center max-w-lg p-8 bg-white/10 rounded-3xl backdrop-blur-xl shadow-2xl border border-white/20">
@@ -99,12 +111,22 @@ function RedirectContent() {
 
         <div className="flex flex-col gap-3">
           {showRetry && (
-            <button
-              onClick={handleRetry}
-              className="px-7 py-3.5 bg-gradient-to-r from-green-500 to-green-600 rounded-xl text-white font-bold text-base transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl shadow-lg shadow-green-500/40"
-            >
-              🚀 Добавить VPN в приложение
-            </button>
+            <>
+              <button
+                onClick={handleRetry}
+                className="px-7 py-3.5 bg-gradient-to-r from-green-500 to-green-600 rounded-xl text-white font-bold text-base transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl shadow-lg shadow-green-500/40"
+              >
+                🚀 Добавить VPN в приложение
+              </button>
+              {decodedUrl && (
+                <button
+                  onClick={handleCopyLink}
+                  className="px-7 py-3.5 bg-white/20 border-2 border-white/50 rounded-xl text-white font-semibold text-base transition-all duration-300 hover:bg-white/30"
+                >
+                  {copyDone ? '✓ Ссылка скопирована' : 'Скопировать ссылку (вставить в приложении)'}
+                </button>
+              )}
+            </>
           )}
 
           <a

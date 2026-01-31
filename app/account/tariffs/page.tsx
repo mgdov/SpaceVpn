@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { getPublicTariffs, purchaseFreeTariff, createYookassaPayment, type Tariff } from "@/lib/api"
+import { getPublicTariffs, getMySubscriptions, purchaseFreeTariff, createYookassaPayment, type Tariff } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -23,10 +23,18 @@ export default function TariffsPage() {
   const [selectedTariff, setSelectedTariff] = useState<Tariff | null>(null)
   const [bypassPreset, setBypassPreset] = useState<string>("yandex")
   const [showPresetDialog, setShowPresetDialog] = useState(false)
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false)
 
   useEffect(() => {
     loadTariffs()
+    loadMySubscriptions()
   }, [])
+
+  const loadMySubscriptions = async () => {
+    const res = await getMySubscriptions()
+    const active = res.data?.subscriptions?.some((s: { status: string }) => s.status === "active") ?? false
+    setHasActiveSubscription(active)
+  }
 
   const loadTariffs = async () => {
     setLoading(true)
@@ -39,6 +47,11 @@ export default function TariffsPage() {
   }
 
   const handlePurchase = async (tariffId: number, tariffName: string, tariffPrice: number) => {
+    if (hasActiveSubscription) {
+      router.push("/account/keys")
+      return
+    }
+
     // Если тариф бесплатный, сначала показываем диалог выбора bypass preset
     if (tariffPrice === 0) {
       setSelectedTariff(tariffs.find(t => t.id === tariffId) || null)
@@ -70,6 +83,11 @@ export default function TariffsPage() {
 
   const confirmPurchase = async () => {
     if (!selectedTariff) return
+    if (hasActiveSubscription) {
+      setShowPresetDialog(false)
+      router.push("/account/keys")
+      return
+    }
 
     // Clear previous messages
     setMessage(null)
@@ -177,6 +195,20 @@ export default function TariffsPage() {
             </p>
           </div>
 
+          {hasActiveSubscription && (
+            <div className="mb-4 sm:mb-6 p-4 bg-primary/10 border-2 border-primary rounded-lg flex flex-wrap items-center justify-between gap-3">
+              <p className="text-foreground text-xs sm:text-sm">
+                У вас активный тариф. Продлить или посмотреть ключи можно в разделе Ключи.
+              </p>
+              <Link
+                href="/account/keys"
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-colors rounded"
+              >
+                Перейти к ключам
+              </Link>
+            </div>
+          )}
+
           {message && (
             <Alert className={`mb-4 sm:mb-6 ${message.type === "success" ? "border-2 border-green-500 bg-green-500/10" : "border-2 border-red-500 bg-red-500/10"}`}>
               {message.type === "success" ? (
@@ -249,6 +281,8 @@ export default function TariffsPage() {
                           <Loader2 className="h-5 w-5 animate-spin" />
                           {tariff.price === 0 ? "АКТИВАЦИЯ..." : "ПОДГОТОВКА..."}
                         </span>
+                      ) : hasActiveSubscription ? (
+                        "ПЕРЕЙТИ К КЛЮЧАМ"
                       ) : tariff.price === 0 ? (
                         "ПОПРОБОВАТЬ БЕСПЛАТНО"
                       ) : (

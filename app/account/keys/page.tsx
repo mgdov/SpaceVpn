@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Key, Download, Smartphone, Clock, Trash2, RefreshCw, ExternalLink, ChevronUp, ChevronDown } from "lucide-react"
+import { Key, Download, Smartphone, Clock, Trash2, RefreshCw, ExternalLink, ChevronUp, ChevronDown, Copy } from "lucide-react"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -61,10 +61,23 @@ function AccountKeysPageContent() {
         setInstallOpen((prev) => ({ ...prev, [id]: !prev[id] }))
     }
 
+    const subscriptionUrlFor = (client: VPNClient) =>
+        (vpnConfigs.get(client.id)?.subscription_url || client.subscription_url) ?? ""
+
     const handleAddToApp = (subscriptionUrl: string) => {
         if (!subscriptionUrl) return
         const url = `/redirect?redirect_to=${encodeURIComponent(subscriptionUrl)}`
         window.location.href = url
+    }
+
+    const handleCopyLink = async (subscriptionUrl: string) => {
+        if (!subscriptionUrl) return
+        try {
+            await navigator.clipboard.writeText(subscriptionUrl)
+            alert("Ссылка скопирована. Вставьте её в приложении (Импорт из буфера или добавление по ссылке).")
+        } catch {
+            alert("Не удалось скопировать. Скопируйте ссылку вручную.")
+        }
     }
 
     const handleDeleteKey = (clientId: number) => {
@@ -289,15 +302,25 @@ function AccountKeysPageContent() {
                                                     </div>
                                                 )}
 
-                                                {config && (
-                                                    <button
-                                                        onClick={() => handleAddToApp(config.subscription_url)}
-                                                        className="w-full bg-purple-600 hover:bg-purple-700 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
-                                                    >
-                                                        <span className="text-base">2.</span>
-                                                        <Smartphone className="w-4 h-4" />
-                                                        <span>Добавить VPN в приложение</span>
-                                                    </button>
+                                                {(config?.subscription_url ?? client.subscription_url) && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => handleAddToApp(subscriptionUrlFor(client))}
+                                                            className="w-full bg-purple-600 hover:bg-purple-700 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                        >
+                                                            <span className="text-base">2.</span>
+                                                            <Smartphone className="w-4 h-4" />
+                                                            <span>Добавить VPN в приложение</span>
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleCopyLink(subscriptionUrlFor(client))}
+                                                            className="w-full border-2 border-purple-500 text-purple-400 hover:bg-purple-500/10 p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                        >
+                                                            <Copy className="w-4 h-4" />
+                                                            <span>Скопировать ссылку (вставить в приложении)</span>
+                                                        </button>
+                                                    </>
                                                 )}
 
                                                 {/* Extend even if not expired */}

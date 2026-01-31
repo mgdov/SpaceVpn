@@ -50,7 +50,7 @@ function VerifyEmailContent() {
     setError("")
     try {
       const response = await verifyEmail({ email: email.trim().toLowerCase(), code: code.trim() })
-      if (response.data?.access_token) {
+      if (response && response.data?.access_token) {
         setVerifySuccess(true)
         try {
           await refreshUser()
@@ -60,7 +60,7 @@ function VerifyEmailContent() {
         window.location.href = "/account"
         return
       }
-      setError(response.error || "Неверный или истёкший код. Запросите новый код.")
+      setError(response?.error || "Неверный или истёкший код. Запросите новый код.")
     } catch (err) {
       setError("Ошибка сети. Проверьте подключение к интернету.")
     } finally {

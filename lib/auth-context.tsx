@@ -9,7 +9,7 @@ import {
   isAuthenticated,
 } from './api/auth'
 import {
-  getCurrentUser as apiGetCurrentUser,
+  getCurrentUserInfo as apiGetCurrentUserInfo,
   getStoredUser,
 } from './api/users'
 import { setAuthToken } from './api/client'
@@ -42,10 +42,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Then refresh from API
-        const response = await apiGetCurrentUser()
-        if (response.data) {
+        const response = await apiGetCurrentUserInfo()
+        if (response && response.data) {
           setUser(response.data)
-        } else if (response.status === 401 || response.status === 403) {
+        } else if (response && (response.status === 401 || response.status === 403)) {
           // Token expired or invalid — очищаем
           apiLogoutUser()
           setUser(null)
@@ -70,8 +70,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (response.data) {
         // Get user info after login
-        const userResponse = await apiGetCurrentUser()
-        if (userResponse.data) {
+        const userResponse = await apiGetCurrentUserInfo()
+        if (userResponse && userResponse.data) {
           setUser(userResponse.data)
           if (typeof window !== 'undefined') {
             localStorage.setItem('current_user', JSON.stringify(userResponse.data))
@@ -122,13 +122,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = async () => {
     if (isAuthenticated()) {
-      const response = await apiGetCurrentUser()
-      if (response.data) {
+      const response = await apiGetCurrentUserInfo()
+      if (response && response.data) {
         setUser(response.data)
         if (typeof window !== 'undefined') {
           localStorage.setItem('current_user', JSON.stringify(response.data))
         }
-      } else if (response.status === 401 || response.status === 403) {
+      } else if (response && (response.status === 401 || response.status === 403)) {
         apiLogoutUser()
         setUser(null)
       }

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Loader2 } from "lucide-react"
@@ -9,7 +9,7 @@ import { PixelStars } from "@/components/pixel-stars"
 import { useAuth } from "@/lib/auth-context"
 import { verifyEmail, sendVerificationCode } from "@/lib/api"
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const { refreshUser } = useAuth()
@@ -191,5 +191,19 @@ export default function VerifyEmailPage() {
         </Link>
       </div>
     </div>
+  )
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-muted-foreground text-sm">Загрузка...</div>
+        </div>
+      }
+    >
+      <VerifyEmailContent />
+    </Suspense>
   )
 }

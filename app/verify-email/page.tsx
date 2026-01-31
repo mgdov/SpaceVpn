@@ -20,6 +20,7 @@ function VerifyEmailContent() {
   const [loading, setLoading] = useState(false)
   const [resendLoading, setResendLoading] = useState(false)
   const [resendSent, setResendSent] = useState(false)
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false)
 
   // Pre-fill email from query (after registration)
   useEffect(() => {
@@ -27,9 +28,15 @@ function VerifyEmailContent() {
     if (q) setEmail(decodeURIComponent(q))
   }, [searchParams])
 
+  const onEmailChange = (value: string) => {
+    setEmail(value)
+    setAlreadyRegistered(false)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+    setAlreadyRegistered(false)
     if (!email.trim() || !code.trim()) {
       setError("Введите email и код из письма.")
       return
@@ -69,8 +76,15 @@ function VerifyEmailContent() {
       })
       if (!response.error) {
         setResendSent(true)
+        setError("")
       } else {
-        setError(response.error || "Не удалось отправить код.")
+        const msg = response.error || ""
+        if (msg.toLowerCase().includes("already registered") || msg.toLowerCase().includes("уже зарегистрирован")) {
+          setError("")
+          setAlreadyRegistered(true)
+        } else {
+          setError(msg || "Не удалось отправить код.")
+        }
       }
     } catch (err) {
       setError("Ошибка сети. Проверьте подключение к интернету.")
@@ -109,6 +123,13 @@ function VerifyEmailContent() {
           </div>
         )}
 
+        {alreadyRegistered && (
+          <div className="mb-4 p-3 bg-green-500/10 border border-green-500/50 text-green-600 dark:text-green-400 text-[10px]">
+            Этот email уже подтверждён.{" "}
+            <Link href="/login" className="underline font-medium">Войти в аккаунт</Link>.
+          </div>
+        )}
+
         {error && (
           <div className="mb-3 sm:mb-4 p-2.5 sm:p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[9px] sm:text-[10px]">
             {error}
@@ -123,7 +144,7 @@ function VerifyEmailContent() {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => onEmailChange(e.target.value)}
               placeholder="your@email.com"
               required
               disabled={loading}

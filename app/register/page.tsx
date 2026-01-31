@@ -79,8 +79,16 @@ export default function RegisterPage() {
 
         {/* Error message */}
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[10px]">
-            {error}
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[10px] space-y-2">
+            <p>{error}</p>
+            {error.toLowerCase().includes("already registered") && (
+              <p className="text-muted-foreground mt-2">
+                Уже есть аккаунт?{" "}
+                <Link href="/login" className="text-primary underline">Войти</Link>
+                {" или "}
+                <Link href="/forgot-password" className="text-primary underline">Восстановить пароль</Link>.
+              </p>
+            )}
           </div>
         )}
 

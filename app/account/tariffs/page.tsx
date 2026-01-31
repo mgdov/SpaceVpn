@@ -155,47 +155,47 @@ export default function TariffsPage() {
       <PixelStars />
       <Header />
 
-      <main className="pt-24 pb-20 px-4">
+      <main className="pt-20 sm:pt-24 pb-12 sm:pb-20 px-3 sm:px-4">
         <div className="max-w-6xl mx-auto">
           {/* Кнопка назад */}
           <Link
             href="/account"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm mb-6"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-xs sm:text-sm mb-4 sm:mb-6"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             Назад в личный кабинет
           </Link>
 
           {/* Заголовок */}
-          <div className="bg-card border border-border p-8 mb-10">
-            <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ ТАРИФЫ ]</p>
-            <h1 className="text-3xl md:text-4xl text-foreground font-bold mb-3">
+          <div className="bg-card border border-border p-4 sm:p-6 md:p-8 mb-6 sm:mb-10">
+            <p className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em] mb-2">[ ТАРИФЫ ]</p>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl text-foreground font-bold mb-2 sm:mb-3">
               Выберите свой план
             </h1>
-            <p className="text-muted-foreground text-base max-w-2xl">
+            <p className="text-muted-foreground text-xs sm:text-sm md:text-base max-w-2xl">
               Гибкие тарифы для любых потребностей. Начните с бесплатного пробного периода.
             </p>
           </div>
 
           {message && (
-            <Alert className={`mb-6 ${message.type === "success" ? "border-2 border-green-500 bg-green-500/10" : "border-2 border-red-500 bg-red-500/10"}`}>
+            <Alert className={`mb-4 sm:mb-6 ${message.type === "success" ? "border-2 border-green-500 bg-green-500/10" : "border-2 border-red-500 bg-red-500/10"}`}>
               {message.type === "success" ? (
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
               ) : (
-                <XCircle className="h-5 w-5 text-red-500" />
+                <XCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
               )}
-              <AlertDescription className={`text-base ${message.type === "success" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+              <AlertDescription className={`text-xs sm:text-sm md:text-base ${message.type === "success" ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
                 {message.text}
               </AlertDescription>
             </Alert>
           )}
 
           {tariffs.length === 0 ? (
-            <div className="bg-card border border-border p-6 text-center text-muted-foreground text-[11px]">
+            <div className="bg-card border border-border p-4 sm:p-6 text-center text-muted-foreground text-[10px] sm:text-[11px]">
               Нет доступных тарифов
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {tariffs.map((tariff) => {
                 const months = tariffMonths(tariff)
                 const nominalPrice = baseMonthlyPrice * months

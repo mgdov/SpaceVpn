@@ -46,32 +46,32 @@ function AccountPageContent() {
             <PixelStars />
             <Header />
 
-            <main className="pt-24 pb-20 px-4">
-                <div className="max-w-6xl mx-auto space-y-6">
+            <main className="pt-20 sm:pt-24 pb-12 sm:pb-20 px-3 sm:px-4">
+                <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6">
                     {/* Приветствие */}
-                    <div className="bg-card border border-border p-6">
-                        <p className="text-accent text-[9px] tracking-[0.35em] mb-2">[ ЛИЧНЫЙ КАБИНЕТ ]</p>
-                        <h1 className="text-foreground text-3xl font-bold">
+                    <div className="bg-card border border-border p-4 sm:p-6">
+                        <p className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em] mb-2">[ ЛИЧНЫЙ КАБИНЕТ ]</p>
+                        <h1 className="text-foreground text-2xl sm:text-3xl font-bold">
                             Привет, {user?.full_name || user?.username}!
                         </h1>
-                        <p className="text-muted-foreground text-sm mt-2">
+                        <p className="text-muted-foreground text-xs sm:text-sm mt-2 break-all">
                             {user?.email}
                         </p>
                     </div>
 
                     {/* Количество ключей */}
-                    <div className="bg-card border-2 border-primary p-8">
-                        <p className="text-accent text-[9px] tracking-[0.35em] mb-4">[ ВАШИ КЛЮЧИ ]</p>
+                    <div className="bg-card border-2 border-primary p-4 sm:p-8">
+                        <p className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em] mb-3 sm:mb-4">[ ВАШИ КЛЮЧИ ]</p>
                         {loading ? (
-                            <p className="text-muted-foreground">Загрузка...</p>
+                            <p className="text-muted-foreground text-sm">Загрузка...</p>
                         ) : (
-                            <div className="flex items-center gap-4">
-                                <div className="bg-primary/20 p-4 rounded">
-                                    <Key className="w-8 h-8 text-primary" />
+                            <div className="flex items-center gap-3 sm:gap-4">
+                                <div className="bg-primary/20 p-3 sm:p-4 rounded">
+                                    <Key className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-5xl font-bold text-primary">{keysCount}</p>
-                                    <p className="text-muted-foreground text-sm mt-1">
+                                    <p className="text-4xl sm:text-5xl font-bold text-primary">{keysCount}</p>
+                                    <p className="text-muted-foreground text-xs sm:text-sm mt-1">
                                         {keysCount === 0 ? 'У вас пока нет ключей' :
                                             keysCount === 1 ? 'Активный VPN ключ' :
                                                 `Активных VPN ключ${keysCount < 5 ? 'а' : 'ей'}`}
@@ -83,22 +83,22 @@ function AccountPageContent() {
 
                     {/* Быстрые действия */}
                     <div>
-                        <p className="text-accent text-[9px] tracking-[0.35em] mb-4">[ БЫСТРЫЕ ДЕЙСТВИЯ ]</p>
-                        <div className="grid grid-cols-1 gap-4">
+                        <p className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em] mb-3 sm:mb-4">[ БЫСТРЫЕ ДЕЙСТВИЯ ]</p>
+                        <div className="grid grid-cols-1 gap-3 sm:gap-4">
                             {/* Инструкция по подключению */}
                             <Link
                                 href="#"
-                                className="group bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary hover:border-primary hover:from-primary/30 hover:to-primary/10 p-6 transition-all hover:shadow-lg hover:shadow-primary/20"
+                                className="group bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary hover:border-primary hover:from-primary/30 hover:to-primary/10 p-4 sm:p-6 transition-all hover:shadow-lg hover:shadow-primary/20"
                             >
-                                <div className="flex items-start gap-4">
-                                    <div className="bg-primary/20 p-3 rounded">
-                                        <PlayCircle className="w-6 h-6 text-primary" />
+                                <div className="flex items-start gap-3 sm:gap-4">
+                                    <div className="bg-primary/20 p-2 sm:p-3 rounded flex-shrink-0">
+                                        <PlayCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="text-foreground text-lg font-semibold mb-1">
+                                        <h3 className="text-foreground text-base sm:text-lg font-semibold mb-1">
                                             Смотреть инструкцию
                                         </h3>
-                                        <p className="text-muted-foreground text-sm">
+                                        <p className="text-muted-foreground text-xs sm:text-sm">
                                             Видеоинструкция по подключению и настройке VPN
                                         </p>
                                     </div>
@@ -109,24 +109,24 @@ function AccountPageContent() {
 
                     {/* Основные разделы */}
                     <div>
-                        <p className="text-accent text-[9px] tracking-[0.35em] mb-4">[ МОИ ДАННЫЕ ]</p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <p className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em] mb-3 sm:mb-4">[ МОИ ДАННЫЕ ]</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             {/* VPN Ключи */}
                             <Link
                                 href="/account/keys"
-                                className="group border-2 border-border hover:border-primary bg-card p-6 transition-all hover:shadow-lg"
+                                className="group border-2 border-border hover:border-primary bg-card p-4 sm:p-6 transition-all hover:shadow-lg"
                             >
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="bg-primary/10 p-2 rounded">
-                                        <Key className="w-5 h-5 text-primary" />
+                                <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                                    <div className="bg-primary/10 p-1.5 sm:p-2 rounded">
+                                        <Key className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                                     </div>
-                                    <span className="text-accent text-[9px] tracking-[0.35em]">КЛЮЧИ</span>
+                                    <span className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em]">КЛЮЧИ</span>
                                 </div>
-                                <h2 className="text-foreground text-lg font-semibold mb-2">VPN Ключи</h2>
-                                <p className="text-muted-foreground text-sm mb-4">
+                                <h2 className="text-foreground text-base sm:text-lg font-semibold mb-1 sm:mb-2">VPN Ключи</h2>
+                                <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4">
                                     Ваши VLESS ссылки для подключения
                                 </p>
-                                <span className="text-primary text-xs tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
+                                <span className="text-primary text-xs tracking-[0.15em] sm:tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
                                     ОТКРЫТЬ →
                                 </span>
                             </Link>
@@ -134,19 +134,19 @@ function AccountPageContent() {
                             {/* Тарифы */}
                             <Link
                                 href="/account/tariffs"
-                                className="group border-2 border-border hover:border-accent bg-card p-6 transition-all hover:shadow-lg"
+                                className="group border-2 border-border hover:border-accent bg-card p-4 sm:p-6 transition-all hover:shadow-lg"
                             >
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="bg-accent/10 p-2 rounded">
-                                        <CreditCard className="w-5 h-5 text-accent" />
+                                <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                                    <div className="bg-accent/10 p-1.5 sm:p-2 rounded">
+                                        <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                                     </div>
-                                    <span className="text-accent text-[9px] tracking-[0.35em]">ТАРИФЫ</span>
+                                    <span className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em]">ТАРИФЫ</span>
                                 </div>
-                                <h2 className="text-foreground text-lg font-semibold mb-2">Тарифы и планы</h2>
-                                <p className="text-muted-foreground text-sm mb-4">
+                                <h2 className="text-foreground text-base sm:text-lg font-semibold mb-1 sm:mb-2">Тарифы и планы</h2>
+                                <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4">
                                     Выберите или продлите подписку
                                 </p>
-                                <span className="text-accent text-xs tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
+                                <span className="text-accent text-xs tracking-[0.15em] sm:tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
                                     ОТКРЫТЬ →
                                 </span>
                             </Link>
@@ -154,19 +154,19 @@ function AccountPageContent() {
                             {/* Поддержка */}
                             <Link
                                 href="/support"
-                                className="group border-2 border-border hover:border-green-500 bg-card p-6 transition-all hover:shadow-lg"
+                                className="group border-2 border-border hover:border-green-500 bg-card p-4 sm:p-6 transition-all hover:shadow-lg"
                             >
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="bg-green-500/10 p-2 rounded">
-                                        <HelpCircle className="w-5 h-5 text-green-500" />
+                                <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                                    <div className="bg-green-500/10 p-1.5 sm:p-2 rounded">
+                                        <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                                     </div>
-                                    <span className="text-accent text-[9px] tracking-[0.35em]">SUPPORT</span>
+                                    <span className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em]">SUPPORT</span>
                                 </div>
-                                <h2 className="text-foreground text-lg font-semibold mb-2">Поддержка</h2>
-                                <p className="text-muted-foreground text-sm mb-4">
+                                <h2 className="text-foreground text-base sm:text-lg font-semibold mb-1 sm:mb-2">Поддержка</h2>
+                                <p className="text-muted-foreground text-xs sm:text-sm mb-3 sm:mb-4">
                                     Помощь через Telegram, email или телефон
                                 </p>
-                                <span className="text-green-500 text-xs tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
+                                <span className="text-green-500 text-xs tracking-[0.15em] sm:tracking-[0.25em] group-hover:translate-x-1 inline-block transition-transform">
                                     ОТКРЫТЬ →
                                 </span>
                             </Link>

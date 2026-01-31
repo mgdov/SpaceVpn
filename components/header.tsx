@@ -26,13 +26,13 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <PixelLogo className="w-8 h-8 text-primary" aria-hidden="true" />
-              <span className="text-primary text-xs md:text-sm">SPACE VPN</span>
+            <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
+              <PixelLogo className="w-7 h-7 sm:w-8 sm:h-8 text-primary" aria-hidden="true" />
+              <span className="text-primary text-[10px] sm:text-xs md:text-sm">SPACE VPN</span>
             </Link>
 
             {/* Desktop Navigation */}

@@ -142,7 +142,8 @@ export default function LoginPage() {
         {/* Success: after registration, need to verify email */}
         {verifyEmailMessage && !error && (
           <div className="mb-4 p-3 bg-green-500/10 border border-green-500/50 text-green-600 dark:text-green-400 text-[10px]">
-            Регистрация прошла. Проверьте почту (письмо с кодом) и подтвердите email, затем войдите.
+            Регистрация прошла. Проверьте почту (письмо с кодом).{" "}
+            <Link href="/verify-email" className="underline font-medium">Подтвердить email и войти</Link>.
           </div>
         )}
 

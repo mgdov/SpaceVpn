@@ -50,7 +50,7 @@ export default function RegisterPage() {
         if (result.needsEmailVerification) {
           setError("")
           setLoading(false)
-          router.push("/login?message=verify-email")
+          router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`)
           return
         }
         router.push("/account")

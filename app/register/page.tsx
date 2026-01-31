@@ -47,6 +47,12 @@ export default function RegisterPage() {
     try {
       const result = await register(formData.username, formData.email, formData.password)
       if (result.success) {
+        if (result.needsEmailVerification) {
+          setError("")
+          setLoading(false)
+          router.push("/login?message=verify-email")
+          return
+        }
         router.push("/account")
       } else {
         setError(result.error || "Ошибка регистрации")

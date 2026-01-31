@@ -398,8 +398,9 @@ function AuthProvider({ children }) {
         try {
             const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$Documents$2f$programming$2f$pixel$2d$space$2d$vpn$2f$lib$2f$api$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["registerUser"])(username, email, password, fullName);
             if (response.data) {
-                // Auto-login after registration
-                const loginResult = await login(username, password);
+                // Auto-login after registration: use username/email from API (backend may derive username from email)
+                const loginIdentifier = response.data.username || response.data.email || username;
+                const loginResult = await login(loginIdentifier, password);
                 return loginResult;
             }
             setLoading(false);
@@ -441,7 +442,7 @@ function AuthProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-        lineNumber: 133,
+        lineNumber: 134,
         columnNumber: 5
     }, this);
 }
@@ -485,12 +486,12 @@ function withAuth(Component) {
                     children: "Загрузка..."
                 }, void 0, false, {
                     fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-                    lineNumber: 162,
+                    lineNumber: 163,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-                lineNumber: 161,
+                lineNumber: 162,
                 columnNumber: 9
             }, this);
         }
@@ -501,7 +502,7 @@ function withAuth(Component) {
             ...props
         }, void 0, false, {
             fileName: "[project]/Documents/programming/pixel-space-vpn/lib/auth-context.tsx",
-            lineNumber: 171,
+            lineNumber: 172,
             columnNumber: 12
         }, this);
     }, "Zr2WDa/YWeMetzDhcnOimt0LiKE=", false, function() {

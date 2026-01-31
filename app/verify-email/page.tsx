@@ -21,6 +21,7 @@ function VerifyEmailContent() {
   const [resendLoading, setResendLoading] = useState(false)
   const [resendSent, setResendSent] = useState(false)
   const [alreadyRegistered, setAlreadyRegistered] = useState(false)
+  const [verifySuccess, setVerifySuccess] = useState(false)
 
   // Pre-fill email from query (after registration)
   useEffect(() => {
@@ -46,11 +47,17 @@ function VerifyEmailContent() {
       return
     }
     setLoading(true)
+    setError("")
     try {
       const response = await verifyEmail({ email: email.trim().toLowerCase(), code: code.trim() })
       if (response.data?.access_token) {
-        await refreshUser()
-        router.push("/account")
+        setVerifySuccess(true)
+        try {
+          await refreshUser()
+        } catch {
+          // token already set; account page will load user
+        }
+        window.location.href = "/account"
         return
       }
       setError(response.error || "Неверный или истёкший код. Запросите новый код.")
@@ -130,6 +137,13 @@ function VerifyEmailContent() {
           </div>
         )}
 
+        {verifySuccess && (
+          <div className="mb-4 p-3 bg-green-500/10 border border-green-500/50 text-green-600 dark:text-green-400 text-[10px] flex items-center gap-2">
+            <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+            Подтверждено! Перенаправление в аккаунт...
+          </div>
+        )}
+
         {error && (
           <div className="mb-3 sm:mb-4 p-2.5 sm:p-3 bg-red-500/10 border border-red-500/50 text-red-500 text-[9px] sm:text-[10px]">
             {error}
@@ -147,7 +161,7 @@ function VerifyEmailContent() {
               onChange={(e) => onEmailChange(e.target.value)}
               placeholder="your@email.com"
               required
-              disabled={loading}
+              disabled={loading || verifySuccess}
               className="w-full bg-card border border-border px-3 sm:px-4 py-2.5 sm:py-3 text-foreground text-[9px] sm:text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary disabled:opacity-50"
             />
           </div>
@@ -164,7 +178,7 @@ function VerifyEmailContent() {
               onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 8))}
               placeholder="123456"
               required
-              disabled={loading}
+              disabled={loading || verifySuccess}
               className="w-full bg-card border border-border px-3 sm:px-4 py-2.5 sm:py-3 text-foreground text-[9px] sm:text-[10px] placeholder:text-muted-foreground focus:outline-none focus:border-primary disabled:opacity-50 tracking-widest text-center"
               maxLength={8}
             />
@@ -172,10 +186,15 @@ function VerifyEmailContent() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || verifySuccess}
             className="w-full bg-primary text-primary-foreground py-2.5 sm:py-3 text-[9px] sm:text-[10px] hover:bg-primary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            {loading ? (
+            {verifySuccess ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
+                Вход в аккаунт...
+              </>
+            ) : loading ? (
               <>
                 <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
                 Подтверждаю...
@@ -190,7 +209,7 @@ function VerifyEmailContent() {
           <button
             type="button"
             onClick={handleResendCode}
-            disabled={resendLoading || loading}
+            disabled={resendLoading || loading || verifySuccess}
             className="text-muted-foreground hover:text-primary text-[9px] sm:text-[10px] underline disabled:opacity-50"
           >
             {resendLoading ? (

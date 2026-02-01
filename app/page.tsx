@@ -5,7 +5,7 @@ import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart, CheckCircle2 } from "lucide-react"
+import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { useEffect, useState } from "react"
 import { getPublicTariffs, type Tariff } from "@/lib/api"
@@ -39,6 +39,14 @@ export default function HomePage() {
     if (days === 180) return "6 месяцев"
     if (days === 365) return "1 год"
     return `${days} дней`
+  }
+
+  const formatDurationLabel = (days: number) => {
+    return formatDuration(days)
+      .replace(/месяцев/gi, "мес.")
+      .replace(/месяца/gi, "мес.")
+      .replace(/месяц/gi, "мес.")
+      .toUpperCase()
   }
 
   return (
@@ -183,56 +191,48 @@ export default function HomePage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                {tariffs.map((tariff) => (
-                  <div
-                    key={tariff.id}
-                    className="bg-card border-2 border-border hover:border-primary transition-all p-4 sm:p-6 flex flex-col"
-                  >
-                    {/* Название */}
-                    <div className="mb-4">
-                      <h4 className="text-lg sm:text-xl font-bold text-foreground mb-2">
-                        {tariff.name}
-                      </h4>
-                      {tariff.description && (
-                        <p className="text-xs sm:text-sm text-muted-foreground">
-                          {tariff.description}
-                        </p>
+                {tariffs.map((tariff, index) => {
+                  const isPopular = index === 0
+                  const isFree = tariff.price === 0
+                  const description = tariff.description?.trim()
+                    || (typeof tariff.features === "string" ? tariff.features.split("\n")[0] : tariff.features?.[0])
+                    || ""
+
+                  return (
+                    <div key={tariff.id} className="relative bg-card border border-primary p-5 sm:p-6 md:p-8 flex flex-col gap-6">
+                      {isPopular && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 text-[8px] tracking-[0.2em]">
+                          ПОПУЛЯРНЫЙ
+                        </div>
                       )}
+
+                      <div className="text-center space-y-4">
+                        <p className="text-accent text-[9px] tracking-[0.35em] uppercase"># {tariff.name}</p>
+                        <h3 className="text-foreground text-base sm:text-lg font-semibold">{formatDurationLabel(tariff.duration_days)}</h3>
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="flex items-baseline justify-center gap-2">
+                            <span className="text-primary text-3xl sm:text-4xl font-bold">{isFree ? 0 : tariff.price}</span>
+                            <span className="text-muted-foreground text-[12px]">₽</span>
+                          </div>
+                          <span className="text-muted-foreground text-[9px] uppercase tracking-[0.25em]">
+                            ЗА ВЕСЬ ПЕРИОД
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="flex-1 text-muted-foreground text-[11px] leading-relaxed">
+                        {description || "🚀 Идеально для знакомства с сервисом! Полный доступ ко всем функциям на 2 дня"}
+                      </p>
+
+                      <Link
+                        href="/tariffs"
+                        className="w-full flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] transition-colors bg-primary text-primary-foreground hover:bg-primary/80"
+                      >
+                        ВЫБРАТЬ ТАРИФ
+                      </Link>
                     </div>
-
-                    {/* Цена */}
-                    <div className="mb-4 sm:mb-6">
-                      <div className="text-2xl sm:text-3xl font-bold text-primary">
-                        {tariff.price === 0 ? "БЕСПЛАТНО" : `${tariff.price} ₽`}
-                      </div>
-                      <div className="text-xs sm:text-sm text-muted-foreground mt-1">
-                        {formatDuration(tariff.duration_days)}
-                      </div>
-                    </div>
-
-                    {/* Особенности */}
-                    {tariff.features && (
-                      <div className="mb-6 grow">
-                        <ul className="space-y-2">
-                          {(typeof tariff.features === 'string' ? tariff.features.split('\n').filter(f => f.trim()) : tariff.features).slice(0, 3).map((feature: string, idx: number) => (
-                            <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm">
-                              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500 shrink-0 mt-0.5" />
-                              <span className="text-muted-foreground">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Кнопка */}
-                    <Link
-                      href="/tariffs"
-                      className="mt-auto w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-colors text-center"
-                    >
-                      ВЫБРАТЬ ТАРИФ
-                    </Link>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             )}
 

@@ -114,6 +114,10 @@ function AccountKeysPageContent() {
         const hours = key.time_remaining_hours
 
         if (days < 0) {
+            const daysAgo = Math.abs(days)
+            if (key.within_grace_period) {
+                return `Истекло ${daysAgo} д. назад (можно продлить)`
+            }
             return 'Истёк'
         }
 
@@ -229,9 +233,15 @@ function AccountKeysPageContent() {
                                                 </div>
                                             </div>
                                             {isExpired ? (
-                                                <div className="bg-red-500/20 border-2 border-red-500 text-red-400 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold">
-                                                    Истек
-                                                </div>
+                                                key.within_grace_period ? (
+                                                    <div className="bg-amber-500/20 border-2 border-amber-500 text-amber-400 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold">
+                                                        Можно продлить
+                                                    </div>
+                                                ) : (
+                                                    <div className="bg-red-500/20 border-2 border-red-500 text-red-400 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold">
+                                                        Истек
+                                                    </div>
+                                                )
                                             ) : (
                                                 <div className="bg-primary/20 border-2 border-primary text-primary px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold">
                                                     Активен

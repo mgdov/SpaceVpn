@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { getPublicTariffs, createYookassaPayment, type Tariff } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { CheckCircle2, Loader2, ShoppingCart, Gift } from "lucide-react"
+import { Loader2, ShoppingCart, Gift } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
@@ -132,105 +132,71 @@ export default function TariffsPage() {
             {tariffs.map((tariff, index) => (
               <div
                 key={tariff.id}
-                className="bg-card border-2 border-primary transition-all p-4 sm:p-6 flex flex-col relative"
+                className="relative bg-card/80 border-2 border-green-500/70 hover:border-green-400 transition-all p-5 sm:p-6 flex flex-col gap-3"
               >
-                {/* Бадж ПОПУЛЯРНЫЙ */}
-                {index === 0 && (
-                  <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 text-[10px] font-bold">
-                    ПОПУЛЯРНЫЙ
+                {(tariff.is_featured || index === 0) && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-black text-[10px] font-bold px-3 py-1 uppercase tracking-[0.1em]">
+                    популярный
                   </div>
                 )}
 
-                {/* Название тарифа */}
-                <div className="text-center mb-3 mt-8">
-                  <div className="text-xs text-primary mb-2">
-                    # {tariff.name.toUpperCase()}
+                <div className="text-center space-y-2 mt-1">
+                  <div className="text-green-400 text-[11px] sm:text-xs tracking-[0.25em] uppercase">
+                    {tariff.tagline || `# ${tariff.name}`}
                   </div>
-                  {tariff.description && (
-                    <p className="text-[10px] text-muted-foreground">
-                      {tariff.description}
-                    </p>
-                  )}
-                </div>
-
-                {/* Длительность */}
-                <div className="text-center mb-4">
-                  <div className="text-xl sm:text-2xl font-bold text-foreground">
+                  <div className="text-3xl sm:text-4xl font-black text-foreground">
                     {formatDuration(tariff.duration_days)}
                   </div>
-                </div>
-
-                {/* Цена */}
-                <div className="text-center mb-2">
-                  <div className="text-6xl sm:text-7xl font-bold text-primary leading-none">
-                    {tariff.price === 0 ? "0" : tariff.price}
-                    <span className="text-3xl sm:text-4xl">₽</span>
+                  <div className="flex items-baseline justify-center gap-1 text-green-500">
+                    <span className="text-5xl sm:text-6xl font-black">{tariff.price === 0 ? "0" : tariff.price}</span>
+                    <span className="text-2xl sm:text-3xl font-extrabold">₽</span>
                   </div>
-                </div>
-
-                {/* За весь период */}
-                <div className="text-center mb-6">
-                  <div className="text-[10px] sm:text-xs text-muted-foreground">
+                  <div className="text-[11px] sm:text-xs text-muted-foreground uppercase tracking-[0.2em]">
                     за весь период
                   </div>
                 </div>
 
-                {/* Особенности */}
                 {tariff.features && (
-                  <div className="mb-6 grow">
+                  <div className="mb-2">
                     <ul className="space-y-2">
-                      {(typeof tariff.features === 'string' ? tariff.features.split('\n') : tariff.features).map((feature: string, idx: number) => (
-                        <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm">
-                          <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
-                          <span className="text-muted-foreground">{feature}</span>
+                      {(typeof tariff.features === 'string' ? tariff.features.split('\n').filter(f => f.trim()) : tariff.features).map((feature: string, idx: number) => (
+                        <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground">
+                          <span className="mt-1 inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                          <span>{feature}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
 
-                {/* Кнопки */}
                 <div className="mt-auto space-y-2">
                   {!user ? (
                     <>
-                      {/* Первая кнопка: ПОПРОБОВАТЬ для бесплатного, ВЫБРАТЬ для платных */}
-                      {tariff.price === 0 ? (
-                        <Button
-                          onClick={() => router.push("/register")}
-                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wide"
-                          size="lg"
-                        >
-                          ПОПРОБОВАТЬ
-                        </Button>
-                      ) : (
-                        <Button
-                          onClick={() => handlePurchaseForUser(tariff.id, tariff.name, tariff.price)}
-                          disabled={purchasing === tariff.id}
-                          variant="outline"
-                          className="w-full border-2 border-primary text-foreground hover:bg-primary/10 font-bold tracking-wide"
-                          size="lg"
-                        >
-                          {purchasing === tariff.id ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            "ВЫБРАТЬ"
-                          )}
-                        </Button>
-                      )}
-
-                      {/* Вторая кнопка: КУПИТЬ БЕЗ РЕГИСТРАЦИИ */}
+                      {/* Для незарегистрированных пользователей */}
                       <Button
                         onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
                         disabled={purchasing === tariff.id}
-                        variant="outline"
-                        className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors font-bold tracking-wide"
+                        className="w-full bg-green-500 text-black hover:bg-green-400 border-2 border-green-500 font-bold uppercase tracking-[0.05em] py-3 sm:py-3.5"
                         size="lg"
                       >
                         {purchasing === tariff.id ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                          "КУПИТЬ БЕЗ РЕГИСТРАЦИИ"
+                          <>
+                            <ShoppingCart className="w-4 h-4 mr-2" />
+                            КУПИТЬ БЕЗ РЕГИСТРАЦИИ
+                          </>
                         )}
+                      </Button>
+
+                      <Button
+                        onClick={() => router.push("/register")}
+                        variant="outline"
+                        className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-black font-bold uppercase tracking-[0.05em] py-3 sm:py-3.5 transition-colors"
+                        size="lg"
+                      >
+                        <Gift className="w-4 h-4 mr-2" />
+                        ПОПРОБОВАТЬ БЕСПЛАТНО
                       </Button>
                     </>
                   ) : (
@@ -239,7 +205,7 @@ export default function TariffsPage() {
                       <Button
                         onClick={() => handlePurchaseForUser(tariff.id, tariff.name, tariff.price)}
                         disabled={purchasing === tariff.id}
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                        className="w-full bg-green-500 text-black hover:bg-green-400 border-2 border-green-500 font-bold uppercase tracking-[0.05em] py-3 sm:py-3.5"
                         size="lg"
                       >
                         {purchasing === tariff.id ? (

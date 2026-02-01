@@ -190,7 +190,7 @@ export default function TariffsPage() {
                       <Button
                         onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
                         disabled={purchasing === tariff.id}
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
                         size="lg"
                       >
                         {purchasing === tariff.id ? (
@@ -206,7 +206,7 @@ export default function TariffsPage() {
                       <Button
                         onClick={() => router.push("/register")}
                         variant="outline"
-                        className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500/10"
+                        className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white hover:border-green-500 transition-colors font-semibold"
                         size="lg"
                       >
                         <Gift className="w-4 h-4 mr-2" />

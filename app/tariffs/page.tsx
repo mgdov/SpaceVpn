@@ -160,15 +160,6 @@ export default function TariffsPage() {
             <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
               Выберите подходящий тариф для комфортного и безопасного интернета
             </p>
-            {!user && (
-              <p className="mt-3 text-muted-foreground text-xs sm:text-sm">
-                Уже есть аккаунт?{" "}
-                <Link href="/login?redirect=/tariffs" className="text-primary hover:underline font-medium">
-                  Войти
-                </Link>
-                {" — после входа вернётесь на эту страницу."}
-              </p>
-            )}
           </div>
 
           {hasActiveSubscription && (

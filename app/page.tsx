@@ -236,18 +236,6 @@ export default function HomePage() {
               </div>
             )}
 
-            {/* Кнопка "Все тарифы" */}
-            {tariffs.length > 0 && (
-              <div className="text-center mt-8 sm:mt-12">
-                <Link
-                  href="/tariffs"
-                  className="inline-flex items-center gap-2 bg-card hover:bg-accent/10 border-2 border-border hover:border-primary text-foreground px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm font-semibold transition-all"
-                >
-                  ПОСМОТРЕТЬ ВСЕ ТАРИФЫ
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            )}
           </div>
         </section>
       </main>

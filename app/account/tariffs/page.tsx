@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { getPublicTariffs, getMySubscriptions, purchaseFreeTariff, createYookassaPayment, type Tariff } from "@/lib/api"
@@ -26,8 +26,8 @@ export default function TariffsPage() {
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false)
 
   useEffect(() => {
-    void loadTariffs()
-    void loadMySubscriptions()
+    loadTariffs()
+    loadMySubscriptions()
   }, [])
 
   const loadMySubscriptions = async () => {
@@ -38,14 +38,12 @@ export default function TariffsPage() {
 
   const loadTariffs = async () => {
     setLoading(true)
-    try {
-      const response = await getPublicTariffs()
-      if (response.data?.length) {
-        setTariffs(response.data.filter((tariff) => tariff.is_active))
-      }
-    } finally {
-      setLoading(false)
+
+    const response = await getPublicTariffs()
+    if (response.data?.length) {
+      setTariffs(response.data.filter((tariff) => tariff.is_active))
     }
+    setLoading(false)
   }
 
   const handlePurchase = async (tariffId: number, tariffName: string, tariffPrice: number) => {
@@ -54,12 +52,14 @@ export default function TariffsPage() {
       return
     }
 
+    // Если тариф бесплатный, сначала показываем диалог выбора bypass preset
     if (tariffPrice === 0) {
-      setSelectedTariff(tariffs.find((t) => t.id === tariffId) || null)
+      setSelectedTariff(tariffs.find(t => t.id === tariffId) || null)
       setShowPresetDialog(true)
       return
     }
 
+    // Платный тариф — создаём платёж в YooKassa и редиректим на страницу оплаты
     setPurchasing(tariffId)
     setMessage(null)
     try {
@@ -69,15 +69,23 @@ export default function TariffsPage() {
         price: tariffPrice,
         description: `Оплата тарифа ${tariffName}`,
       })
-
-      if (response.data?.confirmation_url) {
-        window.location.href = response.data.confirmation_url
+      const data = response.data as { confirmation_url?: string | null; confirmationUrl?: string | null } | undefined
+      const confirmationUrl =
+        (data?.confirmation_url ?? data?.confirmationUrl ?? "") as string
+      if (confirmationUrl && typeof confirmationUrl === "string" && confirmationUrl.startsWith("http")) {
+        window.location.assign(confirmationUrl)
         return
       }
-
-      setMessage({ type: "error", text: response.error || "Не удалось инициировать оплату" })
-    } catch (error) {
-      setMessage({ type: "error", text: "Ошибка подключения к YooKassa" })
+      setMessage({
+        type: "error",
+        text:
+          response.error ||
+          (data
+            ? "Платёжная система не вернула ссылку на оплату. Проверьте настройки YooKassa на сервере."
+            : "Не удалось инициировать оплату"),
+      })
+    } catch (e) {
+      setMessage({ type: "error", text: "Ошибка подключения к платёжной системе. Попробуйте позже." })
     } finally {
       setPurchasing(null)
     }
@@ -91,6 +99,7 @@ export default function TariffsPage() {
       return
     }
 
+    // Clear previous messages
     setMessage(null)
     setPurchasing(selectedTariff.id)
     setShowPresetDialog(false)
@@ -102,18 +111,57 @@ export default function TariffsPage() {
       })
 
       if (response.data) {
-        setMessage({ type: "success", text: response.data.message })
-        setTimeout(() => router.push("/account/keys"), 2000)
+        setMessage({
+          type: "success",
+          text: response.data.message,
+        })
+
+        // Redirect to keys page after 2 seconds
+        setTimeout(() => {
+          router.push("/account/keys")
+        }, 2000)
       } else {
-        setMessage({ type: "error", text: response.error || "Ошибка активации тарифа" })
+        setMessage({
+          type: "error",
+          text: response.error || "Ошибка активации тарифа",
+        })
       }
     } catch (error) {
-      setMessage({ type: "error", text: "Произошла ошибка. Попробуйте позже." })
+      setMessage({
+        type: "error",
+        text: "Произошла ошибка. Попробуйте позже.",
+      })
     } finally {
       setPurchasing(null)
       setSelectedTariff(null)
     }
   }
+
+  const formatDataLimit = (gb: number) => {
+    if (gb === 0) return "Безлимитный"
+    if (gb < 1000) return `${gb} ГБ`
+    return `${gb / 1000} ТБ`
+  }
+
+  const tariffMonths = (t: { duration_days?: number; duration_months?: number }) =>
+    t.duration_days != null ? Math.max(1, t.duration_days / 30) : (t.duration_months === 0 ? 1 : Math.max(1, t.duration_months ?? 1))
+
+  const baseMonthlyPrice = useMemo(() => {
+    if (!tariffs.length) return 0
+    const perMonthPrices = tariffs.map((tariff) => tariff.price / tariffMonths(tariff))
+    return Math.min(...perMonthPrices)
+  }, [tariffs])
+
+  const highlightTariffId = useMemo(() => {
+    if (!tariffs.length) return null
+    return tariffs.reduce((best, current) => {
+      const currentMonths = tariffMonths(current)
+      const bestMonths = tariffMonths(best)
+      const currentRatio = current.price / currentMonths
+      const bestRatio = best.price / bestMonths
+      return currentRatio < bestRatio ? current : best
+    }).id
+  }, [tariffs])
 
   if (loading) {
     return (
@@ -137,6 +185,7 @@ export default function TariffsPage() {
 
       <main className="pt-20 sm:pt-24 pb-12 sm:pb-20 px-3 sm:px-4">
         <div className="max-w-6xl mx-auto">
+          {/* Кнопка назад */}
           <Link
             href="/account"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-xs sm:text-sm mb-4 sm:mb-6"
@@ -145,9 +194,12 @@ export default function TariffsPage() {
             Назад в личный кабинет
           </Link>
 
+          {/* Заголовок */}
           <div className="bg-card border border-border p-4 sm:p-6 md:p-8 mb-6 sm:mb-10">
             <p className="text-accent text-[9px] tracking-[0.25em] sm:tracking-[0.35em] mb-2">[ ТАРИФЫ ]</p>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl text-foreground font-bold mb-2 sm:mb-3">Выберите свой план</h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl text-foreground font-bold mb-2 sm:mb-3">
+              Выберите свой план
+            </h1>
             <p className="text-muted-foreground text-xs sm:text-sm md:text-base max-w-2xl">
               Гибкие тарифы для любых потребностей. Начните с бесплатного пробного периода.
             </p>
@@ -185,79 +237,129 @@ export default function TariffsPage() {
               Нет доступных тарифов
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {tariffs.map((tariff, idx) => (
-                <div
-                  key={tariff.id}
-                  className="relative bg-card border border-[#2BD05E] p-6 sm:p-7 flex flex-col gap-5"
-                >
-                  {idx === 0 && (
-                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#2BD05E] text-slate-900 text-[11px] sm:text-xs font-bold tracking-[0.08em] px-4 py-1 uppercase">
-                      ПОПУЛЯРНЫЙ
-                    </span>
-                  )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+              {tariffs.map((tariff) => {
+                const months = tariffMonths(tariff)
+                const nominalPrice = baseMonthlyPrice * months
+                const discountPercent = nominalPrice > tariff.price && months > 1
+                  ? Math.round(((nominalPrice - tariff.price) / nominalPrice) * 100)
+                  : 0
 
-                  <div className="text-center space-y-3">
-                    <p className="text-[#31D4C2] text-[11px] sm:text-xs tracking-[0.22em] uppercase">{tariff.name}</p>
-                    <p className="text-3xl sm:text-4xl font-extrabold text-foreground leading-tight">
-                      {formatDuration(tariff.duration_days)}
-                    </p>
-                    <div className="text-5xl sm:text-6xl font-black text-[#2BD05E] leading-none">
-                      {tariff.price === 0 ? "0" : tariff.price}
-                      <span className="text-3xl sm:text-4xl align-top">₽</span>
-                    </div>
-                    <div className="text-xs sm:text-sm tracking-[0.28em] text-muted-foreground uppercase">за весь период</div>
-                  </div>
+                return (
+                  <div
+                    key={tariff.id}
+                    className={`relative bg-card border ${tariff.id === highlightTariffId ? "border-primary" : "border-border"} p-5 sm:p-6 md:p-8 flex flex-col gap-6`}
+                  >
+                    {tariff.id === highlightTariffId && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 text-[8px]">
+                        ПОПУЛЯРНЫЙ
+                      </div>
+                    )}
 
-                  {tariff.features && (
-                    <div className="space-y-2 text-left text-[15px] sm:text-base text-[#C5C5C5] leading-relaxed">
-                      {(typeof tariff.features === "string" ? tariff.features.split("\n").filter(Boolean) : tariff.features).map((feature: string, featureIdx: number) => (
-                        <div key={featureIdx} className="flex gap-2">
-                          <span className="text-[#2BD05E]">•</span>
-                          <span>{feature}</span>
+                    {discountPercent > 0 && (
+                      <div className="absolute top-3 right-3 bg-primary/15 border border-primary/40 text-primary px-3 py-1 text-[9px] tracking-[0.3em]">
+                        -{discountPercent}%
+                      </div>
+                    )}
+
+                    {/* Сетка тарифов */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                      {tariffs.map((tariff, idx) => (
+                        <div
+                          key={tariff.id}
+                          className="relative bg-card/80 border-2 border-green-500 hover:border-green-400 transition-all p-5 sm:p-6 flex flex-col gap-4 shadow-[0_0_20px_rgba(34,197,94,0.15)]"
+                        >
+                          {idx === 0 && (
+                            <span className="absolute -top-4 left-4 bg-green-500 text-slate-900 text-[10px] sm:text-xs font-bold tracking-[0.08em] px-3 py-1">
+                              ПОПУЛЯРНЫЙ
+                            </span>
+                          )}
+
+                          {/* Название и длительность */}
+                          <div className="text-center space-y-2">
+                            <p className="text-teal-300 text-[11px] sm:text-xs tracking-[0.2em] uppercase">{tariff.name}</p>
+                            <p className="text-3xl sm:text-4xl font-bold text-foreground uppercase leading-tight">
+                              {formatDuration(tariff.duration_days)}
+                            </p>
+                          </div>
+
+                          {/* Цена */}
+                          <div className="text-center space-y-1">
+                            <div className="text-5xl sm:text-6xl font-extrabold text-green-500 leading-none">
+                              {tariff.price === 0 ? "0" : tariff.price}
+                              <span className="text-3xl sm:text-4xl align-top">₽</span>
+                            </div>
+                            <div className="text-xs sm:text-sm tracking-[0.25em] text-muted-foreground uppercase">
+                              за весь период
+                            </div>
+                          </div>
+
+                          {/* Особенности */}
+                          {tariff.features && (
+                            <div className="space-y-2 text-left">
+                              <ul className="space-y-2">
+                                {(typeof tariff.features === 'string' ? tariff.features.split('\n').filter(Boolean) : tariff.features).map((feature: string, idx: number) => (
+                                  <li key={idx} className="flex items-start gap-2 text-sm text-foreground/90 leading-relaxed">
+                                    <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                                    <span>{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Кнопки */}
+                          <div className="mt-auto space-y-2 pt-2">
+                            {!user ? (
+                              <>
+                                {/* Для незарегистрированных пользователей */}
+                                <Button
+                                  onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
+                                  disabled={purchasing === tariff.id}
+                                  className="w-full bg-green-500 hover:bg-green-400 text-slate-900 font-black tracking-[0.08em]"
+                                  size="lg"
+                                >
+                                  {purchasing === tariff.id ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                  ) : (
+                                    <>
+                                      <ShoppingCart className="w-4 h-4 mr-2" />
+                                      КУПИТЬ БЕЗ РЕГИСТРАЦИИ
+                                    </>
+                                  )}
+                                </Button>
+
+                                <Button
+                                  onClick={() => router.push("/register")}
+                                  variant="outline"
+                                  className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-slate-900 hover:border-green-500 transition-colors font-black tracking-[0.08em]"
+                                  size="lg"
+                                >
+                                  <Gift className="w-4 h-4 mr-2" />
+                                  ПОПРОБОВАТЬ БЕСПЛАТНО
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                {/* Для зарегистрированных пользователей */}
+                                <Button
+                                  onClick={() => handlePurchase(tariff.id, tariff.name, tariff.price)}
+                                  disabled={purchasing === tariff.id}
+                                  className="w-full bg-green-500 hover:bg-green-400 text-slate-900 font-black tracking-[0.08em]"
+                                  size="lg"
+                                >
+                                  {purchasing === tariff.id ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                  ) : (
+                                    <>
+                                      <ShoppingCart className="w-4 h-4 mr-2" />
+                                      КУПИТЬ VPN
+                                    </>
+                                  )}
+                                </Button>
+                              </>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
-                  )}
-
-                  <div className="mt-auto space-y-3 pt-1">
-                    <Button
-                      onClick={() => handlePurchase(tariff.id, tariff.name, tariff.price)}
-                      disabled={purchasing === tariff.id}
-                      className="w-full bg-[#2BD05E] hover:bg-[#24b851] text-slate-900 font-black tracking-[0.12em] uppercase border border-[#2BD05E]"
-                      size="lg"
-                    >
-                      {purchasing === tariff.id ? <Loader2 className="w-4 h-4 animate-spin" /> : 'КУПИТЬ VPN'}
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
-
-      <Dialog open={showPresetDialog} onOpenChange={setShowPresetDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Выберите обход</DialogTitle>
-            <DialogDescription>Этот параметр нужен для подключения к бесплатному тарифу.</DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <BypassPresetSelector value={bypassPreset} onChange={setBypassPreset} />
-          </div>
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setShowPresetDialog(false)}>
-              Отмена
-            </Button>
-            <Button onClick={confirmPurchase} disabled={!selectedTariff || purchasing === selectedTariff?.id}>
-              {purchasing === selectedTariff?.id ? <Loader2 className="w-4 h-4 animate-spin" /> : "Подтвердить"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Footer />
-    </div>
-  )
-}

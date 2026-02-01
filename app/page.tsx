@@ -339,6 +339,17 @@ export default function HomePage() {
                 ))}
               </div>
             )}
+
+            {/* Ссылка на полную страницу тарифов */}
+            {!loadingTariffs && tariffs.length > 0 && (
+              <div className="text-center mt-8 sm:mt-10">
+                <Link href="/tariffs">
+                  <Button variant="outline" className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold">
+                    ПОСМОТРЕТЬ ВСЕ ТАРИФЫ
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </section>
       </main>

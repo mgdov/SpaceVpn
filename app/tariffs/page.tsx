@@ -1,4 +1,4 @@
-"use client"
+nb"use client"
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
@@ -135,7 +135,7 @@ export default function TariffsPage() {
                 className="bg-card border-2 border-border hover:border-primary transition-all p-4 sm:p-6 flex flex-col"
               >
                 {/* Название тарифа */}
-                <div className="mb-4">
+                <div className="text-center mb-4">
                   <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
                     {tariff.name}
                   </h3>
@@ -146,13 +146,25 @@ export default function TariffsPage() {
                   )}
                 </div>
 
-                {/* Цена */}
-                <div className="mb-4 sm:mb-6">
-                  <div className="text-3xl sm:text-4xl font-bold text-primary">
-                    {tariff.price === 0 ? "БЕСПЛАТНО" : `${tariff.price} ₽`}
-                  </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground mt-1">
+                {/* Длительность */}
+                <div className="text-center mb-2">
+                  <div className="text-xs sm:text-sm text-muted-foreground">
                     {formatDuration(tariff.duration_days)}
+                  </div>
+                </div>
+
+                {/* Цена */}
+                <div className="text-center mb-2">
+                  <div className="text-4xl sm:text-5xl font-bold text-primary">
+                    {tariff.price === 0 ? "0" : tariff.price}
+                    <span className="text-2xl sm:text-3xl">₽</span>
+                  </div>
+                </div>
+
+                {/* За весь период */}
+                <div className="text-center mb-4 sm:mb-6">
+                  <div className="text-[10px] sm:text-xs text-muted-foreground">
+                    за весь период
                   </div>
                 </div>
 

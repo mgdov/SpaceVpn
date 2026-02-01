@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { getPublicTariffs, createYookassaPayment, type Tariff } from "@/lib/api"
-import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2 } from "lucide-react"
 import { Header } from "@/components/header"
@@ -26,9 +25,24 @@ export default function TariffsPage() {
   const loadTariffs = async () => {
     setLoading(true)
     const response = await getPublicTariffs()
-    if (response.data?.length) {
-      setTariffs(response.data.filter((tariff) => tariff.is_active))
+    const activeTariffs = response.data?.length ? response.data.filter((tariff) => tariff.is_active) : []
+
+    const testTariff: Tariff = {
+      id: -1,
+      name: "Тестовый тариф",
+      description: "Временный тестовый доступ для проверки скорости и стабильности.",
+      tagline: null,
+      duration_days: 2,
+      price: 0,
+      data_limit_gb: 999,
+      devices_count: 1,
+      is_active: true,
+      is_featured: false,
+      features: "2 дня бесплатного доступа\nПолный функционал без ограничений\nПодходит для проверки скорости",
+      sort_order: 9999,
     }
+
+    setTariffs([...activeTariffs, testTariff])
     setLoading(false)
   }
 
@@ -94,6 +108,14 @@ export default function TariffsPage() {
     return `${days} дней`
   }
 
+  const formatDurationLabel = (days: number) => {
+    return formatDuration(days)
+      .replace(/месяцев/gi, "мес.")
+      .replace(/месяца/gi, "мес.")
+      .replace(/месяц/gi, "мес.")
+      .toUpperCase()
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background relative flex items-center justify-center">
@@ -129,77 +151,81 @@ export default function TariffsPage() {
 
           {/* Сетка тарифов */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {tariffs.map((tariff, idx) => (
-              <div
-                key={tariff.id}
-                className="relative bg-card border border-[#2BD05E] p-6 sm:p-7 flex flex-col gap-5"
-              >
-                {idx === 0 && (
-                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#2BD05E] text-slate-900 text-[11px] sm:text-xs font-bold tracking-[0.08em] px-4 py-1 uppercase">
-                    ПОПУЛЯРНЫЙ
-                  </span>
-                )}
+            {tariffs.map((tariff, index) => {
+              const isPopular = index === 0
+              const isFree = tariff.price === 0
+              const description = tariff.description?.trim() || (typeof tariff.features === 'string' ? tariff.features.split('\n')[0] : tariff.features?.[0]) || ""
 
-                <div className="text-center space-y-3">
-                  <p className="text-[#31D4C2] text-[11px] sm:text-xs tracking-[0.22em] uppercase">{tariff.name}</p>
-                  <p className="text-3xl sm:text-4xl font-extrabold text-foreground leading-tight">
-                    {formatDuration(tariff.duration_days)}
-                  </p>
-                  <div className="text-5xl sm:text-6xl font-black text-[#2BD05E] leading-none">
-                    {tariff.price === 0 ? "0" : tariff.price}
-                    <span className="text-3xl sm:text-4xl align-top">₽</span>
-                  </div>
-                  <div className="text-xs sm:text-sm tracking-[0.28em] text-muted-foreground uppercase">
-                    за весь период
-                  </div>
-                </div>
-
-                {tariff.features && (
-                  <div className="space-y-2 text-left text-[15px] sm:text-base text-[#C5C5C5] leading-relaxed">
-                    {(typeof tariff.features === "string" ? tariff.features.split("\n").filter(Boolean) : tariff.features).map((feature: string, idx: number) => (
-                      <div key={idx} className="flex gap-2">
-                        <span className="text-[#2BD05E]">•</span>
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="mt-auto space-y-3 pt-1">
-                  {!user ? (
-                    <>
-                      <Button
-                        onClick={() => (tariff.price === 0 ? router.push('/register') : handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price))}
-                        disabled={purchasing === tariff.id}
-                        className="w-full bg-[#2BD05E] hover:bg-[#24b851] text-slate-900 font-black tracking-[0.12em] uppercase border border-[#2BD05E]"
-                        size="lg"
-                      >
-                        {purchasing === tariff.id ? <Loader2 className="w-4 h-4 animate-spin" /> : tariff.price === 0 ? 'ПОПРОБОВАТЬ' : 'ВЫБРАТЬ'}
-                      </Button>
-
-                      <Button
-                        onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
-                        variant="outline"
-                        disabled={purchasing === tariff.id}
-                        className="w-full border-2 border-[#2BD05E] text-[#2BD05E] hover:bg-[#2BD05E] hover:text-slate-900 font-black tracking-[0.12em] uppercase"
-                        size="lg"
-                      >
-                        {purchasing === tariff.id ? <Loader2 className="w-4 h-4 animate-spin" /> : 'КУПИТЬ БЕЗ РЕГИСТРАЦИИ'}
-                      </Button>
-                    </>
-                  ) : (
-                    <Button
-                      onClick={() => handlePurchaseForUser(tariff.id, tariff.name, tariff.price)}
-                      disabled={purchasing === tariff.id}
-                      className="w-full bg-[#2BD05E] hover:bg-[#24b851] text-slate-900 font-black tracking-[0.12em] uppercase border border-[#2BD05E]"
-                      size="lg"
-                    >
-                      {purchasing === tariff.id ? <Loader2 className="w-4 h-4 animate-spin" /> : 'КУПИТЬ VPN'}
-                    </Button>
+              return (
+                <div key={tariff.id} className="relative bg-card border border-primary p-5 sm:p-6 md:p-8 flex flex-col gap-6">
+                  {isPopular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 text-[8px] tracking-[0.2em]">
+                      ПОПУЛЯРНЫЙ
+                    </div>
                   )}
+
+                  <div className="text-center space-y-4">
+                    <p className="text-accent text-[9px] tracking-[0.35em] uppercase"># {tariff.name}</p>
+                    <h3 className="text-foreground text-base sm:text-lg font-semibold">{formatDurationLabel(tariff.duration_days)}</h3>
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="flex items-baseline justify-center gap-2">
+                        <span className="text-primary text-3xl sm:text-4xl font-bold">{isFree ? 0 : tariff.price}</span>
+                        <span className="text-muted-foreground text-[12px]">₽</span>
+                      </div>
+                      <span className="text-muted-foreground text-[9px] uppercase tracking-[0.25em]">
+                        ЗА ВЕСЬ ПЕРИОД
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="flex-1 text-muted-foreground text-[11px] leading-relaxed">
+                    {description || '🚀 Идеально для знакомства с сервисом! Полный доступ ко всем функциям на 2 дня'}
+                  </p>
+
+                  <div className="flex flex-col gap-2">
+                    {!user ? (
+                      <>
+                        <button
+                          onClick={() => router.push('/register')}
+                          className="flex-1 flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] transition-colors bg-primary text-primary-foreground hover:bg-primary/80"
+                        >
+                          ПОПРОБОВАТЬ БЕСПЛАТНО
+                        </button>
+                        <button
+                          onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
+                          disabled={purchasing === tariff.id}
+                          className="flex-1 flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] transition-colors bg-transparent border border-green-500 text-green-500 hover:bg-green-500/10 hover:border-green-400 hover:text-green-400"
+                        >
+                          {purchasing === tariff.id ? (
+                            <span className="inline-flex items-center gap-2">
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                              ОЖИДАЙТЕ
+                            </span>
+                          ) : (
+                            <>КУПИТЬ БЕЗ РЕГИСТРАЦИИ</>
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => handlePurchaseForUser(tariff.id, tariff.name, tariff.price)}
+                        disabled={purchasing === tariff.id}
+                        className="flex-1 flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] transition-colors bg-primary text-primary-foreground hover:bg-primary/80"
+                      >
+                        {purchasing === tariff.id ? (
+                          <span className="inline-flex items-center gap-2">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            ОЖИДАЙТЕ
+                          </span>
+                        ) : (
+                          <>КУПИТЬ VPN</>
+                        )}
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           {tariffs.length === 0 && !loading && (

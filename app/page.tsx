@@ -235,11 +235,11 @@ export default function HomePage() {
                     key={tariff.id}
                     className="bg-card border-2 border-border hover:border-primary transition-all p-4 sm:p-6 flex flex-col"
                   >
-                    {/* Название */}
+                    {/* Название тарифа */}
                     <div className="mb-4">
-                      <h4 className="text-lg sm:text-xl font-bold text-foreground mb-2">
+                      <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
                         {tariff.name}
-                      </h4>
+                      </h3>
                       {tariff.description && (
                         <p className="text-xs sm:text-sm text-muted-foreground">
                           {tariff.description}
@@ -249,7 +249,7 @@ export default function HomePage() {
 
                     {/* Цена */}
                     <div className="mb-4 sm:mb-6">
-                      <div className="text-2xl sm:text-3xl font-bold text-primary">
+                      <div className="text-3xl sm:text-4xl font-bold text-primary">
                         {tariff.price === 0 ? "БЕСПЛАТНО" : `${tariff.price} ₽`}
                       </div>
                       <div className="text-xs sm:text-sm text-muted-foreground mt-1">
@@ -261,9 +261,9 @@ export default function HomePage() {
                     {tariff.features && (
                       <div className="mb-6 grow">
                         <ul className="space-y-2">
-                          {(typeof tariff.features === 'string' ? tariff.features.split('\n').filter(f => f.trim()) : tariff.features).slice(0, 3).map((feature: string, idx: number) => (
+                          {(typeof tariff.features === 'string' ? tariff.features.split('\n').filter(f => f.trim()) : tariff.features).map((feature: string, idx: number) => (
                             <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm">
-                              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-500 shrink-0 mt-0.5" />
+                              <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
                               <span className="text-muted-foreground">{feature}</span>
                             </li>
                           ))}
@@ -271,28 +271,60 @@ export default function HomePage() {
                       </div>
                     )}
 
-                    {/* Кнопка */}
-                    <Link
-                      href="/tariffs"
-                      className="mt-auto w-full bg-primary hover:bg-primary/90 text-primary-foreground py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-colors text-center"
-                    >
-                      ВЫБРАТЬ ТАРИФ
-                    </Link>
+                    {/* Кнопки */}
+                    <div className="mt-auto space-y-2">
+                      {!user ? (
+                        <>
+                          {/* Для незарегистрированных пользователей */}
+                          <Button
+                            onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
+                            disabled={purchasing === tariff.id}
+                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                            size="lg"
+                          >
+                            {purchasing === tariff.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <>
+                                <ShoppingCart className="w-4 h-4 mr-2" />
+                                КУПИТЬ БЕЗ РЕГИСТРАЦИИ
+                              </>
+                            )}
+                          </Button>
+
+                          <Button
+                            onClick={() => router.push("/register")}
+                            variant="outline"
+                            className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500/10"
+                            size="lg"
+                          >
+                            <Gift className="w-4 h-4 mr-2" />
+                            ПОПРОБОВАТЬ БЕСПЛАТНО
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          {/* Для зарегистрированных пользователей */}
+                          <Button
+                            onClick={() => handlePurchaseForUser(tariff.id, tariff.name, tariff.price)}
+                            disabled={purchasing === tariff.id}
+                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                            size="lg"
+                          >
+                            {purchasing === tariff.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <>
+                                <ShoppingCart className="w-4 h-4 mr-2" />
+                                КУПИТЬ VPN
+                              </>
+                            )}
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 ))}
-              </div>
-            )}
-
-            {/* Кнопка "Все тарифы" */}
-            {tariffs.length > 0 && (
-              <div className="text-center mt-8 sm:mt-12">
-                <Link
-                  href="/tariffs"
-                  className="inline-flex items-center gap-2 bg-card hover:bg-accent/10 border-2 border-border hover:border-primary text-foreground px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm font-semibold transition-all"
-                >
-                  ПОСМОТРЕТЬ ВСЕ ТАРИФЫ
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
               </div>
             )}
           </div>

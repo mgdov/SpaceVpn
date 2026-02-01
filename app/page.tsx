@@ -4,16 +4,18 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart, Loader2 } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { useEffect, useState } from "react"
-import { getPublicTariffs, type Tariff } from "@/lib/api"
+import { getPublicTariffs, createYookassaPayment, type Tariff } from "@/lib/api"
 
 export default function HomePage() {
+  const router = useRouter()
   const { user } = useAuth()
   const [tariffs, setTariffs] = useState<Tariff[]>([])
   const [loadingTariffs, setLoadingTariffs] = useState(true)
+  const [purchasing, setPurchasing] = useState<number | null>(null)
 
   useEffect(() => {
     loadTariffs()
@@ -47,6 +49,50 @@ export default function HomePage() {
       .replace(/месяца/gi, "мес.")
       .replace(/месяц/gi, "мес.")
       .toUpperCase()
+  }
+
+  const handlePurchaseWithoutRegistration = async (tariffId: number, tariffName: string, tariffPrice: number) => {
+    setPurchasing(tariffId)
+
+    try {
+      const response = await createYookassaPayment({
+        tariffId,
+        plan: tariffName,
+        price: tariffPrice,
+        description: `Оплата тарифа ${tariffName}`,
+      })
+
+      if (response.data?.confirmation_url) {
+        window.location.href = response.data.confirmation_url
+        return
+      }
+    } catch (error) {
+      console.error("Payment error", error)
+    } finally {
+      setPurchasing(null)
+    }
+  }
+
+  const handlePurchaseForUser = async (tariffId: number, tariffName: string, tariffPrice: number) => {
+    setPurchasing(tariffId)
+
+    try {
+      const response = await createYookassaPayment({
+        tariffId,
+        plan: tariffName,
+        price: tariffPrice,
+        description: `Оплата тарифа ${tariffName}`,
+      })
+
+      if (response.data?.confirmation_url) {
+        window.location.href = response.data.confirmation_url
+        return
+      }
+    } catch (error) {
+      console.error("Payment error", error)
+    } finally {
+      setPurchasing(null)
+    }
   }
 
   return (
@@ -224,12 +270,47 @@ export default function HomePage() {
                         {description || "🚀 Идеально для знакомства с сервисом! Полный доступ ко всем функциям на 2 дня"}
                       </p>
 
-                      <Link
-                        href="/tariffs"
-                        className="w-full flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] transition-colors bg-primary text-primary-foreground hover:bg-primary/80"
-                      >
-                        ВЫБРАТЬ ТАРИФ
-                      </Link>
+                      <div className="flex flex-col gap-2">
+                        {!user ? (
+                          <>
+                            <button
+                              onClick={() => router.push("/register")}
+                              className="flex-1 flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] transition-colors bg-primary text-primary-foreground hover:bg-primary/80"
+                            >
+                              ПОПРОБОВАТЬ БЕСПЛАТНО
+                            </button>
+                            <button
+                              onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
+                              disabled={purchasing === tariff.id}
+                              className="flex-1 flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] transition-colors bg-transparent border border-green-500 text-green-500 hover:bg-green-500/10 hover:border-green-400 hover:text-green-400 disabled:opacity-50"
+                            >
+                              {purchasing === tariff.id ? (
+                                <span className="inline-flex items-center gap-2">
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                  ОЖИДАЙТЕ
+                                </span>
+                              ) : (
+                                <>КУПИТЬ БЕЗ РЕГИСТРАЦИИ</>
+                              )}
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => handlePurchaseForUser(tariff.id, tariff.name, tariff.price)}
+                            disabled={purchasing === tariff.id}
+                            className="flex-1 flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] transition-colors bg-primary text-primary-foreground hover:bg-primary/80 disabled:opacity-50"
+                          >
+                            {purchasing === tariff.id ? (
+                              <span className="inline-flex items-center gap-2">
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                ОЖИДАЙТЕ
+                              </span>
+                            ) : (
+                              <>КУПИТЬ VPN</>
+                            )}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   )
                 })}

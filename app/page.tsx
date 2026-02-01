@@ -5,7 +5,7 @@ import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart, Gift, Loader2 } from "lucide-react"
+import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart, CheckCircle2, Gift, Loader2 } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
@@ -230,39 +230,56 @@ export default function HomePage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                {tariffs.map((tariff, index) => (
+                {tariffs.map((tariff, idx) => (
                   <div
                     key={tariff.id}
-                    className="relative bg-card/80 border-2 border-green-500/70 hover:border-green-400 transition-all p-5 sm:p-6 flex flex-col gap-3"
+                    className="relative bg-card border-2 border-green-500 hover:border-green-400 transition-all p-5 sm:p-6 flex flex-col min-h-[520px] sm:min-h-[540px]"
                   >
-                    {(tariff.is_featured || index === 0) && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-black text-[10px] font-bold px-3 py-1 uppercase tracking-[0.1em]">
-                        популярный
+                    {idx === 0 && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-background text-[10px] sm:text-[11px] font-semibold px-4 py-1 tracking-wide uppercase">
+                        ПОПУЛЯРНЫЙ
                       </div>
                     )}
 
-                    <div className="text-center space-y-2 mt-1">
-                      <div className="text-green-400 text-[11px] sm:text-xs tracking-[0.25em] uppercase">
-                        {tariff.tagline || `# ${tariff.name}`}
-                      </div>
-                      <div className="text-3xl sm:text-4xl font-black text-foreground">
+                    {/* Название тарифа */}
+                    <div className="text-center mb-3">
+                      <h3 className="text-accent text-[12px] sm:text-[13px] tracking-[0.3em] mb-2 uppercase">
+                        # {tariff.name}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground">
+                        {tariff.description || ""}
+                      </p>
+                    </div>
+
+                    {/* Длительность */}
+                    <div className="text-center mb-1">
+                      <div className="text-2xl sm:text-3xl font-semibold text-foreground">
                         {formatDuration(tariff.duration_days)}
                       </div>
-                      <div className="flex items-baseline justify-center gap-1 text-green-500">
-                        <span className="text-5xl sm:text-6xl font-black">{tariff.price === 0 ? "0" : tariff.price}</span>
-                        <span className="text-2xl sm:text-3xl font-extrabold">₽</span>
+                    </div>
+
+                    {/* Цена */}
+                    <div className="text-center mb-1">
+                      <div className="flex items-baseline justify-center gap-1 text-4xl sm:text-5xl font-bold text-green-400">
+                        <span>{tariff.price === 0 ? "0" : tariff.price}</span>
+                        <span className="text-2xl sm:text-3xl">₽</span>
                       </div>
-                      <div className="text-[11px] sm:text-xs text-muted-foreground uppercase tracking-[0.2em]">
+                    </div>
+
+                    {/* За весь период */}
+                    <div className="text-center mb-5 sm:mb-6">
+                      <div className="text-[11px] sm:text-xs text-muted-foreground tracking-[0.2em] uppercase">
                         за весь период
                       </div>
                     </div>
 
+                    {/* Особенности */}
                     {tariff.features && (
-                      <div className="mb-2">
+                      <div className="mb-6 grow px-1">
                         <ul className="space-y-2">
                           {(typeof tariff.features === 'string' ? tariff.features.split('\n').filter(f => f.trim()) : tariff.features).map((feature: string, idx: number) => (
-                            <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground">
-                              <span className="mt-1 inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                            <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm leading-relaxed text-foreground">
+                              <span className="text-green-400">•</span>
                               <span>{feature}</span>
                             </li>
                           ))}
@@ -270,55 +287,35 @@ export default function HomePage() {
                       </div>
                     )}
 
+                    {/* Кнопки */}
                     <div className="mt-auto space-y-2">
                       {!user ? (
                         <>
-                          {/* Для незарегистрированных пользователей */}
                           <Button
                             onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
                             disabled={purchasing === tariff.id}
-                            className="w-full bg-green-500 text-black hover:bg-green-400 border-2 border-green-500 font-bold uppercase tracking-[0.05em] py-3 sm:py-3.5"
-                            size="lg"
+                            className="w-full bg-green-500 hover:bg-green-400 text-black font-semibold text-sm sm:text-base py-3"
                           >
-                            {purchasing === tariff.id ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <>
-                                <ShoppingCart className="w-4 h-4 mr-2" />
-                                КУПИТЬ БЕЗ РЕГИСТРАЦИИ
-                              </>
-                            )}
+                            {purchasing === tariff.id ? <Loader2 className="w-4 h-4 animate-spin" /> : "ПОПРОБОВАТЬ"}
                           </Button>
 
                           <Button
-                            onClick={() => router.push("/register")}
+                            onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
+                            disabled={purchasing === tariff.id}
                             variant="outline"
-                            className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-black font-bold uppercase tracking-[0.05em] py-3 sm:py-3.5 transition-colors"
-                            size="lg"
+                            className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-black font-semibold text-sm sm:text-base py-3"
                           >
-                            <Gift className="w-4 h-4 mr-2" />
-                            ПОПРОБОВАТЬ БЕСПЛАТНО
+                            КУПИТЬ БЕЗ РЕГИСТРАЦИИ
                           </Button>
                         </>
                       ) : (
-                        <>
-                          {/* Для зарегистрированных пользователей */}
-                          <Button
-                            onClick={() => handlePurchaseForUser(tariff.id, tariff.name, tariff.price)}
-                            disabled={purchasing === tariff.id}
-                            className="w-full bg-green-500 text-black hover:bg-green-400 border-2 border-green-500 font-bold uppercase tracking-[0.05em] py-3 sm:py-3.5"
-                            size="lg"
-                          >
-                            {purchasing === tariff.id ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <>
-                                <ShoppingCart className="w-4 h-4 mr-2" />
-                                КУПИТЬ VPN
-                              </>
-                            )}
-                          </Button>
-                        </>
+                        <Button
+                          onClick={() => handlePurchaseForUser(tariff.id, tariff.name, tariff.price)}
+                          disabled={purchasing === tariff.id}
+                          className="w-full bg-green-500 hover:bg-green-400 text-black font-semibold text-sm sm:text-base py-3"
+                        >
+                          {purchasing === tariff.id ? <Loader2 className="w-4 h-4 animate-spin" /> : "КУПИТЬ VPN"}
+                        </Button>
                       )}
                     </div>
                   </div>

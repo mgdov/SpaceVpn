@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { BypassPresetSelector } from "@/components/bypass-preset-selector"
-import { CheckCircle2, XCircle, Loader2, ArrowLeft, ShoppingCart } from "lucide-react"
+import { CheckCircle2, XCircle, Loader2, ArrowLeft } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
@@ -189,57 +189,45 @@ export default function TariffsPage() {
               {tariffs.map((tariff, idx) => (
                 <div
                   key={tariff.id}
-                  className="relative bg-card/80 border-2 border-green-500 hover:border-green-400 transition-all p-5 sm:p-6 flex flex-col gap-4 shadow-[0_0_20px_rgba(34,197,94,0.15)]"
+                  className="relative bg-card border border-[#2BD05E] p-6 sm:p-7 flex flex-col gap-5"
                 >
                   {idx === 0 && (
-                    <span className="absolute -top-4 left-4 bg-green-500 text-slate-900 text-[10px] sm:text-xs font-bold tracking-[0.08em] px-3 py-1">
+                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#2BD05E] text-slate-900 text-[11px] sm:text-xs font-bold tracking-[0.08em] px-4 py-1 uppercase">
                       ПОПУЛЯРНЫЙ
                     </span>
                   )}
 
-                  <div className="text-center space-y-2">
-                    <p className="text-teal-300 text-[11px] sm:text-xs tracking-[0.2em] uppercase">{tariff.name}</p>
-                    <p className="text-3xl sm:text-4xl font-bold text-foreground uppercase leading-tight">
+                  <div className="text-center space-y-3">
+                    <p className="text-[#31D4C2] text-[11px] sm:text-xs tracking-[0.22em] uppercase">{tariff.name}</p>
+                    <p className="text-3xl sm:text-4xl font-extrabold text-foreground leading-tight">
                       {formatDuration(tariff.duration_days)}
                     </p>
-                  </div>
-
-                  <div className="text-center space-y-1">
-                    <div className="text-5xl sm:text-6xl font-extrabold text-green-500 leading-none">
+                    <div className="text-5xl sm:text-6xl font-black text-[#2BD05E] leading-none">
                       {tariff.price === 0 ? "0" : tariff.price}
                       <span className="text-3xl sm:text-4xl align-top">₽</span>
                     </div>
-                    <div className="text-xs sm:text-sm tracking-[0.25em] text-muted-foreground uppercase">за весь период</div>
+                    <div className="text-xs sm:text-sm tracking-[0.28em] text-muted-foreground uppercase">за весь период</div>
                   </div>
 
                   {tariff.features && (
-                    <div className="space-y-2 text-left">
-                      <ul className="space-y-2">
-                        {(typeof tariff.features === "string" ? tariff.features.split("\n").filter(Boolean) : tariff.features).map((feature: string, featureIdx: number) => (
-                          <li key={featureIdx} className="flex items-start gap-2 text-sm text-foreground/90 leading-relaxed">
-                            <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="space-y-2 text-left text-[15px] sm:text-base text-[#C5C5C5] leading-relaxed">
+                      {(typeof tariff.features === "string" ? tariff.features.split("\n").filter(Boolean) : tariff.features).map((feature: string, featureIdx: number) => (
+                        <div key={featureIdx} className="flex gap-2">
+                          <span className="text-[#2BD05E]">•</span>
+                          <span>{feature}</span>
+                        </div>
+                      ))}
                     </div>
                   )}
 
-                  <div className="mt-auto space-y-2 pt-2">
+                  <div className="mt-auto space-y-3 pt-1">
                     <Button
                       onClick={() => handlePurchase(tariff.id, tariff.name, tariff.price)}
                       disabled={purchasing === tariff.id}
-                      className="w-full bg-green-500 hover:bg-green-400 text-slate-900 font-black tracking-[0.08em]"
+                      className="w-full bg-[#2BD05E] hover:bg-[#24b851] text-slate-900 font-black tracking-[0.12em] uppercase border border-[#2BD05E]"
                       size="lg"
                     >
-                      {purchasing === tariff.id ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <ShoppingCart className="w-4 h-4 mr-2" />
-                          КУПИТЬ VPN
-                        </>
-                      )}
+                      {purchasing === tariff.id ? <Loader2 className="w-4 h-4 animate-spin" /> : 'КУПИТЬ VPN'}
                     </Button>
                   </div>
                 </div>

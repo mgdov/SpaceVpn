@@ -81,6 +81,13 @@ export default function RegisterPage() {
             </div>
           </div>
           <h1 className="text-foreground text-xs sm:text-sm">СОЗДАТЬ АККАУНТ</h1>
+
+          {/* Информация о бесплатном ключе */}
+          <div className="mt-3 sm:mt-4 p-2.5 sm:p-3 bg-green-500/10 border border-green-500/50">
+            <p className="text-green-500 text-[9px] sm:text-[10px] leading-relaxed">
+              🎁 При регистрации аккаунта вы получите бесплатный 2-дневный VPN ключ
+            </p>
+          </div>
         </div>
 
         {/* Error message */}

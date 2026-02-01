@@ -1,46 +1,46 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Key, Download, Smartphone, Clock, Trash2, RefreshCw, ExternalLink, ChevronUp, ChevronDown, Copy } from "lucide-react"
+import { Key, Download, Smartphone, Clock, Trash2, RefreshCw, ExternalLink, ChevronUp, ChevronDown } from "lucide-react"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
 import { useAuth, withAuth } from "@/lib/auth-context"
 import {
-    listUserVPNClients,
+    getUserVPNKeys,
     getUserVPNClientConfig,
     getHappDeeplink,
-    type VPNClient,
+    type VPNKeyStatus,
     type VPNConfig,
 } from "@/lib/api"
 
 function AccountKeysPageContent() {
     const { user } = useAuth()
-    const [clients, setClients] = useState<VPNClient[]>([])
+    const [keys, setKeys] = useState<VPNKeyStatus[]>([])
     const [vpnConfigs, setVpnConfigs] = useState<Map<number, VPNConfig>>(new Map())
-    const [loadingClients, setLoadingClients] = useState(true)
+    const [loadingKeys, setLoadingKeys] = useState(true)
     const [installOpen, setInstallOpen] = useState<Record<number, boolean>>({})
     const [error, setError] = useState("")
 
     useEffect(() => {
-        loadClientsAndConfigs()
+        loadKeysAndConfigs()
     }, [])
 
-    const loadClientsAndConfigs = async () => {
-        setLoadingClients(true)
+    const loadKeysAndConfigs = async () => {
+        setLoadingKeys(true)
         setError("")
 
-        const response = await listUserVPNClients()
-        if (response.data) {
-            setClients(response.data)
+        const response = await getUserVPNKeys()
+        if (response.data?.keys) {
+            setKeys(response.data.keys)
 
             // Загружаем конфиги для всех ключей
             const configs = new Map()
-            for (const client of response.data) {
-                const configResponse = await getUserVPNClientConfig(client.id.toString())
+            for (const key of response.data.keys) {
+                const configResponse = await getUserVPNClientConfig(key.id.toString())
                 if (configResponse.data) {
-                    configs.set(client.id, configResponse.data)
+                    configs.set(key.id, configResponse.data)
                 }
             }
             setVpnConfigs(configs)
@@ -48,7 +48,7 @@ function AccountKeysPageContent() {
             setError(response.error || "Не удалось загрузить список VPN ключей")
         }
 
-        setLoadingClients(false)
+        setLoadingKeys(false)
     }
 
     const platformLinks = [
@@ -62,14 +62,14 @@ function AccountKeysPageContent() {
         setInstallOpen((prev) => ({ ...prev, [id]: !prev[id] }))
     }
 
-    const subscriptionUrlFor = (client: VPNClient) =>
-        (vpnConfigs.get(client.id)?.subscription_url || client.subscription_url) ?? ""
+    const subscriptionUrlFor = (key: VPNKeyStatus) =>
+        (vpnConfigs.get(key.id)?.subscription_url || key.subscription_url) ?? ""
 
-    const handleAddToApp = async (client: VPNClient, subscriptionUrl: string) => {
+    const handleAddToApp = async (key: VPNKeyStatus, subscriptionUrl: string) => {
         if (!subscriptionUrl) return
         let happDeepLink: string
         try {
-            const res = await getHappDeeplink(client.id)
+            const res = await getHappDeeplink(key.id)
             if (res?.data?.happ_link) {
                 happDeepLink = res.data.happ_link
             } else {
@@ -87,20 +87,10 @@ function AccountKeysPageContent() {
         }
     }
 
-    const handleCopyLink = async (subscriptionUrl: string) => {
-        if (!subscriptionUrl) return
-        try {
-            await navigator.clipboard.writeText(subscriptionUrl)
-            alert("Ссылка скопирована. Вставьте её в приложении (Импорт из буфера или добавление по ссылке).")
-        } catch {
-            alert("Не удалось скопировать. Скопируйте ссылку вручную.")
-        }
-    }
-
-    const handleDeleteKey = (clientId: number) => {
+    const handleDeleteKey = (keyId: number) => {
         if (confirm('Вы уверены, что хотите удалить этот ключ?')) {
             // TODO: Реализовать удаление ключа
-            console.log('Deleting key:', clientId)
+            console.log('Deleting key:', keyId)
         }
     }
 
@@ -115,33 +105,43 @@ function AccountKeysPageContent() {
         })
     }
 
-    const getTimeRemaining = (expiresAt: string) => {
-        const now = new Date().getTime()
-        const expiry = new Date(expiresAt).getTime()
-        const diff = expiry - now
+    const getTimeRemainingText = (key: VPNKeyStatus) => {
+        if (key.time_remaining_days === null || key.time_remaining_hours === null) {
+            return 'Неизвестно'
+        }
 
-        if (diff <= 0) return 'Истёк'
+        const days = key.time_remaining_days
+        const hours = key.time_remaining_hours
 
-        const hours = Math.floor(diff / (1000 * 60 * 60))
-        const days = Math.floor(hours / 24)
+        if (days < 0) {
+            return 'Истёк'
+        }
 
         if (days > 0) {
+            const hoursPart = hours % 24
+            if (hoursPart > 0) {
+                return `${days} д. ${hoursPart} ч.`
+            }
             return `${days} д.`
         }
+
         return `${hours} ч.`
     }
 
-    const hasClients = clients.length > 0
+    const hasKeys = keys.length > 0
 
-    const isClientExpired = (c: any) => !!(c.expires_at && new Date(c.expires_at).getTime() < Date.now())
-    const sortedClients = [...clients].sort((a, b) => Number(isClientExpired(a)) - Number(isClientExpired(b)))
+    const isKeyExpired = (key: VPNKeyStatus) => {
+        return key.time_remaining_days !== null && key.time_remaining_days < 0
+    }
+
+    const sortedKeys = [...keys].sort((a, b) => Number(isKeyExpired(a)) - Number(isKeyExpired(b)))
 
     return (
         <div className="min-h-screen bg-background relative">
             <PixelStars />
             <Header />
 
-            <main className="pt-20 sm:pt-24 pb-12 sm:pb-20 px-3 sm:px-4">
+            <main className="pt-20 sm:pt-24 pb-12 sm:pb-20 px-2 sm:px-4">
                 <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
                     {/* Навигация назад вне рамки */}
                     <Link
@@ -175,7 +175,7 @@ function AccountKeysPageContent() {
                     )}
 
                     {/* Состояние загрузки */}
-                    {loadingClients && (
+                    {loadingKeys && (
                         <div className="bg-card border border-border p-8 sm:p-12 text-center">
                             <div className="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-primary border-t-transparent"></div>
                             <p className="text-muted-foreground text-xs sm:text-sm mt-4">Загрузка ваших ключей...</p>
@@ -183,7 +183,7 @@ function AccountKeysPageContent() {
                     )}
 
                     {/* Нет ключей */}
-                    {!loadingClients && !hasClients && (
+                    {!loadingKeys && !hasKeys && (
                         <div className="bg-gradient-to-br from-primary/10 to-accent/5 border-2 border-primary p-6 sm:p-8 md:p-12 text-center space-y-4 sm:space-y-6">
                             <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/20 mb-2 sm:mb-4">
                                 <Key className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
@@ -206,69 +206,68 @@ function AccountKeysPageContent() {
                         </div>
                     )}
 
-                    {/* Список ключей в grid */}
-                    {!loadingClients && hasClients && (
-                        <div className="grid grid-cols-1 gap-4 sm:gap-6">
-                            {sortedClients.map((client) => {
-                                const config = vpnConfigs.get(client.id)
-                                const isExpired = isClientExpired(client)
-                                const isExpiring = client.expires_at && !isExpired && new Date(client.expires_at).getTime() - Date.now() < 24 * 60 * 60 * 1000
+                    {/* Список ключей в grid - ключи занимают половину экрана */}
+                    {!loadingKeys && hasKeys && (
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+                            {sortedKeys.map((key) => {
+                                const config = vpnConfigs.get(key.id)
+                                const isExpired = isKeyExpired(key)
 
                                 return (
-                                    <div key={client.id} className="bg-card border-2 border-border p-4 flex flex-col h-full">
+                                    <div key={key.id} className="bg-card border-2 border-border p-3 sm:p-4 flex flex-col h-full">
                                         {/* Шапка ключа */}
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex items-center gap-2">
-                                                <div className="bg-primary/20 p-2 rounded">
-                                                    <Key className="w-4 h-4 text-primary" />
+                                        <div className="flex items-center justify-between mb-2 sm:mb-3">
+                                            <div className="flex items-center gap-1.5 sm:gap-2">
+                                                <div className="bg-primary/20 p-1.5 sm:p-2 rounded">
+                                                    <Key className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-foreground text-base font-bold">Ключ</span>
-                                                    <span className="bg-accent/20 border border-accent text-accent px-2 py-0.5 text-xs font-mono font-semibold">
-                                                        {client.name}
+                                                <div className="flex items-center gap-1.5 sm:gap-2">
+                                                    <span className="text-foreground text-sm sm:text-base font-bold">Ключ</span>
+                                                    <span className="bg-accent/20 border border-accent text-accent px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs font-mono font-semibold">
+                                                        {key.name || key.key_id}
                                                     </span>
                                                 </div>
                                             </div>
                                             {isExpired ? (
-                                                <div className="bg-red-500/20 border-2 border-red-500 text-red-400 px-3 py-1 text-xs font-semibold">
+                                                <div className="bg-red-500/20 border-2 border-red-500 text-red-400 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold">
                                                     Истек
                                                 </div>
                                             ) : (
-                                                <div className="bg-primary/20 border-2 border-primary text-primary px-3 py-1 text-xs font-semibold">
+                                                <div className="bg-primary/20 border-2 border-primary text-primary px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold">
                                                     Активен
                                                 </div>
                                             )}
                                         </div>
 
-                                        {/* Предупреждение об истечении/истёк */}
-                                        {client.expires_at && (
-                                            <div className="bg-orange-500/10 border-2 border-orange-500 p-2 mb-3">
-                                                <div className="flex items-center justify-between">
+                                        {/* Время до истечения */}
+                                        {(key.expires_at || key.expire_date) && (
+                                            <div className={`${isExpired ? 'bg-red-500/10 border-red-500' : 'bg-orange-500/10 border-orange-500'} border-2 p-2 sm:p-2.5 mb-2 sm:mb-3`}>
+                                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
                                                     <div className="flex items-center gap-1.5">
-                                                        <Clock className="w-4 h-4 text-orange-400" />
-                                                        <span className="text-orange-300 text-xs font-semibold">
-                                                            Истекает: {formatDateTime(client.expires_at)}
+                                                        <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400" />
+                                                        <span className="text-orange-300 text-[10px] sm:text-xs font-semibold">
+                                                            {isExpired ? 'Истёк' : 'Истекает'}: {formatDateTime(key.expires_at || key.expire_date || '')}
                                                         </span>
                                                     </div>
-                                                    <div className="bg-orange-500/20 border border-orange-500 text-orange-300 px-2 py-1 text-xs font-semibold">
-                                                        {isExpired ? 'Истёк' : `Осталось ${getTimeRemaining(client.expires_at)}`}
+                                                    <div className={`${isExpired ? 'bg-red-500/20 border-red-500 text-red-300' : 'bg-orange-500/20 border-orange-500 text-orange-300'} border px-2 py-0.5 text-[10px] sm:text-xs font-semibold self-start sm:self-auto`}>
+                                                        {isExpired ? 'Истёк' : `Осталось ${getTimeRemainingText(key)}`}
                                                     </div>
                                                 </div>
                                             </div>
                                         )}
 
                                         {/* Инструкция */}
-                                        <div className="bg-purple-500/10 border-2 border-purple-500 p-3 space-y-2 mb-3 flex-1">
-                                            <div className="flex items-center gap-2">
-                                                <Smartphone className="w-4 h-4 text-purple-400" />
-                                                <h3 className="text-purple-300 text-sm font-semibold">Инструкция:</h3>
+                                        <div className="bg-purple-500/10 border-2 border-purple-500 p-2 sm:p-3 space-y-1.5 sm:space-y-2 mb-2 sm:mb-3 flex-1">
+                                            <div className="flex items-center gap-1.5 sm:gap-2">
+                                                <Smartphone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-400" />
+                                                <h3 className="text-purple-300 text-xs sm:text-sm font-semibold">Инструкция:</h3>
                                             </div>
-                                            <ol className="space-y-1.5 text-muted-foreground text-xs">
-                                                <li className="flex gap-2">
+                                            <ol className="space-y-1 sm:space-y-1.5 text-muted-foreground text-[10px] sm:text-xs">
+                                                <li className="flex gap-1.5 sm:gap-2">
                                                     <span className="text-purple-400 font-bold flex-shrink-0">1.</span>
                                                     <span>Установите приложение для VPN нажав на первую кнопку, а затем вернитесь снова на сайт</span>
                                                 </li>
-                                                <li className="flex gap-2">
+                                                <li className="flex gap-1.5 sm:gap-2">
                                                     <span className="text-purple-400 font-bold flex-shrink-0">2.</span>
                                                     <span>После установки приложения нажмите вторую кнопку «Добавить VPN в приложение»</span>
                                                 </li>
@@ -277,65 +276,59 @@ function AccountKeysPageContent() {
 
                                         {/* Кнопки действий */}
                                         {isExpired ? (
-                                            <div className="mb-3">
+                                            <div className="mb-2 sm:mb-3">
                                                 <button
                                                     onClick={() => (window.location.href = '/account/tariffs')}
-                                                    className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                    className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white p-2 sm:p-2.5 text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
                                                 >
-                                                    <Clock className="w-4 h-4" />
+                                                    <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                                     <span>Продлить VPN</span>
                                                 </button>
                                             </div>
                                         ) : (
-                                            <div className="space-y-2 mb-3">
-                                                {/* Install app toggle */}
-                                                <button
-                                                    onClick={() => toggleInstall(client.id)}
-                                                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
-                                                >
-                                                    <span className="text-base">1.</span>
-                                                    <Download className="w-4 h-4" />
-                                                    <span>Установить приложение для VPN</span>
-                                                    {installOpen[client.id] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                                                </button>
+                                            <div className="space-y-1.5 sm:space-y-2 mb-2 sm:mb-3">
+                                                {/* Install app toggle - dropdown открывается вверх */}
+                                                <div className="relative">
+                                                    <button
+                                                        onClick={() => toggleInstall(key.id)}
+                                                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground p-2 sm:p-2.5 text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
+                                                    >
+                                                        <span className="text-sm sm:text-base">1.</span>
+                                                        <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                                        <span>Установить приложение для VPN</span>
+                                                        {installOpen[key.id] ? <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                                                    </button>
 
-                                                {/* Collapsible platform links */}
-                                                {installOpen[client.id] && (
-                                                    <div className="border-2 border-emerald-500 bg-emerald-500/10 p-3 space-y-2">
-                                                        <p className="text-[11px] text-emerald-400 mb-2">[ Выберите вашу платформу ]</p>
-                                                        <ul className="divide-y divide-emerald-500/30">
-                                                            {platformLinks.map((p) => (
-                                                                <li key={p.id} className="flex items-center justify-between py-3">
-                                                                    <div className="flex items-center gap-3">
-                                                                        <span className="text-foreground text-sm">{p.label}</span>
-                                                                        <span className="text-muted-foreground text-xs">Скачать приложение</span>
-                                                                    </div>
-                                                                    <a href={p.href} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary">
-                                                                        <ExternalLink className="w-4 h-4" />
-                                                                    </a>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                )}
+                                                    {/* Collapsible platform links - открывается вверх */}
+                                                    {installOpen[key.id] && (
+                                                        <div className="absolute bottom-full left-0 right-0 mb-1 sm:mb-2 border-2 border-emerald-500 bg-card/95 backdrop-blur-sm p-2 sm:p-3 space-y-1.5 sm:space-y-2 z-10 shadow-lg">
+                                                            <p className="text-[10px] sm:text-[11px] text-emerald-400 mb-1 sm:mb-2">[ Выберите вашу платформу ]</p>
+                                                            <ul className="divide-y divide-emerald-500/30">
+                                                                {platformLinks.map((p) => (
+                                                                    <li key={p.id} className="flex items-center justify-between py-2 sm:py-3">
+                                                                        <div className="flex items-center gap-2 sm:gap-3">
+                                                                            <span className="text-foreground text-xs sm:text-sm">{p.label}</span>
+                                                                            <span className="text-muted-foreground text-[10px] sm:text-xs">Скачать приложение</span>
+                                                                        </div>
+                                                                        <a href={p.href} target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary">
+                                                                            <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                                                        </a>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+                                                </div>
 
-                                                {(config?.subscription_url ?? client.subscription_url) && (
+                                                {(config?.subscription_url ?? key.subscription_url) && (
                                                     <>
                                                         <button
-                                                            onClick={() => handleAddToApp(client, subscriptionUrlFor(client))}
-                                                            className="w-full bg-purple-600 hover:bg-purple-700 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                            onClick={() => handleAddToApp(key, subscriptionUrlFor(key))}
+                                                            className="w-full bg-purple-600 hover:bg-purple-700 text-white p-2 sm:p-2.5 text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
                                                         >
-                                                            <span className="text-base">2.</span>
-                                                            <Smartphone className="w-4 h-4" />
+                                                            <span className="text-sm sm:text-base">2.</span>
+                                                            <Smartphone className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                                             <span>Добавить VPN в приложение</span>
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => handleCopyLink(subscriptionUrlFor(client))}
-                                                            className="w-full border-2 border-purple-500 text-purple-400 hover:bg-purple-500/10 p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
-                                                        >
-                                                            <Copy className="w-4 h-4" />
-                                                            <span>Скопировать ссылку (вставить в приложении)</span>
                                                         </button>
                                                     </>
                                                 )}
@@ -343,9 +336,9 @@ function AccountKeysPageContent() {
                                                 {/* Extend even if not expired */}
                                                 <button
                                                     onClick={() => (window.location.href = '/account/tariffs')}
-                                                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+                                                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white p-2 sm:p-2.5 text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
                                                 >
-                                                    <Clock className="w-4 h-4" />
+                                                    <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                                     <span>Продлить VPN</span>
                                                 </button>
                                             </div>
@@ -354,8 +347,8 @@ function AccountKeysPageContent() {
                                         {/* Кнопка удаления */}
                                         <div className="flex justify-end pt-1 mt-auto">
                                             <button
-                                                onClick={() => handleDeleteKey(client.id)}
-                                                className="text-red-500 hover:text-red-400 text-xs font-semibold transition-colors flex items-center gap-1"
+                                                onClick={() => handleDeleteKey(key.id)}
+                                                className="text-red-500 hover:text-red-400 text-[10px] sm:text-xs font-semibold transition-colors flex items-center gap-1"
                                             >
                                                 Удалить
                                                 <Trash2 className="w-3 h-3" />

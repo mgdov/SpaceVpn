@@ -92,7 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     apiLogoutUser()
     setUser(null)
-    router.push('/login')
+    router.push('/')
   }
 
   const register = async (username: string, email: string, password: string, fullName?: string) => {

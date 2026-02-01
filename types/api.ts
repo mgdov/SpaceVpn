@@ -190,6 +190,7 @@ export interface PublicTariffsResponse {
 export interface VPNKeyStatus {
   id: number
   key_id: string
+  name?: string  // Имя ключа (опционально)
   status: 'active' | 'expired' | 'blocked' | 'disabled'
 
   // Expiration

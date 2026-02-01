@@ -19,6 +19,7 @@ export function Header() {
 
   const navLinks = [
     { href: "/", label: "Главная" },
+    { href: "/tariffs", label: "Тарифы" },
     { href: "/blog", label: "Блог" },
     { href: "/faq", label: "FAQ" },
     { href: "/about", label: "О нас" },

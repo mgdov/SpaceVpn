@@ -26,7 +26,7 @@ export function Footer() {
               <Link href="/" className="text-muted-foreground hover:text-primary text-[8px]">
                 Главная
               </Link>
-              <Link href="/pricing" className="text-muted-foreground hover:text-primary text-[8px]">
+              <Link href="/tariffs" className="text-muted-foreground hover:text-primary text-[8px]">
                 Тарифы
               </Link>
               <Link href="/blog" className="text-muted-foreground hover:text-primary text-[8px]">

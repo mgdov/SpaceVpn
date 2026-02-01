@@ -5,15 +5,18 @@ import { Footer } from "@/components/footer"
 import { PixelStars } from "@/components/pixel-stars"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart, CheckCircle2 } from "lucide-react"
+import { ArrowRight, LogIn, PlayCircle, RefreshCw, ShoppingCart, CheckCircle2, Gift, Loader2 } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { useEffect, useState } from "react"
-import { getPublicTariffs, type Tariff } from "@/lib/api"
+import { useRouter } from "next/navigation"
+import { getPublicTariffs, createYookassaPayment, type Tariff } from "@/lib/api"
 
 export default function HomePage() {
   const { user } = useAuth()
+  const router = useRouter()
   const [tariffs, setTariffs] = useState<Tariff[]>([])
   const [loadingTariffs, setLoadingTariffs] = useState(true)
+  const [purchasing, setPurchasing] = useState<number | null>(null)
 
   useEffect(() => {
     loadTariffs()
@@ -27,6 +30,50 @@ export default function HomePage() {
       setTariffs(response.data.filter((t) => t.is_active).slice(0, 3))
     }
     setLoadingTariffs(false)
+  }
+
+  const handlePurchaseWithoutRegistration = async (tariffId: number, tariffName: string, tariffPrice: number) => {
+    setPurchasing(tariffId)
+
+    try {
+      const response = await createYookassaPayment({
+        tariffId,
+        plan: tariffName,
+        price: tariffPrice,
+        description: `Оплата тарифа ${tariffName}`,
+      })
+
+      if (response.data?.confirmation_url) {
+        window.location.href = response.data.confirmation_url
+        return
+      }
+    } catch (e) {
+      console.error('Payment error:', e)
+    } finally {
+      setPurchasing(null)
+    }
+  }
+
+  const handlePurchaseForUser = async (tariffId: number, tariffName: string, tariffPrice: number) => {
+    setPurchasing(tariffId)
+
+    try {
+      const response = await createYookassaPayment({
+        tariffId,
+        plan: tariffName,
+        price: tariffPrice,
+        description: `Оплата тарифа ${tariffName}`,
+      })
+
+      if (response.data?.confirmation_url) {
+        window.location.href = response.data.confirmation_url
+        return
+      }
+    } catch (e) {
+      console.error('Payment error:', e)
+    } finally {
+      setPurchasing(null)
+    }
   }
 
   const formatDuration = (days: number) => {

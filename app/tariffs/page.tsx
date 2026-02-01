@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { getPublicTariffs, createYookassaPayment, type Tariff } from "@/lib/api"
+import { getPublicTariffs, getMySubscriptions, createYookassaPayment, type Tariff } from "@/lib/api"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2 } from "lucide-react"
 import { Header } from "@/components/header"
@@ -15,12 +16,19 @@ export default function TariffsPage() {
   const { user } = useAuth()
   const [tariffs, setTariffs] = useState<Tariff[]>([])
   const [loading, setLoading] = useState(true)
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false)
   const [purchasing, setPurchasing] = useState<number | null>(null)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
   useEffect(() => {
     loadTariffs()
   }, [])
+
+  useEffect(() => {
+    if (user) {
+      loadMySubscriptions()
+    }
+  }, [user])
 
   const loadTariffs = async () => {
     setLoading(true)
@@ -46,6 +54,12 @@ export default function TariffsPage() {
     setLoading(false)
   }
 
+  const loadMySubscriptions = async () => {
+    const res = await getMySubscriptions()
+    const active = res.data?.subscriptions?.some((sub: { status: string }) => sub.status === "active") ?? false
+    setHasActiveSubscription(active)
+  }
+
   const handlePurchaseWithoutRegistration = async (tariffId: number, tariffName: string, tariffPrice: number) => {
     setPurchasing(tariffId)
     setMessage(null)
@@ -63,15 +77,20 @@ export default function TariffsPage() {
         return
       }
 
-      setMessage({ type: 'error', text: response.error || 'Не удалось инициировать оплату' })
-    } catch (e) {
-      setMessage({ type: 'error', text: 'Ошибка подключения к платежной системе' })
+      setMessage({ type: "error", text: response.error || "Не удалось инициировать оплату" })
+    } catch (error) {
+      setMessage({ type: "error", text: "Ошибка подключения к платежной системе" })
     } finally {
       setPurchasing(null)
     }
   }
 
   const handlePurchaseForUser = async (tariffId: number, tariffName: string, tariffPrice: number) => {
+    if (hasActiveSubscription) {
+      router.push("/account/keys")
+      return
+    }
+
     setPurchasing(tariffId)
     setMessage(null)
 
@@ -88,9 +107,9 @@ export default function TariffsPage() {
         return
       }
 
-      setMessage({ type: 'error', text: response.error || 'Не удалось инициировать оплату' })
-    } catch (e) {
-      setMessage({ type: 'error', text: 'Ошибка подключения к платежной системе' })
+      setMessage({ type: "error", text: response.error || "Не удалось инициировать оплату" })
+    } catch (error) {
+      setMessage({ type: "error", text: "Ошибка подключения к платежной системе" })
     } finally {
       setPurchasing(null)
     }
@@ -141,7 +160,30 @@ export default function TariffsPage() {
             <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
               Выберите подходящий тариф для комфортного и безопасного интернета
             </p>
+            {!user && (
+              <p className="mt-3 text-muted-foreground text-xs sm:text-sm">
+                Уже есть аккаунт?{" "}
+                <Link href="/login?redirect=/tariffs" className="text-primary hover:underline font-medium">
+                  Войти
+                </Link>
+                {" — после входа вернётесь на эту страницу."}
+              </p>
+            )}
           </div>
+
+          {hasActiveSubscription && (
+            <div className="mb-6 max-w-2xl mx-auto p-4 bg-primary/10 border-2 border-primary rounded-lg flex flex-wrap items-center justify-between gap-3">
+              <p className="text-foreground text-sm">
+                У вас активный тариф. Продлить или посмотреть ключи можно в разделе Ключи.
+              </p>
+              <Link
+                href="/account/keys"
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-sm font-semibold hover:bg-primary/90 transition-colors rounded"
+              >
+                Перейти к ключам
+              </Link>
+            </div>
+          )}
 
           {message && (
             <Alert className="mb-6 max-w-2xl mx-auto" variant={message.type === "error" ? "destructive" : "default"}>
@@ -154,7 +196,7 @@ export default function TariffsPage() {
             {tariffs.map((tariff, index) => {
               const isPopular = index === 0
               const isFree = tariff.price === 0
-              const description = tariff.description?.trim() || (typeof tariff.features === 'string' ? tariff.features.split('\n')[0] : tariff.features?.[0]) || ""
+              const description = tariff.description?.trim() || (typeof tariff.features === "string" ? tariff.features.split("\n")[0] : tariff.features?.[0]) || ""
 
               return (
                 <div key={tariff.id} className="relative bg-card border border-primary p-5 sm:p-6 md:p-8 flex flex-col gap-6">
@@ -179,14 +221,14 @@ export default function TariffsPage() {
                   </div>
 
                   <p className="flex-1 text-muted-foreground text-[11px] leading-relaxed">
-                    {description || '🚀 Идеально для знакомства с сервисом! Полный доступ ко всем функциям на 2 дня'}
+                    {description || "🚀 Идеально для знакомства с сервисом! Полный доступ ко всем функциям на 2 дня"}
                   </p>
 
                   <div className="flex flex-col gap-2">
                     {!user ? (
                       <>
                         <button
-                          onClick={() => router.push('/register')}
+                          onClick={() => router.push("/register")}
                           className="flex-1 flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] transition-colors bg-primary text-primary-foreground hover:bg-primary/80"
                         >
                           ПОПРОБОВАТЬ БЕСПЛАТНО

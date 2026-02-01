@@ -43,9 +43,18 @@ function AuthCallbackContent() {
         setCurrentUser(userResponse.data)
         setStatus("success")
 
-        // Redirect to account after short delay
+        let nextUrl =
+          typeof window !== "undefined"
+            ? sessionStorage.getItem("oauth_redirect") || "/account"
+            : "/account"
+        if (typeof window !== "undefined") {
+          sessionStorage.removeItem("oauth_redirect")
+        }
+        if (!nextUrl.startsWith("/") || nextUrl.includes("//")) {
+          nextUrl = "/account"
+        }
         setTimeout(() => {
-          router.push("/account")
+          router.push(nextUrl)
         }, 1500)
       } else {
         setStatus("error")

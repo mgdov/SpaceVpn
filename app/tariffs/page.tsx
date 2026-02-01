@@ -129,40 +129,47 @@ export default function TariffsPage() {
 
           {/* Сетка тарифов */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {tariffs.map((tariff) => (
+            {tariffs.map((tariff, index) => (
               <div
                 key={tariff.id}
-                className="bg-card border-2 border-border hover:border-primary transition-all p-4 sm:p-6 flex flex-col"
+                className="bg-card border-2 border-primary transition-all p-4 sm:p-6 flex flex-col relative"
               >
+                {/* Бадж ПОПУЛЯРНЫЙ */}
+                {index === 0 && (
+                  <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 text-[10px] font-bold">
+                    ПОПУЛЯРНЫЙ
+                  </div>
+                )}
+
                 {/* Название тарифа */}
-                <div className="text-center mb-4">
-                  <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-                    {tariff.name}
-                  </h3>
+                <div className="text-center mb-3 mt-8">
+                  <div className="text-xs text-primary mb-2">
+                    # {tariff.name.toUpperCase()}
+                  </div>
                   {tariff.description && (
-                    <p className="text-xs sm:text-sm text-muted-foreground">
+                    <p className="text-[10px] text-muted-foreground">
                       {tariff.description}
                     </p>
                   )}
                 </div>
 
                 {/* Длительность */}
-                <div className="text-center mb-2">
-                  <div className="text-xs sm:text-sm text-muted-foreground">
+                <div className="text-center mb-4">
+                  <div className="text-xl sm:text-2xl font-bold text-foreground">
                     {formatDuration(tariff.duration_days)}
                   </div>
                 </div>
 
                 {/* Цена */}
                 <div className="text-center mb-2">
-                  <div className="text-4xl sm:text-5xl font-bold text-primary">
+                  <div className="text-6xl sm:text-7xl font-bold text-primary leading-none">
                     {tariff.price === 0 ? "0" : tariff.price}
-                    <span className="text-2xl sm:text-3xl">₽</span>
+                    <span className="text-3xl sm:text-4xl">₽</span>
                   </div>
                 </div>
 
                 {/* За весь период */}
-                <div className="text-center mb-4 sm:mb-6">
+                <div className="text-center mb-6">
                   <div className="text-[10px] sm:text-xs text-muted-foreground">
                     за весь период
                   </div>
@@ -186,31 +193,44 @@ export default function TariffsPage() {
                 <div className="mt-auto space-y-2">
                   {!user ? (
                     <>
-                      {/* Для незарегистрированных пользователей */}
+                      {/* Первая кнопка: ПОПРОБОВАТЬ для бесплатного, ВЫБРАТЬ для платных */}
+                      {tariff.price === 0 ? (
+                        <Button
+                          onClick={() => router.push("/register")}
+                          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold tracking-wide"
+                          size="lg"
+                        >
+                          ПОПРОБОВАТЬ
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => handlePurchaseForUser(tariff.id, tariff.name, tariff.price)}
+                          disabled={purchasing === tariff.id}
+                          variant="outline"
+                          className="w-full border-2 border-primary text-foreground hover:bg-primary/10 font-bold tracking-wide"
+                          size="lg"
+                        >
+                          {purchasing === tariff.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            "ВЫБРАТЬ"
+                          )}
+                        </Button>
+                      )}
+
+                      {/* Вторая кнопка: КУПИТЬ БЕЗ РЕГИСТРАЦИИ */}
                       <Button
                         onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
                         disabled={purchasing === tariff.id}
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                        variant="outline"
+                        className="w-full border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors font-bold tracking-wide"
                         size="lg"
                       >
                         {purchasing === tariff.id ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                          <>
-                            <ShoppingCart className="w-4 h-4 mr-2" />
-                            КУПИТЬ БЕЗ РЕГИСТРАЦИИ
-                          </>
+                          "КУПИТЬ БЕЗ РЕГИСТРАЦИИ"
                         )}
-                      </Button>
-
-                      <Button
-                        onClick={() => router.push("/register")}
-                        variant="outline"
-                        className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white hover:border-green-500 transition-colors font-semibold"
-                        size="lg"
-                      >
-                        <Gift className="w-4 h-4 mr-2" />
-                        ПОПРОБОВАТЬ БЕСПЛАТНО
                       </Button>
                     </>
                   ) : (

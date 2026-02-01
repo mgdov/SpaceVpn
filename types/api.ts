@@ -197,7 +197,10 @@ export interface VPNKeyStatus {
   expires_at?: string | null  // альтернативное поле
   time_remaining: string | null
   time_remaining_seconds: number | null
+  time_remaining_days: number | null   // дни до истечения (отрицательное = дней после истечения)
+  time_remaining_hours: number | null   // часы (0–23)
   is_expired: boolean
+  within_grace_period: boolean         // истёк, но ещё в пределах 30 дней для продления
 
   // Traffic
   traffic_used_bytes: number

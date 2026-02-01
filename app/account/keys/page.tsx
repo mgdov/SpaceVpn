@@ -10,6 +10,7 @@ import { useAuth, withAuth } from "@/lib/auth-context"
 import {
     listUserVPNClients,
     getUserVPNClientConfig,
+    getHappDeeplink,
     type VPNClient,
     type VPNConfig,
 } from "@/lib/api"
@@ -64,10 +65,26 @@ function AccountKeysPageContent() {
     const subscriptionUrlFor = (client: VPNClient) =>
         (vpnConfigs.get(client.id)?.subscription_url || client.subscription_url) ?? ""
 
-    const handleAddToApp = (subscriptionUrl: string) => {
+    const handleAddToApp = async (client: VPNClient, subscriptionUrl: string) => {
         if (!subscriptionUrl) return
-        const url = `/redirect?redirect_to=${encodeURIComponent(subscriptionUrl)}`
-        window.location.href = url
+        let happDeepLink: string
+        try {
+            const res = await getHappDeeplink(client.id)
+            if (res?.data?.happ_link) {
+                happDeepLink = res.data.happ_link
+            } else {
+                happDeepLink = `happ://add/${encodeURIComponent(subscriptionUrl)}`
+            }
+        } catch {
+            happDeepLink = `happ://add/${encodeURIComponent(subscriptionUrl)}`
+        }
+        const redirectUrl = `/redirect?redirect_to=${encodeURIComponent(happDeepLink)}`
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+        if (isMobile) {
+            window.location.href = redirectUrl
+        } else {
+            window.open(redirectUrl, '_blank')
+        }
     }
 
     const handleCopyLink = async (subscriptionUrl: string) => {
@@ -305,7 +322,7 @@ function AccountKeysPageContent() {
                                                 {(config?.subscription_url ?? client.subscription_url) && (
                                                     <>
                                                         <button
-                                                            onClick={() => handleAddToApp(subscriptionUrlFor(client))}
+                                                            onClick={() => handleAddToApp(client, subscriptionUrlFor(client))}
                                                             className="w-full bg-purple-600 hover:bg-purple-700 text-white p-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
                                                         >
                                                             <span className="text-base">2.</span>

@@ -20,12 +20,9 @@ function RedirectContent() {
       return
     }
 
-    let decoded = redirectTo
-    try {
-      if (redirectTo.includes('%')) {
-        decoded = decodeURIComponent(redirectTo)
-      }
-    } catch (_) { }
+    const decoded = redirectTo.includes('%')
+      ? decodeURIComponent(redirectTo)
+      : redirectTo
 
     setDecodedUrl(decoded)
     tryOpenApp(decoded)
@@ -69,9 +66,8 @@ function RedirectContent() {
 
   const tryOpenApp = (url: string) => {
     if (!url) return
-    // Основная попытка
+    setMessage('Открываем приложение...')
     window.location.href = url
-    // Доп. попытка через iframe
     setTimeout(() => {
       const iframe = document.createElement('iframe')
       iframe.style.display = 'none'
@@ -81,7 +77,6 @@ function RedirectContent() {
         try { document.body.removeChild(iframe) } catch { }
       }, 1000)
     }, 100)
-    setMessage('Открываем приложение...')
   }
 
   const handleRetry = () => {
@@ -90,8 +85,16 @@ function RedirectContent() {
 
   const handleCopyLink = async () => {
     if (!decodedUrl) return
+    let toCopy = decodedUrl
+    if (decodedUrl.startsWith('happ://add/')) {
+      try {
+        toCopy = decodeURIComponent(decodedUrl.slice('happ://add/'.length))
+      } catch {
+        toCopy = decodedUrl
+      }
+    }
     try {
-      await navigator.clipboard.writeText(decodedUrl)
+      await navigator.clipboard.writeText(toCopy)
       setCopyDone(true)
       setMessage('Ссылка скопирована. Вставьте её в приложении (Импорт из буфера или + → по ссылке).')
     } catch {

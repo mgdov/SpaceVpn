@@ -130,3 +130,4 @@ export async function syncUserVPNClient(id: string): Promise<ApiResponse<VPNClie
 export async function getBypassPresets(): Promise<ApiResponse<BypassPresetsResponse>> {
   return fetchAPI<BypassPresetsResponse>('/vpn-clients/bypass-presets')
 }
+

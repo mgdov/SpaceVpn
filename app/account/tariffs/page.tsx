@@ -252,93 +252,104 @@ export default function TariffsPage() {
                       </div>
                     )}
 
-                    <div className="text-center space-y-4">
-                      <p className="text-accent text-[9px] tracking-[0.35em]"># {tariff.name}</p>
-                      <h3 className="text-foreground text-base">{formatDuration(tariff.duration_days ?? (tariff.duration_months != null ? tariff.duration_months * 30 : 0))}</h3>
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="flex items-baseline justify-center gap-2">
-                          <span className="text-primary text-3xl">{tariff.price}</span>
-                          <span className="text-muted-foreground text-[12px]">₽</span>
+                    {/* Сетка тарифов */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                      {tariffs.map((tariff, idx) => (
+                        <div
+                          key={tariff.id}
+                          className="relative bg-card/80 border-2 border-green-500 hover:border-green-400 transition-all p-5 sm:p-6 flex flex-col gap-4 shadow-[0_0_20px_rgba(34,197,94,0.15)]"
+                        >
+                          {idx === 0 && (
+                            <span className="absolute -top-4 left-4 bg-green-500 text-slate-900 text-[10px] sm:text-xs font-bold tracking-[0.08em] px-3 py-1">
+                              ПОПУЛЯРНЫЙ
+                            </span>
+                          )}
+
+                          {/* Название и длительность */}
+                          <div className="text-center space-y-2">
+                            <p className="text-teal-300 text-[11px] sm:text-xs tracking-[0.2em] uppercase">{tariff.name}</p>
+                            <p className="text-3xl sm:text-4xl font-bold text-foreground uppercase leading-tight">
+                              {formatDuration(tariff.duration_days)}
+                            </p>
+                          </div>
+
+                          {/* Цена */}
+                          <div className="text-center space-y-1">
+                            <div className="text-5xl sm:text-6xl font-extrabold text-green-500 leading-none">
+                              {tariff.price === 0 ? "0" : tariff.price}
+                              <span className="text-3xl sm:text-4xl align-top">₽</span>
+                            </div>
+                            <div className="text-xs sm:text-sm tracking-[0.25em] text-muted-foreground uppercase">
+                              за весь период
+                            </div>
+                          </div>
+
+                          {/* Особенности */}
+                          {tariff.features && (
+                            <div className="space-y-2 text-left">
+                              <ul className="space-y-2">
+                                {(typeof tariff.features === 'string' ? tariff.features.split('\n').filter(Boolean) : tariff.features).map((feature: string, idx: number) => (
+                                  <li key={idx} className="flex items-start gap-2 text-sm text-foreground/90 leading-relaxed">
+                                    <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                                    <span>{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Кнопки */}
+                          <div className="mt-auto space-y-2 pt-2">
+                            {!user ? (
+                              <>
+                                {/* Для незарегистрированных пользователей */}
+                                <Button
+                                  onClick={() => handlePurchaseWithoutRegistration(tariff.id, tariff.name, tariff.price)}
+                                  disabled={purchasing === tariff.id}
+                                  className="w-full bg-green-500 hover:bg-green-400 text-slate-900 font-black tracking-[0.08em]"
+                                  size="lg"
+                                >
+                                  {purchasing === tariff.id ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                  ) : (
+                                    <>
+                                      <ShoppingCart className="w-4 h-4 mr-2" />
+                                      КУПИТЬ БЕЗ РЕГИСТРАЦИИ
+                                    </>
+                                  )}
+                                </Button>
+
+                                <Button
+                                  onClick={() => router.push("/register")}
+                                  variant="outline"
+                                  className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-slate-900 hover:border-green-500 transition-colors font-black tracking-[0.08em]"
+                                  size="lg"
+                                >
+                                  <Gift className="w-4 h-4 mr-2" />
+                                  ПОПРОБОВАТЬ БЕСПЛАТНО
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                {/* Для зарегистрированных пользователей */}
+                                <Button
+                                  onClick={() => handlePurchase(tariff.id, tariff.name, tariff.price)}
+                                  disabled={purchasing === tariff.id}
+                                  className="w-full bg-green-500 hover:bg-green-400 text-slate-900 font-black tracking-[0.08em]"
+                                  size="lg"
+                                >
+                                  {purchasing === tariff.id ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                  ) : (
+                                    <>
+                                      <ShoppingCart className="w-4 h-4 mr-2" />
+                                      КУПИТЬ VPN
+                                    </>
+                                  )}
+                                </Button>
+                              </>
+                            )}
+                          </div>
                         </div>
-                        <span className="text-muted-foreground text-[9px] uppercase tracking-[0.25em]">за весь период</span>
-                      </div>
+                      ))}
                     </div>
-
-                    <p className="flex-1 text-muted-foreground text-[11px] leading-relaxed">
-                      {tariff.description || "Стабильный туннель и поддержка 24/7"}
-                    </p>
-
-                    <button
-                      onClick={() => handlePurchase(tariff.id, tariff.name, tariff.price)}
-                      disabled={purchasing !== null}
-                      className={`w-full flex items-center justify-center py-3 md:py-4 px-2 md:px-3 text-[9px] md:text-[10px] tracking-[0.1em] md:tracking-[0.12em] transition-colors ${tariff.id === highlightTariffId
-                        ? "bg-primary text-primary-foreground hover:bg-primary/80"
-                        : "border border-border text-foreground hover:border-primary hover:text-primary"
-                        } ${purchasing !== null ? "opacity-50 cursor-not-allowed" : ""}`}
-                    >
-                      {purchasing === tariff.id ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <Loader2 className="h-5 w-5 animate-spin" />
-                          {tariff.price === 0 ? "АКТИВАЦИЯ..." : "ПОДГОТОВКА..."}
-                        </span>
-                      ) : hasActiveSubscription ? (
-                        "ПЕРЕЙТИ К КЛЮЧАМ"
-                      ) : tariff.price === 0 ? (
-                        "ПОПРОБОВАТЬ БЕСПЛАТНО"
-                      ) : (
-                        "КУПИТЬ VPN"
-                      )}
-                    </button>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      </main>
-
-      <Footer />
-
-      {/* Bypass Preset Selection Dialog */}
-      <Dialog open={showPresetDialog} onOpenChange={setShowPresetDialog}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Настройка VPN подключения</DialogTitle>
-            <DialogDescription>
-              Выберите оптимальные настройки обхода блокировок для вашего региона
-            </DialogDescription>
-          </DialogHeader>
-
-          <BypassPresetSelector
-            value={bypassPreset}
-            onChange={setBypassPreset}
-            disabled={purchasing !== null}
-          />
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowPresetDialog(false)}
-              disabled={purchasing !== null}
-            >
-              Отмена
-            </Button>
-            <Button
-              onClick={confirmPurchase}
-              disabled={purchasing !== null}
-            >
-              {purchasing !== null ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Активация...
-                </>
-              ) : (
-                "Активировать тариф"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
-  )
-}
